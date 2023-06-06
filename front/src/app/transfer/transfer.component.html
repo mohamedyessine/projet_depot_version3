@@ -1,0 +1,103 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Transfert Article</h4>
+          </div>
+          <div class="card-body">
+            <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <div class="custom-dropdown input-group">
+                      <input type="text" class="input-group" placeholder="Recherche..." [(ngModel)]="selectedValue" (ngModelChange)="filterItem($event)">
+                      <select class="custom-select" [(ngModel)]="selectedValue" (ngModelChange)="onArticleSelection()" filter="true">
+                        <option *ngFor="let article of filteredArticles" [value]="article.name">
+                          {{ article.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="data.code" pattern="^[0-9]{12}$" required (input)="onCodeInput()">
+                    <mat-error *ngIf="myForm.submitted && myForm.controls['code'].invalid">
+                      The code à barre must be 12 digits long and only contain numbers.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Quantité" type="text" id="quantity" name="quantity"
+                      [(ngModel)]="quantity" required pattern="[0-9]+">
+                    <mat-error *ngIf="myForm.submitted &&myForm.controls['quantity'].invalid">The quantité must contain only
+                      numbers.</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Depot Emetteur</mat-label>
+                    <mat-select placeholder="Select Depot" name="depotEmetteur" [(ngModel)]="selectedDepotValue"
+                      (selectionChange)="getBureauxByDepotEmetteur()">
+                      <mat-option *ngFor="let depot of depots" [value]="depot.value">
+                        {{ depot.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Bureau Emetteur</mat-label>
+                    <mat-select placeholder="Select Bureau" name="sourceBureau" [(ngModel)]="sourceBureau" required>
+                      <mat-option *ngFor="let bureau of bureaux" [value]="bureau.value">
+                        {{ bureau.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Depot Recepteur</mat-label>
+                    <mat-select placeholder="Select Depot" name="depotRecepteur" [(ngModel)]="selectedTargetDepotValue"
+                      (selectionChange)="getBureauxByDepotRecepteur()">
+                      <mat-option *ngFor="let depot of depots" [value]="depot.value">
+                        {{ depot.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Bureau Recepteur</mat-label>
+                    <mat-select placeholder="Select Bureau" name="targetBureau" [(ngModel)]="targetBureau" required>
+                      <mat-option *ngFor="let bureau of bureaux" [value]="bureau.value" [disabled]="bureau.value === sourceBureau">
+                        {{ bureau.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+              </div>
+            
+              <!-- Rest of the form code... -->
+            
+              <button mat-raised-button type="submit" class="btn btn-danger pull-right" [disabled]="myForm.invalid">
+                transferer
+              </button>
+              <div class="clearfix"></div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title ">Historique de transfert</h4>
+            </div>
+            <div class="card-body">
+              <div class="row align-items-center mb-3">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Recherche..." [(ngModel)]="searchText" (ngModelChange)="filterTable()">
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead class=" text-primary">
+                    <th>Depot Source</th>
+                    <th>Depot Recepteur</th>
+                    <th>Article</th>
+                    <th>Quantité</th>
+                    <th>Date de transfert</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of tableData">
+                      <td>{{ item.sourceBureau.name }}</td>
+                      <td>{{ item.targetBureau.name  }}</td>
+                      <td>{{ item.article.name }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>{{ item.dateTransfer | slice: 0:10 }}</td>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

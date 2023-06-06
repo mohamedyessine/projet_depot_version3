@@ -1,0 +1,58 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Add Bureau de controle</h4>
+                    </div>
+                    <div class="card-body">
+                      <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Depot Name</mat-label>
+                              <mat-select placeholder="Select Depot" name="depot" [(ngModel)]="data.depot" (selectionChange)="onDepotsSelection()">
+                                <mat-option *ngFor="let depot of depots" [value]="depot.name">
+                                  {{ depot.name }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="myForm.submitted && myForm.controls['article'].invalid">
+                                Please select an depot.
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                      
+                          <div class="col-md-4">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Numero depot" id="numero" name="numero" [(ngModel)]="formData.numero" pattern="^[0-9]{4}$" required>
+                              <mat-error *ngIf="myForm.submitted && myForm.controls['numero'].invalid">
+                                The numero à barre must be 12 digits long and only contain numbers.
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          
+                          <div class="col-md-4">
+                            <mat-form-field class="example-full-width">
+                              <input matInput placeholder="Name" id="name" name="name" [(ngModel)]="formData.name"  required>
+                              <mat-error *ngIf="myForm.submitted && myForm.controls['name'].invalid">
+                                The name must contain only caractere.
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        
+                        <button mat-raised-button type="submit" class="btn btn-danger pull-right" [disabled]="myForm.invalid">
+                          Ajouter
+                        </button>
+                        
+                        <div class="clearfix"></div>
+                      </form>
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  
