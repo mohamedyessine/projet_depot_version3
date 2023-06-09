@@ -11,15 +11,16 @@
                         <div class="row">
                           <div class="col-md-6">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Numero Depot" type="text" name="numero" [(ngModel)]="formData.numero" #numeroDepot="ngModel" pattern="^[0-9]+$" required>
-                              <mat-error *ngIf="numeroDepot.invalid">Le numero depot doit contenir que des chiffres.</mat-error>
+                              <input matInput placeholder="Nom Depot" name="name" [(ngModel)]="formData.name" required>
                             </mat-form-field>
                           </div>
                           <div class="col-md-6">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Nom Depot" name="name" [(ngModel)]="formData.name" required>
+                              <input matInput placeholder="Numero Depot" type="text" name="numero" [(ngModel)]="formData.numero" #numeroDepot="ngModel" required>
+                              <mat-error *ngIf="numeroDepot.invalid">Le numero depot doit contenir que des chiffres.</mat-error>
                             </mat-form-field>
                           </div>
+                         
                         </div>
                         <!-- <div class="row">
                           <div class="col-md-12">

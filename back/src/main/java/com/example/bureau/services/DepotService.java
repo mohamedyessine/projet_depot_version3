@@ -8,8 +8,16 @@ import com.example.bureau.repo.ArticleBureauRepo;
 import com.example.bureau.repo.ArticleRepo;
 import com.example.bureau.repo.BureauRepo;
 import com.example.bureau.repo.DepotRepo;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,6 +29,11 @@ public class DepotService {
     private final BureauRepo bureauRepo;
     private final ArticleBureauRepo articleBureauRepo;
     private final ArticleRepo articleRepo;
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/bureau";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "";
+
+    private static final String INSERT_SQL = "INSERT INTO Depot (name, numero) VALUES (?, ?)";
 
     public DepotService(DepotRepo depotRepo, BureauService bureauService, BureauRepo bureauRepo, ArticleBureauRepo articleBureauRepo, ArticleRepo articleRepo) {
         this.depotRepo = depotRepo;
@@ -37,7 +50,7 @@ public class DepotService {
     public Depot findById(Long id) {
         return depotRepo.findById(id).orElse(null);
     }
-    public Depot findByNumero(Long numero) {
+    public Depot findByNumero(String numero) {
         return depotRepo.findByNumero(numero);
     }
 
@@ -162,6 +175,56 @@ public class DepotService {
             return bureauService.getAllBureauByDepot(depot);
         }
         return Collections.emptyList(); // Return an empty list if depot not found
+    }
+
+
+    public void uploadAndInsertDepots(MultipartFile file) throws IOException, SQLException {
+        InputStream inputStream = file.getInputStream();
+        Workbook workbook = WorkbookFactory.create(inputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            conn.setAutoCommit(false);
+
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
+
+                String name = row.getCell(0).getStringCellValue();
+                String numero = row.getCell(1).getStringCellValue();
+
+                // Check if depot already exists
+                String selectSql = "SELECT id FROM depot WHERE numero = ?";
+                try (PreparedStatement selectStatement = conn.prepareStatement(selectSql)) {
+                    selectStatement.setString(1, numero);
+                    try (ResultSet resultSet = selectStatement.executeQuery()) {
+                        if (resultSet.next()) {
+                            continue; // Skip this row if depot exists
+                        }
+                    }
+                }
+
+                // Insert new depot
+                String insertSql = "INSERT INTO depot (name, numero) VALUES (?, ?)";
+                try (PreparedStatement insertStatement = conn.prepareStatement(insertSql)) {
+                    insertStatement.setString(1, name);
+                    insertStatement.setString(2, numero);
+                    insertStatement.executeUpdate();
+                }
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            workbook.close();
+            inputStream.close();
+        }
     }
 
 

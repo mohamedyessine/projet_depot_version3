@@ -154,9 +154,10 @@ onCodeInput() {
   
         // Create a new form data object with the ID instead of the code
         const formDataWithId = {
-          bureauId: this.formData.bureauId,
+          // bureauId: this.formData.bureauId,
           // depotId:this.selectedDepotValue,
-          depotId:1,
+          bureauId:1,
+          depotId:2,
           articleId: articleId,
           quantity: this.formData.quantity
         };

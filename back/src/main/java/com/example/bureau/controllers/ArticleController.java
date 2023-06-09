@@ -15,7 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +66,7 @@ public class ArticleController {
 
     @PostMapping("/code")
     public ResponseEntity<?> getByCode(@RequestBody Map<String, Object> requestBody) {
-        Long articleCode = Long.valueOf(requestBody.get("code").toString());
+        String articleCode = String.valueOf(requestBody.get("code").toString());
         Article article = articleService.findByCode(articleCode);
 
         if (article != null) {
@@ -75,7 +78,7 @@ public class ArticleController {
         }
     }
     @GetMapping("/articles/{code}")
-    public ResponseEntity<?> getByCode(@PathVariable("code") Long code) {
+    public ResponseEntity<?> getByCode(@PathVariable("code") String code) {
         Article article = articleService.findByCode(code);
 
         if (article != null) {
@@ -121,6 +124,18 @@ public class ArticleController {
             return ResponseEntity.badRequest().body(new ArticleBureauResponse(e.getMessage(), 400, "Bad Request"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArticleBureauResponse("An error occurred while adding the article to the bureau and updating depot quantity", 500, "Internal Server Error"));
+        }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+
+        try {
+            articleService.uploadAndInsertArticles(file);
+            return ResponseEntity.ok("File uploaded and data inserted successfully!");
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error uploading file: " + e.getMessage());
         }
     }
 

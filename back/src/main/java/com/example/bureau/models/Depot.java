@@ -20,8 +20,7 @@ public class Depot {
     private Long id;
     private String name;
     private String adresse;
-    private Long numero;
-    private int quantity;
+    private String numero;
 
     @OneToMany(mappedBy = "depot")
     private List<Bureau> bureaux;

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DepotRepo extends JpaRepository<Depot,Long> {
 
-     Depot findByNumero(Long numero);
+     Depot findByNumero(String numero);
 
     List<Depot> findByNameContaining(String name);
 

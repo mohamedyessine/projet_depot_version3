@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ArticleRepo extends JpaRepository<Article,Long> {
 
-    public Article findByCode(Long code);
+    public Article findByCode(String code);
 
 
     List<Article> findByNameContaining(String name);

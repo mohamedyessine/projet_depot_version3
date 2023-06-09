@@ -22,7 +22,7 @@ public class Article {
     private String name;
     private String lebelle;
     @Column(unique = true)
-    private Long code;
+    private String code;
 
 
     @OneToMany(mappedBy = "article")

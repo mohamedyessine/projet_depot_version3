@@ -38,7 +38,7 @@ export class AddBureauComponent implements OnInit {
     const selectedDepot = this.depots.find(depot => depot.name === this.data.depot);
     
     // Update the code field with the selected article's code
-    this.formData.numero   = selectedDepot.numero;
+    this.data.numero   = selectedDepot.numero;
   }
 
   onSubmit(form: NgForm) {
@@ -50,7 +50,7 @@ export class AddBureauComponent implements OnInit {
    
   
    // Make an HTTP request to get the ID of the depot
-  this.http.get<any>('http://localhost:8080/depots/numero/' + this.formData.numero)
+  this.http.get<any>('http://localhost:8080/depots/numero/' + this.data.numero)
   .subscribe(response => {
     // Get the ID from the response
     const depotId = response.id;

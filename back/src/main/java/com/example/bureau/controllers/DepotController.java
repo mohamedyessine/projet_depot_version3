@@ -11,7 +11,10 @@ import com.example.bureau.services.DepotService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +51,7 @@ public class DepotController {
 
     @PostMapping("/numero")
     public ResponseEntity<?> getByNumero(@RequestBody Map<String, Object> requestBody) {
-        Long depotNumero = Long.valueOf(requestBody.get("numero").toString());
+        String depotNumero = String.valueOf(requestBody.get("numero").toString());
         Depot depot = depotService.findByNumero(depotNumero);
 
         if (depot != null) {
@@ -60,7 +63,7 @@ public class DepotController {
         }
     }
     @GetMapping("/numero/{depotNumero}")
-    public ResponseEntity<?> getByNumero(@PathVariable Long depotNumero) {
+    public ResponseEntity<?> getByNumero(@PathVariable String depotNumero) {
         Depot depot = depotService.findByNumero(depotNumero);
 
         if (depot != null) {
@@ -103,6 +106,18 @@ public class DepotController {
     @GetMapping("/ArticleWithQuantityAndBureau/{depotId}")
     public List<ArticleWithQuantityAndBureau> getArticlesWithQuantityAndBureauByDepotId(@PathVariable Long depotId) {
         return depotService.findAllArticlesWithQuantityAndBureauByDepotId(depotId);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+
+        try {
+            depotService.uploadAndInsertDepots(file);
+            return ResponseEntity.ok("File uploaded and data inserted successfully!");
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error uploading file: " + e.getMessage());
+        }
     }
 
 }

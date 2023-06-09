@@ -19,7 +19,7 @@ public class Bureau {
     private Long id;
     private String name;
     private String adresse;
-    private Long numero;
+    private String numero;
 
     @JsonIgnore
     @ManyToOne

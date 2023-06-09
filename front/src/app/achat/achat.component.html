@@ -20,7 +20,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div> -->
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                   <mat-form-field class="example-full-width">
                     <mat-label>Bureau</mat-label>
                     <mat-select placeholder="Select Bureau" name="bureau" [(ngModel)]="formData.bureauId">
@@ -32,13 +32,13 @@
                       Please select a bureau.
                     </mat-error>
                   </mat-form-field>
-                </div>
+                </div> -->
 
                 <div class="col-md-4">
                   <div class="input-group">
                     <div class="custom-dropdown input-group">
-                      <input type="text" class="input-group" placeholder="Recherche..." [(ngModel)]="selectedValue" (ngModelChange)="filterItem($event)">
-                      <select class="custom-select" [(ngModel)]="selectedValue" (ngModelChange)="onArticleSelection()" filter="true">
+                      <input type="text" class="form-control" placeholder="Recherche..." [(ngModel)]="selectedValue" (ngModelChange)="filterItem($event)">
+                      <select class="custom-select" [(ngModel)]="selectedValue" (ngModelChange)="onArticleSelection()" [hidden]="filteredArticles.length === 0">
                         <option *ngFor="let article of filteredArticles" [value]="article.name">
                           {{ article.name }}
                         </option>
@@ -47,9 +47,10 @@
                   </div>
                 </div>
                 
+                
                 <div class="col-md-4">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="formData.code" pattern="^[0-9]{12}$" required (input)="onCodeInput()">
+                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="formData.code" required (input)="onCodeInput()">
                     <mat-error *ngIf="myForm.submitted && myForm.controls['code'].invalid">
                       The code à barre must be 12 digits long and only contain numbers.
                     </mat-error>

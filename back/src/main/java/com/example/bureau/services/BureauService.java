@@ -38,7 +38,7 @@ public class BureauService {
         return bureauRepo.findById(id).orElse(null);
     }
 
-    public Bureau findByNumero(Long numero) {
+    public Bureau findByNumero(String numero) {
         return bureauRepo.findByNumero(numero);
     }
     public List<Bureau> getAllBureauByDepot(Depot depot) {
