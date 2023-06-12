@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-bureau.component.css']
 })
 export class AddBureauComponent implements OnInit {
-  
+  private baseUrl = 'http://localhost:8080';
   data: any = {};
   formData = {
     depotId:'',
@@ -23,7 +23,8 @@ export class AddBureauComponent implements OnInit {
   ngOnInit() { this.getData();}
 
   getData() {
-    this.http.get<any[]>('http://localhost:8080/depots').subscribe(
+    const url = `${this.baseUrl}/depots`;
+    this.http.get<any[]>(url).subscribe(
       (response) => {
         this.depots = response;
       },
@@ -48,9 +49,9 @@ export class AddBureauComponent implements OnInit {
     }
 
    
-  
+    const url = `${this.baseUrl}/depots/numero/`;
    // Make an HTTP request to get the ID of the depot
-  this.http.get<any>('http://localhost:8080/depots/numero/' + this.data.numero)
+  this.http.get<any>(url + this.data.numero)
   .subscribe(response => {
     // Get the ID from the response
     const depotId = response.id;
@@ -60,9 +61,9 @@ export class AddBureauComponent implements OnInit {
       numero: this.formData.numero,
       name: this.formData.name
     };
-
+    const url1 = `${this.baseUrl}/bureau/create?depotId=`;
     // Make an HTTP request to create the bureau in the depot
-    this.http.post('http://localhost:8080/bureau/create?depotId=' + depotId, bureauData)
+    this.http.post(url1 + depotId, bureauData)
       .subscribe(response => {
         console.log('Bureau created:', response);
         this.snackBar.open('Bureau created successfully.', 'Close', {

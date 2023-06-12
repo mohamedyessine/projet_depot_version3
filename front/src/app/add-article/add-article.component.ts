@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-article.component.css']
 })
 export class AddArticleComponent implements OnInit {
+  private baseUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
@@ -28,7 +29,8 @@ export class AddArticleComponent implements OnInit {
   
     // Check if numeroDepot already exists
         // Form is valid and numeroDepot doesn't exist, send the form data to the server
-        this.http.post('http://localhost:8080/articles', this.formData).subscribe(response => {
+        const url = `${this.baseUrl}/articles`;
+        this.http.post(url, this.formData).subscribe(response => {
           this.snackBar.open("Added successfully", 'Close', { 
             duration: 3000,
             panelClass: ['success-snackbar'] // Add a custom class to the snackbar
@@ -41,5 +43,7 @@ export class AddArticleComponent implements OnInit {
           });
         });
       }
+
+     
 
 }

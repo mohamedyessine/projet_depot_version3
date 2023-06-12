@@ -14,7 +14,7 @@
                   </div>
                 </div>
               </div>
-              <div class="table-responsive">
+              <div class="table-responsive"  *ngIf="transfersToShow.length > 0">
                 <table class="table">
                   <thead class=" text-primary">
                     <th>Depot Source</th>
@@ -24,14 +24,23 @@
                     <th>Date de transfert</th>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let item of tableData">
-                      <td>{{ item.sourceBureau.name }}</td>
-                      <td>{{ item.targetBureau.name  }}</td>
+                    <tr  *ngFor="let item of transfersToShow">
+                      <td>{{ item.sourceBureau.name | slice: 0:45 }}</td>
+                      <td>{{ item.targetBureau.name | slice: 0:45 }}</td>
                       <td>{{ item.article.name }}</td>
                       <td>{{ item.quantity }}</td>
                       <td>{{ item.dateTransfer | slice: 0:10 }}</td>
                   </tbody>
                 </table>
+              </div>
+            </div>
+            <div class="row text-center " *ngIf="!(tableData.length <8)">
+              <div class="col-md-12">
+                <button mat-button (click)="prevPage()" [disabled]="page === 1">Previous</button>
+                <button mat-button (click)="nextPage()" [disabled]="page === pageCount">Next</button>
+                <div class="pagination-info">
+                  Page {{page}} of {{pageCount}} pages
+                </div>
               </div>
             </div>
           </div>

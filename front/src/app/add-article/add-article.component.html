@@ -9,13 +9,7 @@
                   <div class="card-body">
                     <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
                       <div class="row">
-                        <div class="col-md-4">
-                          <mat-form-field class="example-full-width">
-                            <input matInput placeholder="Code Article" name="code" [(ngModel)]="formData.code" #codeABare="ngModel"
-                                   pattern="^[0-9]{12}$" required>
-                            <mat-error *ngIf="codeABare.invalid">The code à bare must be 12 digits long and only contain numbers.</mat-error>
-                          </mat-form-field>
-                        </div>
+                        
                         <div class="col-md-4">
                           <mat-form-field class="example-full-width">
                             <input matInput placeholder="Nom Article" name="name" [(ngModel)]="formData.name" required>
@@ -26,6 +20,13 @@
                             <input matInput placeholder="Type" type="text" name="type" [(ngModel)]="formData.type">
                           </mat-form-field>
                         </div> -->
+                        <div class="col-md-4">
+                          <mat-form-field class="example-full-width">
+                            <input matInput placeholder="Code Article" name="code" [(ngModel)]="formData.code" #codeABare="ngModel"
+                                    required>
+                            <mat-error *ngIf="codeABare.invalid">The code à bare must be 12 digits long and only contain numbers.</mat-error>
+                          </mat-form-field>
+                        </div>
                       </div>
                       <div class="row">
                         <div class="col-md-12">

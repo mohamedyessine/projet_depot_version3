@@ -20,6 +20,7 @@ interface Bureau {
   styleUrls: ['./transfer.component.css']
 })
 export class TransferComponent implements OnInit {
+  private baseUrl = 'http://localhost:8080';
   formData = {
     bureauId:'',
     code: '',
@@ -43,10 +44,12 @@ export class TransferComponent implements OnInit {
   
 
   getBureaux(): Observable<any> {
-    return this.http.get('http://localhost:8080/bureau');
+    const url = `${this.baseUrl}/bureau`;
+    return this.http.get(url);
   }
   getStocks(): Observable<any> {
-    return this.http.get('http://localhost:8080/stock');
+    const url = `${this.baseUrl}/stock`;
+    return this.http.get(url);
   }
 
   selectedDepotValue: string;
@@ -54,11 +57,13 @@ export class TransferComponent implements OnInit {
   depots1: Depot[] = [];
 
   getDepots(): Observable<any> {
-    return this.http.get('http://localhost:8080/depots');
+    const url = `${this.baseUrl}/depots`;
+    return this.http.get(url);
   }
 
   getAllBureauByDepot(depotId: string): Observable<Bureau[]> {
-    return this.http.get<Bureau[]>('http://localhost:8080/bureau/' + depotId + '/bureau');
+    const url = `${this.baseUrl}/bureau/`;
+    return this.http.get<Bureau[]>(url + depotId + '/bureau');
   }
  
 
@@ -138,7 +143,8 @@ export class TransferComponent implements OnInit {
   }
 
   getData() {
-    this.http.get<any[]>('http://localhost:8080/articles').subscribe(
+    const url = `${this.baseUrl}/articles`;
+    this.http.get<any[]>(url).subscribe(
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
@@ -208,7 +214,8 @@ export class TransferComponent implements OnInit {
    
   }
   onSubmit(form: NgForm) {
-    this.http.get<any>('http://localhost:8080/articles/articles/' + this.data.code)
+    const url = `${this.baseUrl}/articles/articles/`;
+    this.http.get<any>(url + this.data.code)
       .subscribe(response => {
         const articleId = response.id;
         const formData = {
@@ -219,8 +226,8 @@ export class TransferComponent implements OnInit {
           sourceDepotId: this.selectedDepotValue,
           targetDepotId: this.selectedTargetDepotValue
         };
-  
-        this.http.post('http://localhost:8080/transfers', formData)
+        const url1 = `${this.baseUrl}/transfers`;
+        this.http.post(url1, formData)
           .subscribe(
             (response) => {
               console.log(response);

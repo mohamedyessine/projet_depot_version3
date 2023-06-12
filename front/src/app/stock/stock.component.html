@@ -34,19 +34,22 @@
                 <div class="col-md-12">
                   <div class="container-fluid">
                     <mat-form-field appearance="fill">
-                        <mat-label>Choisir Depot</mat-label>
-                        <mat-select [(ngModel)]="selectedValue" name="depot" required (selectionChange)="getStock()">
-                          <mat-option *ngFor="let depot of depots" [value]="depot.value">
-                            {{depot.viewValue}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                </div>
+                      <mat-label>Choisir Depot</mat-label>
+                      <mat-select [(ngModel)]="selectedValue" name="depot" required (selectionChange)="getStock()">
+                        <mat-option *ngFor="let depot of depots" [value]="depot.value">
+                          {{depot.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
 
                 </div>
               </div>
             </form>
-            <div class="table-responsive" *ngIf="tableData.length > 0 || tableFullData.length > 0">
+            <div class="table-responsive" *ngIf="articlesToShow.length > 0">
+              <button mat-raised-button type="button" class="btn btn-danger pull-right" [disabled]="!selectedValue"
+                (click)="exportToExcel()">Exporter</button>
+
               <!-- <table class="table">
                 <thead class="text-primary">
                   <th>Bureau</th>
@@ -72,14 +75,14 @@
               </table> -->
               <table class="table">
                 <thead class="text-primary">
-                 
+
                   <th>Article</th>
                   <th>Quantité</th>
                 </thead>
                 <tbody>
                   <ng-container *ngIf="tableData.length > 0">
-                    <tr *ngFor="let item of tableData ">
-                   
+                    <tr *ngFor="let item of articlesToShow ">
+
                       <td>{{ item.article.name}}</td>
                       <td>{{ item.quantity}}</td>
                     </tr>
@@ -95,8 +98,19 @@
                 <b>Bureau is already empty or you didn't select a depot.</b>
               </span>
             </div>
-          </div>             
+            <div class="row text-center" *ngIf="!(tableData.length <8 && tableFullData.length <8)">
+              <div class="col-md-12">
+                <button mat-button (click)="prevPage()" [disabled]="page === 1">Previous</button>
+                <button mat-button (click)="nextPage()" [disabled]="page === pageCount">Next</button>
+                <div class="pagination-info">
+                  Page {{page}} of {{pageCount}} pages
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </div>
     </div>
   </div>

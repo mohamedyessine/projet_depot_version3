@@ -1,6 +1,12 @@
 <div class="logo">
-  <a routerLink="#" class="simple-text">
-    Gestion Des Articles
+  <a href="#" class="simple-text ">
+    <div class="logo-img ml-2">
+      <img src="/assets/img/9ba4a.jpg" />
+    </div>
+    <div class="ml-5">
+      Gestion des depots
+    </div>
+
   </a>
 </div>
 <div class="sidebar-wrapper">
@@ -13,7 +19,7 @@
     </li>
     <ng-container *ngIf="isAuthenticated">
       <li class="nav-item" *ngFor="let menuItem of menuItems">
-        <a class="nav-link" [routerLink]="[menuItem.path]" (click)="menuItem.title === 'Logout' ? logout() : null" >
+        <a class="nav-link" [routerLink]="[menuItem.path]" (click)="menuItem.title === 'Logout' ? logout() : null">
           <i class="material-icons">{{ menuItem.icon }}</i>
           <p>{{ menuItem.title }}</p>
         </a>

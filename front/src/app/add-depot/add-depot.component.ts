@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-depot.component.css']
 })
 export class AddDepotComponent implements OnInit {
-
+  private baseUrl = 'http://localhost:8080';
   formData = {
     numero: '',
     name: '',
@@ -28,7 +28,8 @@ export class AddDepotComponent implements OnInit {
   
     // Check if numeroDepot already exists
         // Form is valid and numeroDepot doesn't exist, send the form data to the server
-        this.http.post('http://localhost:8080/depots', this.formData).subscribe(response => {
+        const url = `${this.baseUrl}/depots`;
+        this.http.post(url, this.formData).subscribe(response => {
           this.snackBar.open('Ajout réussie', 'Close', { 
             duration: 3000,
             panelClass: ['success-snackbar'] // Add a custom class to the snackbar

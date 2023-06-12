@@ -10,9 +10,12 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./liste-article.component.css']
 })
 export class ListeArticleComponent implements OnInit {
-  
+  private baseUrl = 'http://localhost:8080';
   searchText: string = '';
   tableData: any;
+  // Define the page and page size variables
+  page = 1;
+  pageSize = 10;
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
@@ -23,14 +26,16 @@ export class ListeArticleComponent implements OnInit {
   }
 
   getData() {
-    return this.http.get<any[]>('http://localhost:8080/articles');
+    const url = `${this.baseUrl}/articles`;
+    return this.http.get<any[]>(url);
   }
 
   deleteData(id: number) {
-    this.http.delete(`http://localhost:8080/articles/${id}`).subscribe(
+    const url = `${this.baseUrl}/articles/${id}`;
+    this.http.delete(url).subscribe(
       response => {
         console.log(response);
-        this.snackBar.open(response['message'], 'Close', { 
+        this.snackBar.open(response['message'], 'Close', {
           duration: 3000,
           panelClass: ['success-snackbar'] // Add a custom class to the snackbar
         });
@@ -38,7 +43,7 @@ export class ListeArticleComponent implements OnInit {
       },
       error => {
         console.error(error);
-        this.snackBar.open(error.error.message, 'Close', { 
+        this.snackBar.open(error.error.message, 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar'] // Add a custom class to the snackbar
         });
@@ -47,87 +52,37 @@ export class ListeArticleComponent implements OnInit {
     );
   }
 
-  // printBarcode(code: string, name: string) {
-  //   // Generate the barcode
-  //   const canvas = document.createElement('canvas');
-  //   JsBarcode(canvas, code, {
-  //     format: 'CODE128',
-  //     height: 64,
-  //     width: 2,
-  //     displayValue: false
-  //   });
-  
-  //   // Open a new window and add the barcode to it
-  //   const printWindow = window.open('', '', 'height=1080,width=780'); // Adjusted dimensions for a 64/24 barcode
-  //   printWindow.document.write('<html><head><title>Barcode</title></head><body>');
-  //   printWindow.document.write('<h6 style="text-align:center">Nom Article: ' + name + '</h6>');
-  //   printWindow.document.write('<img style="display:block;margin:auto;" src="' + canvas.toDataURL() + '"/>');
-  //   printWindow.document.write('</body></html>');
-  //   printWindow.document.close();
-  
-  //   // Print the window
-  //   printWindow.print();
-  // }
-  item = { code: '' }; // Sample barcode code
 
+
+  item = { code: '', article:'' }; // Sample barcode code
   ngAfterViewInit() {
-    this.generateBarcode(this.item.code);
+    this.generateBarcode(this.item.code, this.item.article);
   }
-  // generateBarcode(code: string) {
-  //   const canvas = document.getElementById('barcode') as HTMLCanvasElement;
-  //   if (canvas) {
-  //     JsBarcode(canvas, code);
-  //   } else {
-  //     console.error('Canvas element with id "barcode" not found.');
-  //   }
-  // }
-//   generateBarcode(code: string) {
-//     const canvas = document.getElementById('barcode') as HTMLCanvasElement;
-//     if (canvas) {
-//       JsBarcode(canvas, code);
-//       this.exportBarcode(); // Call exportBarcode() after generating the barcode
-//     } else {
-//       console.error('Canvas element with id "barcode" not found.');
-//     }
-//   }
-//   exportBarcode() {
-//   const canvas = document.getElementById('barcode') as HTMLCanvasElement;
-//   if (canvas) {
-//     const targetWidth = 300; // Desired width in millimeters
-//     const targetHeight = 100; // Desired height in millimeters
-
-//     const scale = targetWidth / canvas.offsetWidth;
-
-//     html2canvas(canvas, {
-//       scale: scale
-//     }).then((canvas) => {
-//       const jpegDataUrl = canvas.toDataURL('image/jpeg');
-//       saveAs(jpegDataUrl, 'barcode.jpg');
-//     });
-//   } else {
-//     console.error('Canvas element with id "barcode" not found.');
-//   }
-// }
-generateBarcode(code: string) {
-  const canvas = document.createElement('canvas');
-  JsBarcode(canvas, code);
-  this.exportBarcode(canvas);
-}
-
-
-exportBarcode(canvas: HTMLCanvasElement) {
-  if (canvas) {
+  
+  generateBarcode(code: string, name: string) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const barcodeOptions = {
+      text: code + '\n' + name, // Combine code and name with a line break
+      fontOptions: 'bold',
+      textAlign: 'center',
+      fontSize: 14,
+      width: 2,
+      height: 60,
+    };
+    JsBarcode(canvas, code, barcodeOptions);
+  
     const targetWidth = 440; // Desired width in millimeters
     const targetHeight = 200; // Desired height in millimeters
-
+  
     const scale = targetWidth / canvas.offsetWidth;
-
+  
     // Create a new hidden canvas element to perform the resizing
     const resizedCanvas = document.createElement('canvas');
     resizedCanvas.width = targetWidth;
     resizedCanvas.height = targetHeight;
     const resizedContext = resizedCanvas.getContext('2d');
-
+  
     // Resize the original canvas content to the target size
     resizedContext.drawImage(
       canvas,
@@ -140,19 +95,33 @@ exportBarcode(canvas: HTMLCanvasElement) {
       targetWidth,
       targetHeight
     );
-
-    // Export the resized canvas as an image
+  
+    // Create a new container element for the barcode and name
+    const container = document.createElement('div');
+    container.style.textAlign = 'center';
+  
+    // Append the resized barcode canvas to the container
+    container.appendChild(resizedCanvas);
+  
+    // Create a new h3 element for the name
+    const nameElement = document.createElement('h3');
+    nameElement.style.textAlign = 'center';
+    nameElement.innerText = name;
+    container.appendChild(nameElement);
+  
+    // Export the container as an image
     const jpegDataUrl = resizedCanvas.toDataURL('image/jpeg');
     saveAs(jpegDataUrl, 'barcode.jpg');
-    
-  } else {
-    console.error('Canvas element not found.');
   }
-}
+  
+  
+
+
+ 
 
 
 
- generateAndExportBarcode(code: string) {
+  generateAndExportBarcode(code: string) {
     const canvas = document.createElement('canvas'); // Create a new canvas element
     JsBarcode(canvas, code);
 
@@ -161,9 +130,9 @@ exportBarcode(canvas: HTMLCanvasElement) {
       saveAs(jpegDataUrl, 'barcode.jpg');
     });
   }
-  
-  
- 
+
+
+
   printBarcode(code: string) {
     // Retrieve the barcode canvas element
     const canvas = document.getElementById('barcode') as HTMLCanvasElement;
@@ -185,8 +154,8 @@ exportBarcode(canvas: HTMLCanvasElement) {
       printWindow.close();
     });
   }
-  
-  
+
+
   filterTable() {
     if (this.searchText === '') {
       this.getData().subscribe((data: any[]) => {
@@ -201,5 +170,51 @@ exportBarcode(canvas: HTMLCanvasElement) {
       });
     }
   }
+
+  exportInventaireToExcel(): void {
+    const url = `${this.baseUrl}/stock/export/articles_with_quantity`;
+    const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const fileName = `Inventaire ${currentDate}.xlsx`;
+
+    this.http.get(url, { responseType: 'blob' }).subscribe((response: Blob) => {
+      const url = window.URL.createObjectURL(response);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      link.dispatchEvent(new MouseEvent('click'));
+      window.URL.revokeObjectURL(url);
+    }, (error) => {
+      console.error(error);
+      // Handle the error, e.g. show an error message to the user
+    });
+  }
+
+
+  get articlesToShow(): any[] {
+    const startIndex = (this.page - 1) * this.pageSize;
+    return this.tableData.slice(startIndex, startIndex + this.pageSize);
+  }
   
+  
+  
+  // Navigate to the next page
+  nextPage() {
+    if (this.page < this.pageCount) {
+      this.page++;
+    }
+  }
+  
+  // Navigate to the previous page
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+    }
+  }
+  
+  // Return the total number of pages
+  get pageCount(): number {
+    return Math.ceil(this.tableData.length / this.pageSize);
+  }
+
+
 }

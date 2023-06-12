@@ -14,6 +14,7 @@ interface Bureau {
   styleUrls: ['./achat.component.css']
 })
 export class AchatComponent implements OnInit {
+  private baseUrl = 'http://localhost:8080';
   data: any = {};
   formData = {
     bureauId:'',
@@ -31,10 +32,12 @@ export class AchatComponent implements OnInit {
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
   getDepots(): Observable<any> {
-    return this.http.get('http://localhost:8080/depots');
+    const url = `${this.baseUrl}/depots`;
+    return this.http.get(url);
   }
   getAllBureauByDepot(depotId: string): Observable<Bureau[]> {
-    return this.http.get<Bureau[]>('http://localhost:8080/bureau/' + depotId + '/bureau');
+    const url = `${this.baseUrl}/bureau/`;
+    return this.http.get<Bureau[]>(url + depotId + '/bureau');
   }
  
   getBureauxByDepot() {
@@ -90,7 +93,8 @@ export class AchatComponent implements OnInit {
   }
 
   getData() {
-    this.http.get<any[]>('http://localhost:8080/articles').subscribe(
+    const url = `${this.baseUrl}/articles`;
+    this.http.get<any[]>(url).subscribe(
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
@@ -101,7 +105,8 @@ export class AchatComponent implements OnInit {
     );
   }
   getBureau(): Observable<any> {
-    return this.http.get('http://localhost:8080/bureau');
+    const url = `${this.baseUrl}/bureau`;
+    return this.http.get(url);
   }
 
   // onArticleSelection() {
@@ -147,7 +152,8 @@ onCodeInput() {
    
   
     // Make an HTTP request to get the ID of the article
-    this.http.get<any>('http://localhost:8080/articles/articles/' + this.formData.code)
+    const url = `${this.baseUrl}/articles/articles/`;
+    this.http.get<any>(url + this.formData.code)
       .subscribe(response => {
         // Get the ID from the response
         const articleId = response.id;
@@ -156,14 +162,15 @@ onCodeInput() {
         const formDataWithId = {
           // bureauId: this.formData.bureauId,
           // depotId:this.selectedDepotValue,
-          bureauId:1,
+          bureauId:2,
           depotId:2,
           articleId: articleId,
           quantity: this.formData.quantity
         };
   
         // Make an HTTP request to send the form data to the backend with the ID
-        this.http.post('http://localhost:8080/articles/add', formDataWithId)
+        const url1 = `${this.baseUrl}/articles/add`;
+        this.http.post(url1, formDataWithId)
           .subscribe(response => {
             console.log('Form submitted:', response);
             this.snackBar.open(response['message'], 'Close', { 

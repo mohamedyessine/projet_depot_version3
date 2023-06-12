@@ -7,8 +7,12 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./historique-transfert.component.css']
 })
 export class HistoriqueTransfertComponent implements OnInit {
+  private baseUrl = 'http://localhost:8080';
   searchText: string = '';
   tableData: any;
+ // Define the page and page size variables
+ page = 1;
+ pageSize = 10;
 
   constructor(private http: HttpClient) { }
 
@@ -22,7 +26,8 @@ export class HistoriqueTransfertComponent implements OnInit {
   }
 
   getData() {
-    return this.http.get<any[]>('http://localhost:8080/transfers');
+    const url = `${this.baseUrl}/transfers`;
+    return this.http.get<any[]>(url);
   }
 
   filterTable() {
@@ -38,5 +43,31 @@ export class HistoriqueTransfertComponent implements OnInit {
         });
       });
     }
+  }
+
+  get transfersToShow(): any[] {
+    const startIndex = (this.page - 1) * this.pageSize;
+    return this.tableData.slice(startIndex, startIndex + this.pageSize);
+  }
+  
+  
+  
+  // Navigate to the next page
+  nextPage() {
+    if (this.page < this.pageCount) {
+      this.page++;
+    }
+  }
+  
+  // Navigate to the previous page
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+    }
+  }
+  
+  // Return the total number of pages
+  get pageCount(): number {
+    return Math.ceil(this.tableData.length / this.pageSize);
   }
 }
