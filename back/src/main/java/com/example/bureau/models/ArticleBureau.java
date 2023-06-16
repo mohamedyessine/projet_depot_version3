@@ -16,6 +16,8 @@ public class ArticleBureau {
     private int quantity;
     // other fields and methods
 
+    private int quantityDefect = 0;
+
     @ManyToOne
     @MapsId("articleId")
     private Article article;

@@ -40,6 +40,8 @@ public class TransferController {
         this.bureauRepo = bureauRepo;
         this.articleRepo = articleRepo;
     }
+
+
     @GetMapping
     public List<Transfer> getAllTransfers() {
         return transferService.getAllTransfers();

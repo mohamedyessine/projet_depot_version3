@@ -84,6 +84,8 @@ public class WebSecurityConfig  {
                 .permitAll()
                 .requestMatchers("/bureau/**")
                 .permitAll()
+                .requestMatchers("/defectueux/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
 

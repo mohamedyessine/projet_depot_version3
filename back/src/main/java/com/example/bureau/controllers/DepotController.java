@@ -4,7 +4,9 @@ package com.example.bureau.controllers;
 import com.example.bureau.exceptions.DuplicateException;
 import com.example.bureau.exceptions.ErrorResponse;
 import com.example.bureau.models.Article;
+import com.example.bureau.models.Bureau;
 import com.example.bureau.models.Depot;
+import com.example.bureau.payload.request.ArticleWithQuantities;
 import com.example.bureau.payload.request.ArticleWithQuantity;
 import com.example.bureau.payload.request.ArticleWithQuantityAndBureau;
 import com.example.bureau.services.DepotService;
@@ -30,6 +32,27 @@ public class DepotController {
 
     @PostMapping
     public Depot addDepot(@RequestBody Depot depot) {
+        // Check if any field contains only spaces
+        if (containsOnlySpaces(depot)) {
+            throw new DuplicateException("Fields cannot contain only spaces");
+        }
+
+        Depot existingDepot = depotService.findByNumero(depot.getNumero());
+
+        if (existingDepot != null) {
+            throw new DuplicateException("Depot with numero '" + depot.getNumero() + "' already exists");
+        }
+
+        return depotService.addDepot(depot);
+    }
+
+    private boolean containsOnlySpaces(Depot depot) {
+        String numero = depot.getNumero().trim();
+        String name = depot.getName().trim();
+
+        return !numero.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$") || !name.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$");
+    }
+    /*public Depot addDepot(@RequestBody Depot depot) {
         Depot existingDepot = depotService.findByNumero(depot.getNumero());
 
         if (existingDepot != null) {
@@ -38,7 +61,7 @@ public class DepotController {
 
         return depotService.addDepot(depot);
 
-    }
+    }*/
 
     @GetMapping
     public List<Depot> getAllDepots() {
@@ -101,6 +124,10 @@ public class DepotController {
     @GetMapping("/{depotId}/articles")
     public List<ArticleWithQuantity> findAllArticlesWithQuantityByDepotId(@PathVariable Long depotId) {
         return depotService.findAllArticlesWithQuantityByDepotId(depotId);
+    }
+    @GetMapping("/{depotId}/articlesWithDefect")
+    public List<ArticleWithQuantities> findAllArticlesWithQuantityAndQuantityDefectByDepotId(@PathVariable Long depotId) {
+        return depotService.findAllArticlesWithQuantityAndQuantityDefectByDepotId(depotId);
     }
 
     @GetMapping("/ArticleWithQuantityAndBureau/{depotId}")

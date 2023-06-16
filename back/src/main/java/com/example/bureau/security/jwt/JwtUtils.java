@@ -32,6 +32,21 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+    /*
+    public String generateJwtToken(Authentication authentication) {
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
+        Claims claims = Jwts.claims().setSubject(userPrincipal.getUsername());
+        claims.put("role", userPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+     */
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();

@@ -13,6 +13,7 @@ import com.example.bureau.services.BureauService;
 import com.example.bureau.services.DepotService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,11 @@ public class ArticleController {
 
     @PostMapping
     public Article addArticle(@RequestBody Article article) {
+
+        // Check if any field contains only spaces
+        if (containsOnlySpaces(article)) {
+            throw new DuplicateException("Fields cannot contain only spaces");
+        }
         Article existingArticle = articleService.findByCode(article.getCode());
 
         if (existingArticle != null) {
@@ -50,6 +56,13 @@ public class ArticleController {
         return articleService.addArticle(article);
 
     }
+    private boolean containsOnlySpaces(Article article) {
+        String code = article.getCode().trim();
+        String name = article.getName().trim();
+
+        return !code.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$") || !name.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$");
+    }
+
 
     @GetMapping
     public List<Article> getAllArticles() {

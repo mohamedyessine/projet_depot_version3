@@ -14,6 +14,8 @@ public interface ArticleBureauRepo extends JpaRepository<ArticleBureau,ArticleBu
     List<ArticleBureau> findByBureau(Bureau bureau);
 
     List<ArticleBureau> findAllByBureau_IdIn(List<Long> bureauIds);
+    List<ArticleBureau> findByBureauId(Long bureauId);
+
 
 
 }

@@ -2,6 +2,7 @@ package com.example.bureau.services;
 
 
 import com.example.bureau.models.*;
+import com.example.bureau.payload.request.ArticleWithQuantities;
 import com.example.bureau.payload.request.ArticleWithQuantity;
 import com.example.bureau.payload.request.ArticleWithQuantityAndBureau;
 import com.example.bureau.repo.ArticleBureauRepo;
@@ -108,7 +109,7 @@ public class DepotService {
 
         for (ArticleBureau articleBureau : articleBureaus) {
             Long articleId = articleBureau.getArticle().getId();
-            int quantity = articleBureau.getQuantity();
+            int quantity = articleBureau.getQuantity() + articleBureau.getQuantityDefect();
 
             if (articleQuantityMap.containsKey(articleId)) {
                 quantity += articleQuantityMap.get(articleId);
@@ -133,6 +134,50 @@ public class DepotService {
 
         return articlesWithQuantity;
     }
+
+    public List<ArticleWithQuantities> findAllArticlesWithQuantityAndQuantityDefectByDepotId(Long depotId) {
+        List<ArticleBureau> articleBureaus = findAllArticleByDepotId(depotId);
+
+        Map<Long, Integer> articleQuantityMap = new HashMap<>();
+        Map<Long, Integer> articleQuantityDefectMap = new HashMap<>();
+
+        for (ArticleBureau articleBureau : articleBureaus) {
+            Long articleId = articleBureau.getArticle().getId();
+            int quantity = articleBureau.getQuantity();
+
+            if (articleQuantityMap.containsKey(articleId)) {
+                quantity += articleQuantityMap.get(articleId);
+            }
+
+            articleQuantityMap.put(articleId, quantity);
+
+            int quantityDefect = articleBureau.getQuantityDefect();
+
+            if (articleQuantityDefectMap.containsKey(articleId)) {
+                quantityDefect += articleQuantityDefectMap.get(articleId);
+            }
+
+            articleQuantityDefectMap.put(articleId, quantityDefect);
+        }
+
+        List<ArticleWithQuantities> articlesWithQuantity = new ArrayList<>();
+
+        for (Map.Entry<Long, Integer> entry : articleQuantityMap.entrySet()) {
+            Long articleId = entry.getKey();
+            int quantity = entry.getValue();
+            int quantityDefect = articleQuantityDefectMap.getOrDefault(articleId, 0);
+
+            Article article = articleRepo.findById(articleId).orElse(null);
+
+            if (article != null) {
+                ArticleWithQuantities articleWithQuantity = new ArticleWithQuantities(article, quantity, quantityDefect);
+                articlesWithQuantity.add(articleWithQuantity);
+            }
+        }
+
+        return articlesWithQuantity;
+    }
+
     public List<ArticleWithQuantityAndBureau> findAllArticlesWithQuantityAndBureauByDepotId(Long depotId) {
         List<ArticleBureau> articleBureaus = findAllArticleByDepotId(depotId);
 
