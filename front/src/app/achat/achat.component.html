@@ -34,7 +34,8 @@
                   </mat-form-field>
                 </div> -->
 
-                <div class="col-md-4">
+               
+                <!-- <div class="col-md-4">
                   <div class="input-group">
                     <select class="custom-select" [(ngModel)]="selectedValue" (ngModelChange)="onArticleSelection()" [hidden]="filteredArticles.length === 0" id="articleSelect">
                       <option *ngFor="let article of filteredArticles" [value]="article.name">
@@ -42,7 +43,18 @@
                       </option>
                     </select>
                   </div>
+                </div> 
+                 --> 
+                 <div class="col-md-4">
+                  <div class="input-group">
+                    <select #selectElement data-live-search="true" [(ngModel)]="selectedValue" >
+                      <option *ngFor="let article of filteredArticles" [value]="article.name">{{ article.name }}</option>
+                    </select>
+                  </div>
                 </div>
+                
+                
+
                 
                 <div class="col-md-4">
                   <mat-form-field class="example-full-width">

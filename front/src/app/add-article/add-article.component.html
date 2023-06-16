@@ -10,7 +10,7 @@
                     <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
                       <div class="row">
                         
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                           <mat-form-field class="example-full-width">
                             <input matInput placeholder="Nom Article" name="name" [(ngModel)]="formData.name" required>
                           </mat-form-field>
@@ -20,7 +20,7 @@
                             <input matInput placeholder="Type" type="text" name="type" [(ngModel)]="formData.type">
                           </mat-form-field>
                         </div> -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                           <mat-form-field class="example-full-width">
                             <input matInput placeholder="Code Article" name="code" [(ngModel)]="formData.code" #codeABare="ngModel"
                                     required>

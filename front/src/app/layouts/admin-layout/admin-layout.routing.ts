@@ -10,6 +10,7 @@ import { StockComponent } from '../../stock/stock.component';
 import { HistoriqueTransfertComponent } from '../../historique-transfert/historique-transfert.component';
 import { LoginComponent } from '../../login/login.component';
 import { AddBureauComponent } from '../../add-bureau/add-bureau.component';
+import { ListDefectieuxComponent } from 'app/list-defectieux/list-defectieux.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -63,5 +64,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'achat',           component: AchatComponent },
     { path: 'stock',  component: StockComponent },
     { path: 'historique-transfert',        component: HistoriqueTransfertComponent },
+    { path: 'list-defect',        component: ListDefectieuxComponent },
     { path: 'login',        component: LoginComponent },
 ];

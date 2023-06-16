@@ -9,7 +9,7 @@
           <div class="card-body">
             <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
               <div class="row">
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                   <div class="input-group">
                     <select class="custom-select" [(ngModel)]="selectedValue" (ngModelChange)="onArticleSelection()" [hidden]="filteredArticles.length === 0" id="articleSelect">
                       <option *ngFor="let article of filteredArticles" [value]="article.name">
@@ -17,8 +17,14 @@
                       </option>
                     </select>
                   </div>
+                </div> -->
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <select #selectElement data-live-search="true" [(ngModel)]="selectedValue" >
+                      <option *ngFor="let article of filteredArticles" [value]="article.name">{{ article.name }}</option>
+                    </select>
+                  </div>
                 </div>
-                
                 
                 <div class="col-md-4">
                   <mat-form-field class="example-full-width">
@@ -37,7 +43,7 @@
                       numbers.</mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <mat-label>Depot Emetteur</mat-label>
                     <mat-select placeholder="Select Depot" name="depotEmetteur" [(ngModel)]="selectedDepotValue"
@@ -49,7 +55,7 @@
                   </mat-form-field>
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <mat-label>Bureau Emetteur</mat-label>
                     <mat-select placeholder="Select Bureau" name="sourceBureau" [(ngModel)]="sourceBureau" required
@@ -62,7 +68,7 @@
                 </div>
                 
                 
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <mat-label>Depot Recepteur</mat-label>
                     <mat-select placeholder="Select Depot" name="depotRecepteur" [(ngModel)]="selectedTargetDepotValue"
@@ -74,7 +80,7 @@
                   </mat-form-field>
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <mat-form-field class="example-full-width">
                     <mat-label>Bureau Recepteur</mat-label>
                     <mat-select placeholder="Select Bureau" name="targetBureau" [(ngModel)]="targetBureau" required

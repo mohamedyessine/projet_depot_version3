@@ -1,35 +1,44 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-historique-transfert',
-  templateUrl: './historique-transfert.component.html',
-  styleUrls: ['./historique-transfert.component.css']
+  selector: 'app-list-defectieux',
+  templateUrl: './list-defectieux.component.html',
+  styleUrls: ['./list-defectieux.component.css']
 })
-export class HistoriqueTransfertComponent implements OnInit {
+export class ListDefectieuxComponent implements OnInit {
   private baseUrl = 'http://localhost:8080';
   searchText: string = '';
+  originalTableData: any;
   tableData: any;
- // Define the page and page size variables
- page = 1;
- pageSize = 10;
 
+    // Define the page and page size variables
+    page = 1;
+    pageSize = 10;
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.tableData = []; // Initialize tableData with an empty array
     this.getData().subscribe((data: any[]) => {
-      this.tableData = data.filter(item => {
-        const values = Object.values(item).join(' ').toLowerCase();
-        return values.includes(this.searchText.toLowerCase());
-      });
+      this.originalTableData = data;
+      this.filterTable();
     });
   }
 
   getData() {
-    const url = `${this.baseUrl}/transfers`;
+    const url = `${this.baseUrl}/defectueux`;
     return this.http.get<any[]>(url);
   }
+
+  // filterTable() {
+  //   if (this.searchText === '') {
+  //     this.tableData = this.originalTableData;
+  //   } else {
+  //     this.tableData = this.originalTableData.filter(item => {
+  //       const values = [...Object.values(item.sourceDepot), ...Object.values(item.article), ...Object.values(item)].join(' ').toLowerCase();
+  //       return values.includes(this.searchText.toLowerCase());
+  //     });
+  //   }
+  // }
 
   filterTable() {
     if (this.searchText === '') {
@@ -50,9 +59,7 @@ export class HistoriqueTransfertComponent implements OnInit {
       });
     }
   }
-  
-
-  get transfersToShow(): any[] {
+  get defectieuxToShow(): any[] {
     const startIndex = (this.page - 1) * this.pageSize;
     return this.tableData.slice(startIndex, startIndex + this.pageSize);
   }
@@ -77,4 +84,5 @@ export class HistoriqueTransfertComponent implements OnInit {
   get pageCount(): number {
     return Math.ceil(this.tableData.length / this.pageSize);
   }
+
 }

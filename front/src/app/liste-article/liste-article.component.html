@@ -8,7 +8,7 @@
           </div>
           <div class="card-body">
             <div class="row align-items-center mb-3">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <div class="input-group">
                   <input type="text" class="form-control" placeholder="Recherche..." [(ngModel)]="searchText"
                     (ngModelChange)="filterTable()">
@@ -17,7 +17,7 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <div class="table-responsive"*ngIf="articlesToShow.length > 0">
+                <div class="table-responsive" *ngIf="articlesToShow.length > 0">
                   <button mat-raised-button type="button" class="btn btn-danger pull-right" (click)="exportInventaireToExcel()">Exporter Inventaire</button>
                   <table class="table">
                     <thead class="text-primary">
@@ -64,3 +64,7 @@
     </div>
   </div>
 </div>
+
+
+
+

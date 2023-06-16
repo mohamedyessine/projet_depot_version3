@@ -1,19 +1,22 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { log } from 'console';
+
+ 
 interface Bureau {
   value: string;
   viewValue: string;
-}
+} 
+
+declare var $: any;
 @Component({
   selector: 'app-achat',
   templateUrl: './achat.component.html',
   styleUrls: ['./achat.component.css']
 })
-export class AchatComponent implements OnInit {
+export class AchatComponent implements OnInit{
   private baseUrl = 'http://localhost:8080';
   data: any = {};
   formData = {
@@ -23,14 +26,29 @@ export class AchatComponent implements OnInit {
   };
   articles: any[] = [];
   bureaux: Bureau[] = [];
-  selectedValue: string;
+  // selectedValue: string;
   selectedDepotValue: string;
   depots: Bureau[] = [];
   filteredArticles: any[] = [];
   searchInput: string = '';
+  selectedValue: string =  '';
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private elementRef: ElementRef) { }
+  @ViewChild('selectElement', { static: true }) selectElement: ElementRef;
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
-
+  ngAfterViewInit() {
+     this.getData();
+     this.filteredArticles = this.articles;
+     this.selectedValue = ''; 
+  }
+  onArticleSelect() {
+    console.log("Selected Article Code:")
+    const selectedArticle = this.filteredArticles.find(article => article.name === this.selectedValue);
+    if (selectedArticle) {
+      this.formData.code = selectedArticle.code; // Set the code for the selected article
+      console.log("Selected Article Code:", selectedArticle.code);
+    }
+  }
+  
   getDepots(): Observable<any> {
     const url = `${this.baseUrl}/depots`;
     return this.http.get(url);
@@ -54,7 +72,6 @@ export class AchatComponent implements OnInit {
   }
 
  
- 
   filterItem(event: string) {
     
     if (!event) {
@@ -65,12 +82,15 @@ export class AchatComponent implements OnInit {
       );
     }
   }
+
+
   onChangeofOptions(event: any) {
     // Do something with the selected option
     console.log(event);
   }
+
   ngOnInit() { 
-    this.getData();
+
     this.getDepots().subscribe((data: any[]) => {
       this.depots = data.map(item => {
         return {
@@ -87,9 +107,8 @@ export class AchatComponent implements OnInit {
         };
       });
     });
-    this.filteredArticles = this.articles; // Initialize the filtered articles with all articles
-    this.selectedValue = ''; // Clear the selected value initially
-  
+    
+
   }
 
   getData() {
@@ -98,11 +117,49 @@ export class AchatComponent implements OnInit {
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
+        console.log("hhh "+ this.filteredArticles);
+        
+        // $('.selectpicker').selectpicker();
+        this.populateSelect(this.filteredArticles);
+        this.initializeSelectPicker();
       },
       (error) => {
-        console.log(error);
+        console.log("error");
       }
     );
+  }
+  populateSelect(options: any[]):void{
+    console.log("fdfddfd");
+    
+    const select = this.selectElement.nativeElement;
+    console.log("khijhfdfhd " +select);
+    console.log("yaaaa " +options);
+
+    
+    options.forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option.id;
+      optionElement.text = option.name;
+      
+      
+      select.appendChild(optionElement);
+    });
+
+    select.addEventListener('change', () => {
+      const selectedOption = options.find(option => option.id.toString() === select.value.toString());
+  
+      console.log("selectedOption: ", selectedOption);
+  
+      if (selectedOption) {
+        this.formData.code = selectedOption.code;
+      } else {
+        this.formData.code = '';
+      }
+    });
+  }
+  initializeSelectPicker():void{
+    // $(this.selectElement.nativeElement).selectpicker();
+    $(this.selectElement.nativeElement).selectpicker('refresh');
   }
   getBureau(): Observable<any> {
     const url = `${this.baseUrl}/bureau`;
@@ -117,18 +174,18 @@ export class AchatComponent implements OnInit {
   //   this.formData.code = selectedArticle.code;
   // }
   onArticleSelection() {
-  // Get the selected article
-  const selectedArticle = this.filteredArticles.find(article => article.name === this.selectedValue);
-
-  // Update the code field with the selected article's code
-  this.formData.code = selectedArticle ? selectedArticle.code : '';
-
-  // If the selected article is not found in the filtered articles, set the selected value to null
-  if (!selectedArticle) {
-    this.selectedValue = null;
+    // Get the selected article
+    const selectedArticle = this.filteredArticles.find(article => article.name === this.selectedValue);
+  
+    // Update the code field with the selected article's code
+    this.formData.code = selectedArticle ? selectedArticle.code : '';
+  
+    // If the selected article is not found in the filtered articles, set the selected value to null
+    if (!selectedArticle) {
+      this.selectedValue = null;
+    }
   }
-}
-
+  
 onCodeInput() {
   // Get the article with the inputted code
   const selectedArticle = this.filteredArticles.find(article => article.code === this.formData.code);
@@ -136,12 +193,7 @@ onCodeInput() {
   // Update the selected article in the data object
   this.selectedValue = selectedArticle ? selectedArticle.name : '';
 }
-
-  
-  
-  
-
-  
+ 
 
   onSubmit(form: NgForm) {
     // Check if the form is valid

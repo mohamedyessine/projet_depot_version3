@@ -10,6 +10,8 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import {MatSelectModule} from '@angular/material/select';
 import { AuthService } from './auth.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { ListDefectieuxComponent } from './list-defectieux/list-defectieux.component';
 
 
 @NgModule({
@@ -25,11 +27,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatSelectModule
     
   ],
-  declarations: [
+  declarations: [			
     AppComponent,
     AdminLayoutComponent,
-
-  ],
+      WelcomeComponent,
+      ListDefectieuxComponent
+   ],
   providers: [
     AuthService,
   ],

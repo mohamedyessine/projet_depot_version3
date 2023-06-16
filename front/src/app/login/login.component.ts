@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
               duration: 3000,
               panelClass: ['success-snackbar'] // Add a custom class to the snackbar
             });
-            this.router.navigate(['/add-article']);
+            this.router.navigate(['/stock']);
           } else {
             // Authentication failed, show error message
             this.errorMessage = 'Invalid username or password';

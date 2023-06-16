@@ -1,9 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, Renderer2, ViewChild , EventEmitter} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+// import * as XLSX from 'xlsx';
 
-interface Bureau {
+
+interface CreateDefectueuxRequest {
+  article: number;
+  sourceBureau: number;
+  quantity: number;
+}
+ interface Article {
+  id: number;
+  name: string;
+}
+
+interface Defectieux {
+  id: number;
+  article: {
+    id: number;
+    name: string;
+  };
+  bureau: {
+    id: number;
+    name: string;
+  };
+  quantity: number;
+}
+
+
+
+interface Bureau { 
   value: string;
   viewValue: string;
 
@@ -11,9 +38,11 @@ interface Bureau {
 
 interface TableData {
   bureau: {
+    id: number;
     name: string;
   };
   article: {
+    id: number;
     name: string;
   };
   quantity: number;
@@ -33,22 +62,40 @@ interface TableFullData {
 
 }
 
+
 @Component({
   selector: 'app-stock',
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css']
 })
 export class StockComponent implements OnInit {
+  @Output() closeModalEvent = new EventEmitter<void>();
+
+
+
   private baseUrl = 'http://localhost:8080';
+  private apiUrl = 'http://localhost:8080/defectueux';
   tableData: TableData[] = [];
   tableFullData: TableFullData[] = [];
   selectedValue: string;
+  newQuantity: number;
+  selectedItem: any;
+  tableData1!: TableData;
   // Define the page and page size variables
   page = 1;
   pageSize = 10;
-
-  constructor(private http: HttpClient) { }
+  item: TableData;
+  constructor(private http: HttpClient, private renderer: Renderer2) { }
   bureaux: Bureau[] = [];
+  defectueuxCreated = false;
+  action: string;
+  setSelectedItem(item: any) {
+    this.selectedItem = item;
+  }
+  setAction(action: string) {
+    this.action = action;
+  }
+ 
   getBureau(): Observable<any> {
     const url = `${this.baseUrl}/bureau`;
     return this.http.get(url);
@@ -56,6 +103,7 @@ export class StockComponent implements OnInit {
 
   selectedDepotValue: string;
   depots: Bureau[] = [];
+
   getDepots(): Observable<any> {
     const url = `${this.baseUrl}/depots`;
     return this.http.get(url);
@@ -65,7 +113,79 @@ export class StockComponent implements OnInit {
     const url = `${this.baseUrl}/bureau/`;
     return this.http.get<Bureau[]>(url + depotId + '/bureau');
   }
-
+  closeModal() {
+    this.defectueuxCreated = false;
+    this.newQuantity = null;
+    this.closeModalEvent.emit();
+  }
+  
+  createDefectueux(articleId: number, sourceBureauId: number, quantity: number) {
+    const selectedArticleId = this.selectedItem.article.id;
+    const selectedBureauId = this.selectedItem.bureau.id;
+  
+    const request = {
+      articleId: selectedArticleId,
+      sourceBureauId: selectedBureauId,
+      quantity: quantity
+    };
+    const url = `${this.apiUrl}/add?articleId=${articleId}&sourceBureauId=${sourceBureauId}&quantity=${quantity}`;
+    this.http.post<Defectieux>(url, {}).subscribe(
+      (defectueux: Defectieux) => {
+        this.defectueuxCreated = true;
+        setTimeout(() => {
+          this.defectueuxCreated = false; // Reset the flag after a certain time (e.g., 3 seconds)
+          this.closeModal();
+          this.closeModalEvent.emit();
+        }, 3000);
+       
+        console.log('Defectueux created:', defectueux);
+        // Handle any necessary actions upon successful creation
+        this.getStock();
+       
+      },
+      (error: any) => {
+        console.error('Error creating defectueux:', error);
+        // Handle error if the creation fails
+      }
+      
+    );
+    
+  }
+  
+  
+  reparerArticle(articleId: number, sourceBureauId: number, quantity: number) {
+    const selectedArticleId = this.selectedItem.article.id;
+    const selectedBureauId = this.selectedItem.bureau.id;
+  
+    const request = {
+      articleId: selectedArticleId,
+      sourceBureauId: selectedBureauId,
+      quantity: quantity
+    };
+    const url = `${this.apiUrl}/update?articleId=${articleId}&sourceBureauId=${sourceBureauId}&quantity=${quantity}`;
+    this.http.post<Defectieux>(url, {}).subscribe(
+      (defectueux: Defectieux) => {
+        this.defectueuxCreated = true;
+        setTimeout(() => {
+          this.defectueuxCreated = false; // Reset the flag after a certain time (e.g., 3 seconds)
+          this.closeModal();
+          this.closeModalEvent.emit();
+        }, 3000);
+       
+        console.log('Article réparer:', defectueux);
+        // Handle any necessary actions upon successful creation
+        this.getStock();
+       
+      },
+      (error: any) => {
+        console.error('Error creating reparation:', error);
+        // Handle error if the creation fails
+      }
+      
+    );
+    
+  }
+  
   // getBureauxByDepot() {
   //   if (this.selectedDepotValue) {
   //     this.getAllBureauByDepot(this.selectedDepotValue).subscribe((data: any[]) => {
@@ -97,49 +217,184 @@ export class StockComponent implements OnInit {
     });
   }
 
+  
+
+
   onSubmit(form: NgForm) {
     // Do something with the form data
   }
-  getStock() {
-    const url = `${this.baseUrl}/depots/`;
-    this.http.get(url + this.selectedValue + '/articles').subscribe(
-      (data: TableData[]) => {
-        this.tableData = data;
-      },
-      (error) => {
-        console.error(error);
-        this.tableData = []; // Set the table data to an empty array to clear the table
-        // Handle the error, e.g. show an error message to the user
-      }
-    );
-  }
+  // getStock() {
+  //   const url = `${this.baseUrl}/depots/`;
+  //   this.http.get(url + this.selectedValue + '/articles').subscribe(
+  //     (data: TableData[]) => {
+  //       this.tableData = data;
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //       this.tableData = []; // Set the table data to an empty array to clear the table
+  //       // Handle the error, e.g. show an error message to the user
+  //     }
+  //   );
+  // }
+  // exportToExcel() {
+  //   if (this.selectedValue) {
+  //     const selectedDepot = this.depots.find(depot => depot.value === this.selectedValue);
+  //     const fileName = `${selectedDepot.viewValue}.xlsx`;
+  //     const url = `${this.baseUrl}/stock/${this.selectedValue}/export`;
+  //     this.http.get(url, {
+  //       responseType: 'blob' // Specify the response type as a blob
+  //     }).subscribe((response: Blob) => {
+  //       // Create a blob URL for the response
+  //       const url = window.URL.createObjectURL(response);
+
+  //       // Create a link element and set its attributes
+  //       const link = document.createElement('a');
+  //       link.href = url;
+  //       link.download = fileName;
+
+  //       // Dispatch a click event on the link to trigger the download
+  //       link.dispatchEvent(new MouseEvent('click'));
+
+  //       // Clean up the blob URL
+  //       window.URL.revokeObjectURL(url);
+  //     }, (error) => {
+  //       console.error(error);
+  //       // Handle the error, e.g. show an error message to the user
+  //     });
+  //   }
+  // }
+
+
   exportToExcel() {
-    if (this.selectedValue) {
-      const selectedDepot = this.depots.find(depot => depot.value === this.selectedValue);
-      const fileName = `${selectedDepot.viewValue}.xlsx`;
-      const url = `${this.baseUrl}/stock/${this.selectedValue}/export`;
-      this.http.get(url, {
+    let exportUrl = '';
+    let exportFileName = '';
+  
+    if (this.selectedValue === 'all') {
+
+
+      if (this.selectedDepotValue) {
+        const selectedDepot = this.depots.find(depot => depot.value === this.selectedDepotValue);
+        const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        exportUrl =  `${this.baseUrl}/stock/${this.selectedDepotValue}/exportWithDefect`;
+        exportFileName = `${selectedDepot.viewValue} ${currentDate}.xlsx`;
+      }
+    } else {
+      const selectedBureau = this.bureaux.find(depot => depot.value === this.selectedValue);
+      const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      exportUrl = `${this.baseUrl}/stock/${this.selectedValue}/exportBureau`;
+      exportFileName = `${selectedBureau.viewValue} ${currentDate}.xlsx`;
+    }
+  
+    if (exportUrl && exportFileName) {
+      this.http.get(exportUrl, {
         responseType: 'blob' // Specify the response type as a blob
-      }).subscribe((response: Blob) => {
-        // Create a blob URL for the response
-        const url = window.URL.createObjectURL(response);
-
-        // Create a link element and set its attributes
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-
-        // Dispatch a click event on the link to trigger the download
-        link.dispatchEvent(new MouseEvent('click'));
-
-        // Clean up the blob URL
-        window.URL.revokeObjectURL(url);
-      }, (error) => {
-        console.error(error);
-        // Handle the error, e.g. show an error message to the user
-      });
+      }).subscribe(
+        (response: Blob) => {
+          // Create a blob URL for the response
+          const url = window.URL.createObjectURL(response);
+  
+          // Create a link element and set its attributes
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = exportFileName;
+  
+          // Dispatch a click event on the link to trigger the download
+          link.dispatchEvent(new MouseEvent('click'));
+  
+          // Clean up the blob URL
+          window.URL.revokeObjectURL(url);
+        },
+        (error) => {
+          console.error(error);
+          // Handle the error, e.g. show an error message to the user
+        }
+      );
     }
   }
+
+  
+
+
+
+  // exportToExcel() {
+  //   let exportUrl = '';
+  //   let exportFileName = '';
+  //   let excelTitle = '';
+  
+  //   if (this.selectedValue === 'all') {
+  //     if (this.selectedDepotValue) {
+  //       const selectedDepot = this.depots.find(depot => depot.value === this.selectedDepotValue);
+  //       const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  //       exportUrl =  `${this.baseUrl}/stock/${this.selectedDepotValue}/export`;
+  //       exportFileName = `${selectedDepot.viewValue} ${currentDate}.xlsx`;
+  //       excelTitle = `Stock for ${selectedDepot.viewValue}`;
+  //     }
+  //   } else {
+  //     const selectedBureau = this.bureaux.find(depot => depot.value === this.selectedValue);
+  //     const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  //     exportUrl = `${this.baseUrl}/stock/${this.selectedValue}/exportBureau`;
+  //     exportFileName = `${selectedBureau.viewValue} ${currentDate}.xlsx`;
+  //     excelTitle = `Stock for Bureau ${selectedBureau.viewValue}`;
+  //   }
+  
+  //   if (exportUrl && exportFileName) {
+  //     this.http.get(exportUrl, {
+  //       responseType: 'blob' // Specify the response type as a blob
+  //     }).subscribe(
+  //       (response: Blob) => {
+  //         // Create a blob URL for the response
+  //         const url = window.URL.createObjectURL(response);
+    
+  //         // Create a link element and set its attributes
+  //         const link = document.createElement('a');
+  //         link.href = url;
+  //         link.download = exportFileName;
+    
+  //         // Dispatch a click event on the link to trigger the download
+  //         link.dispatchEvent(new MouseEvent('click'));
+    
+  //         // Clean up the blob URL
+  //         window.URL.revokeObjectURL(url);
+    
+  //         // Read the file using FileReader
+  //         const reader = new FileReader();
+  //         reader.onloadend = () => {
+  //           const fileData = reader.result as string;
+    
+  //           const workbook = XLSX.readFile(fileData);
+  //           const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  //           const titleCell = { t: 's', v: excelTitle };
+  //           worksheet['A1'] = titleCell;
+    
+  //           const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  //           const updatedExcelData = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    
+  //           // Create a new blob URL for the updated Excel file
+  //           const updatedUrl = window.URL.createObjectURL(updatedExcelData);
+    
+  //           // Create a link element and set its attributes for downloading the updated Excel file
+  //           const updatedLink = document.createElement('a');
+  //           updatedLink.href = updatedUrl;
+  //           updatedLink.download = exportFileName;
+    
+  //           // Dispatch a click event on the updated link to trigger the download of the updated Excel file
+  //           updatedLink.dispatchEvent(new MouseEvent('click'));
+    
+  //           // Clean up the updated blob URL
+  //           window.URL.revokeObjectURL(updatedUrl);
+  //         };
+    
+  //         reader.readAsBinaryString(response);
+  //       },
+  //       (error) => {
+  //         console.error(error);
+  //         // Handle the error, e.g. show an error message to the user
+  //       }
+  //     );
+  //   }
+  // }
+    
+  
 
   get articlesToShow(): any[] {
     const startIndex = (this.page - 1) * this.pageSize;
@@ -167,91 +422,92 @@ export class StockComponent implements OnInit {
     return Math.ceil(this.tableData.length / this.pageSize);
   }
 
-  // getStock() {
-  //   if (this.selectedValue === 'all') {
-  //     if (this.selectedDepotValue) {
-  //       this.http.get('http://localhost:8080/depots/ArticleWithQuantityAndBureau/' + this.selectedDepotValue).subscribe(
-  //         (data: TableFullData[]) => {
-  //           this.tableFullData = data;
-  //         },
-  //         (error) => {
-  //           console.error(error);
-  //           this.tableFullData = []; // Set the table data to an empty array to clear the table
-  //           // Handle the error, e.g. show an error message to the user
-  //         }
-  //       );
-  //     } else {
-  //       // Handle the case where no depot is selected
-  //       this.tableFullData = []; // Set the table data to an empty array to clear the table
-  //     }
-  //   } else {
-  //     this.http.get('http://localhost:8080/stock/bureau/' + this.selectedValue).subscribe(
-  //       (data: TableData[]) => {
-  //         this.tableData = data;
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //         this.tableData = []; // Set the table data to an empty array to clear the table
-  //         // Handle the error, e.g. show an error message to the user
-  //       }
-  //     );
-  //   }
-  // }
+  getStock() {
+    if (this.selectedValue === 'all') {
+      if (this.selectedDepotValue) {
+        this.http.get('http://localhost:8080/depots/ArticleWithQuantityAndBureau/' + this.selectedDepotValue).subscribe(
+          (data: TableFullData[]) => {
+            this.tableFullData = data;
+          },
+          (error) => {
+            console.error(error);
+            this.tableFullData = []; // Set the table data to an empty array to clear the table
+            // Handle the error, e.g. show an error message to the user
+          }
+        );
+      } else {
+        // Handle the case where no depot is selected
+        this.tableFullData = []; // Set the table data to an empty array to clear the table
+      }
+    } else {
+      this.http.get('http://localhost:8080/stock/bureau/' + this.selectedValue).subscribe(
+        (data: TableData[]) => {
+          this.tableData = data;
+        },
+        (error) => {
+          console.error(error);
+          this.tableData = []; // Set the table data to an empty array to clear the table
+          // Handle the error, e.g. show an error message to the user
+        }
+      );
+    }
+  }
 
-  // onChangeBureau() {
-  //   if (this.selectedValue === 'all') {
-  //     if (this.selectedDepotValue) {
-  //       this.http.get('http://localhost:8080/depots/ArticleWithQuantityAndBureau/' + this.selectedDepotValue).subscribe(
-  //         (data: TableFullData[]) => {
-  //           this.tableFullData = data;
-  //           this.tableData = []; // Clear the tableData array
-  //         },
-  //         (error) => {
-  //           console.error(error);
-  //           this.tableFullData = []; // Set the table data to an empty array to clear the table
-  //           this.tableData = []; // Clear the tableData array
-  //           // Handle the error, e.g. show an error message to the user
-  //         }
-  //       );
-  //     } else {
-  //       // Handle the case where no depot is selected
-  //       this.tableFullData = []; // Set the table data to an empty array to clear the table
-  //       this.tableData = []; // Clear the tableData array
-  //     }
-  //   } else {
-  //     this.tableFullData = []; // Clear the tableFullData array
-  //     this.getStock(); // Call getStock() to load data for the selected bureau
-  //   }
-  // }
-  // getBureauxByDepot() {
-  //   if (this.selectedDepotValue) {
-  //     this.getAllBureauByDepot(this.selectedDepotValue).subscribe(
-  //       (data: any[]) => {
-  //         this.bureaux = data.map(item => {
-  //           return {
-  //             value: item.id,
-  //             viewValue: item.name
-  //           };
-  //         });
-  //         this.selectedValue = 'all'; // Set the selectedValue to 'all' to display all bureaux
-  //         this.onChangeBureau(); // Call the onChangeBureau() function to load the data
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //         this.bureaux = []; // Set the bureaux array to an empty array
-  //         this.selectedValue = null; // Reset the selectedValue
-  //         this.tableFullData = []; // Set the tableFullData array to an empty array to clear the table
-  //         this.tableData = []; // Clear the tableData array
-  //         // Handle the error, e.g. show an error message to the user
-  //       }
-  //     );
-  //   } else {
-  //     this.bureaux = []; // Set the bureaux array to an empty array
-  //     this.selectedValue = null; // Reset the selectedValue
-  //     this.tableFullData = []; // Set the tableFullData array to an empty array to clear the table
-  //     this.tableData = []; // Clear the tableData array
-  //   }
-  // }
+  onChangeBureau() {
+    if (this.selectedValue === 'all') {
+      if (this.selectedDepotValue) {
+        const url = `${this.baseUrl}/depots/`;
+        this.http.get(url + this.selectedDepotValue + '/articlesWithDefect').subscribe(
+          (data: TableFullData[]) => {
+            this.tableFullData = data;
+            this.tableData = []; // Clear the tableData array
+          },
+          (error) => {
+            console.error(error);
+            this.tableFullData = []; // Set the table data to an empty array to clear the table
+            this.tableData = []; // Clear the tableData array
+            // Handle the error, e.g. show an error message to the user
+          }
+        );
+      } else {
+        // Handle the case where no depot is selected
+        this.tableFullData = []; // Set the table data to an empty array to clear the table
+        this.tableData = []; // Clear the tableData array
+      }
+    } else {
+      this.tableFullData = []; // Clear the tableFullData array
+      this.getStock(); // Call getStock() to load data for the selected bureau
+    }
+  }
+  getBureauxByDepot() {
+    if (this.selectedDepotValue) {
+      this.getAllBureauByDepot(this.selectedDepotValue).subscribe(
+        (data: any[]) => {
+          this.bureaux = data.map(item => {
+            return {
+              value: item.id,
+              viewValue: item.name
+            };
+          });
+          this.selectedValue = 'all'; // Set the selectedValue to 'all' to display all bureaux
+          this.onChangeBureau(); // Call the onChangeBureau() function to load the data
+        },
+        (error) => {
+          console.error(error);
+          this.bureaux = []; // Set the bureaux array to an empty array
+          this.selectedValue = null; // Reset the selectedValue
+          this.tableFullData = []; // Set the tableFullData array to an empty array to clear the table
+          this.tableData = []; // Clear the tableData array
+          // Handle the error, e.g. show an error message to the user
+        }
+      );
+    } else {
+      this.bureaux = []; // Set the bureaux array to an empty array
+      this.selectedValue = null; // Reset the selectedValue
+      this.tableFullData = []; // Set the tableFullData array to an empty array to clear the table
+      this.tableData = []; // Clear the tableData array
+    }
+  }
 
 
 

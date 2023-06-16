@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
 import { NgForm } from '@angular/forms';
@@ -13,6 +13,7 @@ interface Bureau {
   numero:string;
   
 }
+declare var $: any;
 
 @Component({
   selector: 'app-transfer',
@@ -40,9 +41,14 @@ export class TransferComponent implements OnInit {
   bureaux: Bureau[] = [];
   bureaux1: Bureau[] = [];
   filteredArticles: any[] = [];
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
-  
+  constructor(private http: HttpClient, private snackBar: MatSnackBar, private elementRef: ElementRef) { }
+  @ViewChild('selectElement', { static: true }) selectElement: ElementRef;
 
+  ngAfterViewInit() {
+     this.getData();
+     this.filteredArticles = this.articles;
+     this.selectedValue = ''; 
+  }
   getBureaux(): Observable<any> {
     const url = `${this.baseUrl}/bureau`;
     return this.http.get(url);
@@ -89,11 +95,11 @@ export class TransferComponent implements OnInit {
   getBureauxByDepotEmetteur() {
     this.getBureauxByDepot(this.selectedDepotValue).subscribe((bureaux: any[]) => {
       this.bureaux = bureaux;
-      if (this.bureaux.length > 0) {
-        this.sourceBureau = this.bureaux[0].value;
-      } else {
-        this.sourceBureau = null;
-      }
+      // if (this.bureaux.length > 0) {
+      //   this.sourceBureau = this.bureaux[0].value;
+      // } else {
+      //   this.sourceBureau = null;
+      // }
       // Log the selected values
       console.log('Selected Depot Emetteur:', this.selectedDepotValue);
       console.log('Selected Bureau Emetteur:', this.sourceBureau);
@@ -102,26 +108,44 @@ export class TransferComponent implements OnInit {
   
   
  getBureauxByDepotRecepteur() {
+  // if (this.selectedTargetDepotValue !== this.selectedDepotValue) {
+
   if (this.selectedTargetDepotValue !== this.selectedDepotValue) {
     this.getBureauxByDepot(this.selectedTargetDepotValue).subscribe((bureaux1: any[]) => {
       this.bureaux1 = bureaux1;
-      if (this.bureaux1.length > 0) {
-        this.targetBureau = this.bureaux1[0].value;
-      } else {
-        this.targetBureau = null;
-      }
       // Log the selected values
       console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
       console.log('Selected Bureau Recepteur:', this.targetBureau);
     });
   } else {
-    // Reset the bureaux and targetBureau if the selected depot values are the same
-    this.bureaux1 = [];
-    this.targetBureau = null;
-    // Log the selected values
-    console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
-    console.log('Selected Bureau Recepteur:', this.targetBureau);
-  }
+    this.getBureauxByDepot(this.selectedTargetDepotValue).subscribe((bureaux1: any[]) => {
+      this.bureaux1 = bureaux1;
+      const index = this.bureaux1.findIndex(bureau => bureau.value === this.sourceBureau);
+      if (index !== -1) {
+        this.bureaux1.splice(index, 1); // Remove the selected bureau emetteur from the options
+      }
+      // Check if the targetBureau is the same as the sourceBureau and reset it if necessary
+      if (this.targetBureau === this.sourceBureau) {
+        this.targetBureau = null;
+      }
+      // if (this.bureaux1.length > 0) {
+      //   this.targetBureau = this.bureaux1[0].value;
+      // } else {
+      //   this.targetBureau = null;
+      // }
+      // Log the selected values
+      console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
+      console.log('Selected Bureau Recepteur:', this.targetBureau);
+    });
+  } 
+  // else {
+  //   // Reset the bureaux and targetBureau if the selected depot values are the same
+  //   this.bureaux1 = [];
+  //   this.targetBureau = null;
+  //   // Log the selected values
+  //   console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
+  //   console.log('Selected Bureau Recepteur:', this.targetBureau);
+  // }
 }
 
   
@@ -148,11 +172,49 @@ export class TransferComponent implements OnInit {
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
+        console.log("hhh "+ this.filteredArticles);
+        
+        // $('.selectpicker').selectpicker();
+        this.populateSelect(this.filteredArticles);
+        this.initializeSelectPicker();
       },
       (error) => {
-        console.log(error);
+        console.log("error");
       }
     );
+  }
+  populateSelect(options: any[]):void{
+    console.log("fdfddfd");
+    
+    const select = this.selectElement.nativeElement;
+    console.log("khijhfdfhd " +select);
+    console.log("yaaaa " +options);
+
+    
+    options.forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option.id;
+      optionElement.text = option.name;
+      
+      
+      select.appendChild(optionElement);
+    });
+
+    select.addEventListener('change', () => {
+      const selectedOption = options.find(option => option.id.toString() === select.value.toString());
+  
+      console.log("selectedOption: ", selectedOption);
+  
+      if (selectedOption) {
+        this.data.code = selectedOption.code;
+      } else {
+        this.data.code = '';
+      }
+    });
+  }
+  initializeSelectPicker():void{
+    // $(this.selectElement.nativeElement).selectpicker();
+    $(this.selectElement.nativeElement).selectpicker('refresh');
   }
 
   onArticleSelection() {
@@ -182,7 +244,7 @@ export class TransferComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getData();
+    // this.getData();
     this.getBureaux().subscribe((data: any[]) => {
       this.bureaux = data.filter(item => item.id !== 0).map(item => {
         return {
@@ -209,8 +271,8 @@ export class TransferComponent implements OnInit {
         };
       });
     });
-    this.filteredArticles = this.articles; // Initialize the filtered articles with all articles
-    this.selectedValue = ''; // Clear the selected value initially
+    // this.filteredArticles = this.articles; // Initialize the filtered articles with all articles
+    // this.selectedValue = ''; // Clear the selected value initially
    
   }
   onSubmit(form: NgForm) {

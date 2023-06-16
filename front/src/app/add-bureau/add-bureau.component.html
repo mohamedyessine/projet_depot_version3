@@ -34,9 +34,9 @@
                       
                           <div class="col-md-4">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Numero depot" id="numero" name="numero" [(ngModel)]="formData.numero"  required>
+                              <input matInput placeholder="Code bureau" id="numero" name="numero" [(ngModel)]="formData.numero"  required>
                               <mat-error *ngIf="myForm.submitted && myForm.controls['numero'].invalid">
-                                The numero à barre must be 12 digits long and only contain numbers.
+                                The code must be as least 6 characters.
                               </mat-error>
                             </mat-form-field>
                           </div>

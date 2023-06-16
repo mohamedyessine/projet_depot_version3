@@ -20,6 +20,7 @@ export class ListeArticleComponent implements OnInit {
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
+    this.tableData = []; // Initialize tableData with an empty array
     this.getData().subscribe((data: any[]) => {
       this.tableData = data.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
     });
@@ -51,6 +52,7 @@ export class ListeArticleComponent implements OnInit {
       }
     );
   }
+
 
 
 
@@ -172,7 +174,7 @@ export class ListeArticleComponent implements OnInit {
   }
 
   exportInventaireToExcel(): void {
-    const url = `${this.baseUrl}/stock/export/articles_with_quantity`;
+    const url = `${this.baseUrl}/stock/export/articles_with_quantityAndDefect`;
     const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const fileName = `Inventaire ${currentDate}.xlsx`;
 

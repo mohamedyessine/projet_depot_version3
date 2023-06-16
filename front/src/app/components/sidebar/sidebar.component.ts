@@ -20,6 +20,7 @@ export const ROUTES: RouteInfo[] = [
   { path: '/stock', title: 'Stock',  icon:'storage', class: '' },
   { path: '/transfer', title: 'Transfert',  icon:'local_shipping', class: '' },
   { path: '/historique-transfert', title: 'Historique Transfert',  icon:'history', class: 'active-pro' },
+  { path: '/list-defect', title: 'Historique Defectieux',  icon:'history', class: 'active-pro' },
   { path: '/login', title: 'Login',  icon:'person', class: 'active-pro' },
   
   //{ path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },

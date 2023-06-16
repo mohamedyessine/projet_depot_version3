@@ -44,9 +44,9 @@ export class AddBureauComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     // Check if the form is valid
-    if (form.invalid) {
-      return;
-    }
+    // if (form.invalid) {
+    //   return;
+    // }
 
    
     const url = `${this.baseUrl}/depots/numero/`;
@@ -71,21 +71,12 @@ export class AddBureauComponent implements OnInit {
           panelClass: ['success-snackbar'] // Add a custom class to the snackbar
         });
         form.resetForm();
-      },
-      (error) => {
-        console.log(error);
-        this.snackBar.open(error.error.message, 'Close', {
+      }, error => {
+        this.snackBar.open('Ce numero de depot est dejà utilisé', 'Close', { 
           duration: 3000,
           panelClass: ['error-snackbar'] // Add a custom class to the snackbar
         });
       });
-  },
-  (error) => {
-    console.log(error);
-    this.snackBar.open(error.error.message, 'Close', {
-      duration: 3000,
-      panelClass: ['error-snackbar'] // Add a custom class to the snackbar
-    });
   });
   }
   
