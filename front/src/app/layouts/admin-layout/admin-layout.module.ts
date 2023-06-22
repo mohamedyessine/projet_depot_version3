@@ -19,6 +19,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import { AddBureauComponent } from '../../add-bureau/add-bureau.component';
+import { ListUtilisateurComponent } from 'app/list-utilisateur/list-utilisateur.component';
+import { SignupComponent } from 'app/signup/signup.component';
+import { ListDefectieuxComponent } from 'app/list-defectieux/list-defectieux.component';
+
 
 @NgModule({
   imports: [
@@ -43,7 +47,10 @@ import { AddBureauComponent } from '../../add-bureau/add-bureau.component';
     StockComponent,
     HistoriqueTransfertComponent,
     LoginComponent,
-    AddBureauComponent
+    AddBureauComponent,
+    ListUtilisateurComponent,
+    SignupComponent,
+    ListDefectieuxComponent
   ]
 })
 

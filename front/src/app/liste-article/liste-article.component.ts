@@ -174,9 +174,9 @@ export class ListeArticleComponent implements OnInit {
   }
 
   exportInventaireToExcel(): void {
-    const url = `${this.baseUrl}/stock/export/articles_with_quantityAndDefect`;
+    const url = `${this.baseUrl}/stock/export/articles_with_quantityAndDefectWithPDF`;
     const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const fileName = `Inventaire ${currentDate}.xlsx`;
+    const fileName = `Inventaire ${currentDate}.pdf`;
 
     this.http.get(url, { responseType: 'blob' }).subscribe((response: Blob) => {
       const url = window.URL.createObjectURL(response);

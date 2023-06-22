@@ -275,14 +275,14 @@ export class StockComponent implements OnInit {
       if (this.selectedDepotValue) {
         const selectedDepot = this.depots.find(depot => depot.value === this.selectedDepotValue);
         const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        exportUrl =  `${this.baseUrl}/stock/${this.selectedDepotValue}/exportWithDefect`;
-        exportFileName = `${selectedDepot.viewValue} ${currentDate}.xlsx`;
+        exportUrl =  `${this.baseUrl}/stock/${this.selectedDepotValue}/exportToPDFWithDefect`;
+        exportFileName = `${selectedDepot.viewValue} ${currentDate}.pdf`;
       }
     } else {
       const selectedBureau = this.bureaux.find(depot => depot.value === this.selectedValue);
       const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      exportUrl = `${this.baseUrl}/stock/${this.selectedValue}/exportBureau`;
-      exportFileName = `${selectedBureau.viewValue} ${currentDate}.xlsx`;
+      exportUrl = `${this.baseUrl}/stock/${this.selectedValue}/exportBureauToPDF`;
+      exportFileName = `${selectedBureau.viewValue} ${currentDate}.pdf`;
     }
   
     if (exportUrl && exportFileName) {

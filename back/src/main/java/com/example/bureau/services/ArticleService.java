@@ -1,5 +1,6 @@
 package com.example.bureau.services;
 
+import com.example.bureau.exceptions.DuplicateException;
 import com.example.bureau.models.Article;
 import com.example.bureau.models.ArticleBureau;
 import com.example.bureau.models.Bureau;
@@ -7,10 +8,15 @@ import com.example.bureau.models.Depot;
 import com.example.bureau.repo.ArticleBureauRepo;
 import com.example.bureau.repo.ArticleRepo;
 import com.example.bureau.repo.DepotRepo;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -97,6 +103,22 @@ public class ArticleService {
         return articleRepo.save(article);
     }
 
+   /* public Article addArticle(Article article, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Check if the authenticated user has the "ROLE_ADMIN" or "ROLE_USER" authority
+            if (authentication.getAuthorities().stream().anyMatch(auth ->
+                    auth.getAuthority().equals("ROLE_ADMIN") || auth.getAuthority().equals("ROLE_USER"))) {
+                // User is authorized, save the article
+                return articleRepo.save(article);
+            } else {
+                throw new DuplicateException("Only admin or user roles are allowed to add articles.");
+            }
+        } else {
+            throw new DuplicateException("Authentication required to add articles.");
+        }
+    }*/
+
+
     public Article findById(Long id) {
         return articleRepo.findById(id).orElse(null);
     }
@@ -149,6 +171,54 @@ public class ArticleService {
        /* int updatedDepotQuantity = depot.getQuantity() + targetArticleBureauQuantity;
         depot.setQuantity(updatedDepotQuantity);
         depotRepo.save(depot);*/
+    }
+
+
+    public void exportAllArticleToPDF() {
+        // Retrieve all articles from the database
+        List<Article> articles = getAllArticles();
+
+        // Create a new PDF document
+        Document document = new Document();
+        try {
+            // Specify the output file path
+            String outputPath = "D:\\projet_depot_version3\\front\\export\\export." +
+                    "pdf";
+
+            // Create a new PDF writer with the document and output file
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+
+            // Open the document
+            document.open();
+
+            // Create a new PDF table with 3 columns
+            PdfPTable table = new PdfPTable(3);
+
+            // Add table headers
+            table.addCell("Name");
+            table.addCell("Lebelle");
+            table.addCell("Code");
+
+            // Add article data to the table
+            for (Article article : articles) {
+                table.addCell(article.getName());
+                table.addCell(article.getLebelle());
+                table.addCell(article.getCode());
+            }
+
+            // Add the table to the document
+            document.add(table);
+
+            // Close the document
+            document.close();
+
+            // Close the PDF writer
+            writer.close();
+
+            System.out.println("PDF export complete. Output file: " + outputPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

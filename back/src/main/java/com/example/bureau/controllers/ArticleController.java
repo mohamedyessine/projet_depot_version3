@@ -8,12 +8,14 @@ import com.example.bureau.exceptions.ResourceNotFoundException;
 import com.example.bureau.models.Article;
 import com.example.bureau.models.Bureau;
 import com.example.bureau.payload.request.ArticleBureauRequest;
+import com.example.bureau.payload.response.ResponseExport;
 import com.example.bureau.services.ArticleService;
 import com.example.bureau.services.BureauService;
 import com.example.bureau.services.DepotService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -151,6 +153,22 @@ public class ArticleController {
             return ResponseEntity.badRequest().body("Error uploading file: " + e.getMessage());
         }
     }
+    @GetMapping("/exportToPDF")
+    public ResponseEntity<Object> exportArticlesToPDF() {
+        try {
+            // Call the exportAllArticleToPDF method from the service
+            articleService.exportAllArticleToPDF();
 
+            // Build the success response
+            String message = "Articles exported to PDF successfully";
+            return new ResponseEntity<>(new ResponseExport(true, message), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            // Build the error response
+            String message = "Failed to export articles to PDF";
+            return new ResponseEntity<>(new ResponseExport(false, message), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

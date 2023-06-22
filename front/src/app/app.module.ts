@@ -11,7 +11,9 @@ import {MatSelectModule} from '@angular/material/select';
 import { AuthService } from './auth.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { WelcomeComponent } from './welcome/welcome.component';
-import { ListDefectieuxComponent } from './list-defectieux/list-defectieux.component';
+// import { ListDefectieuxComponent } from './list-defectieux/list-defectieux.component';
+// import { ListUtilisateurComponent } from './list-utilisateur/list-utilisateur.component';
+// import { SignupComponent } from './signup/signup.component';
 
 
 @NgModule({
@@ -27,11 +29,13 @@ import { ListDefectieuxComponent } from './list-defectieux/list-defectieux.compo
     MatSelectModule
     
   ],
-  declarations: [			
+  declarations: [					
     AppComponent,
     AdminLayoutComponent,
       WelcomeComponent,
-      ListDefectieuxComponent
+      // ListDefectieuxComponent,
+      // ListUtilisateurComponent,
+      // SignupComponent
    ],
   providers: [
     AuthService,

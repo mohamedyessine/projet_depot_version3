@@ -11,6 +11,8 @@ import { HistoriqueTransfertComponent } from '../../historique-transfert/histori
 import { LoginComponent } from '../../login/login.component';
 import { AddBureauComponent } from '../../add-bureau/add-bureau.component';
 import { ListDefectieuxComponent } from 'app/list-defectieux/list-defectieux.component';
+import { SignupComponent } from 'app/signup/signup.component';
+import { ListUtilisateurComponent } from 'app/list-utilisateur/list-utilisateur.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -55,7 +57,7 @@ export const AdminLayoutRoutes: Routes = [
     //         component: UpgradeComponent
     //     }]
     // }
-    { path: 'dashboard',      component: DashboardComponent },
+    // { path: 'dashboard',      component: DashboardComponent },
     { path: 'add-article',    component: AddArticleComponent },
     { path: 'add-depot',     component: AddDepotComponent },
     { path: 'add-bureau',     component: AddBureauComponent },
@@ -66,4 +68,8 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'historique-transfert',        component: HistoriqueTransfertComponent },
     { path: 'list-defect',        component: ListDefectieuxComponent },
     { path: 'login',        component: LoginComponent },
+    { path: 'signup',        component: SignupComponent },
+    { path: 'liste-users',          component: ListUtilisateurComponent },
+
+
 ];

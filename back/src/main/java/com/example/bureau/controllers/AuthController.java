@@ -5,8 +5,11 @@ import com.example.bureau.exceptions.EmailTakenException;
 import com.example.bureau.exceptions.InvalidEmailException;
 import com.example.bureau.exceptions.PasswordTooLongException;
 import com.example.bureau.exceptions.UsernameTakenException;
+import com.example.bureau.models.Depot;
+import com.example.bureau.models.User;
 import com.example.bureau.payload.request.LoginRequest;
 import com.example.bureau.payload.request.SignupRequest;
+import com.example.bureau.payload.response.ApiResponse;
 import com.example.bureau.payload.response.JwtResponse;
 import com.example.bureau.payload.response.MessageResponse;
 import com.example.bureau.repo.RoleRepo;
@@ -16,6 +19,7 @@ import com.example.bureau.security.services.UserDetailsImpl;
 import com.example.bureau.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,6 +63,18 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
+    @GetMapping
+    public List<User> getAllDepots() {
+        return authService.findAllUser();
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
+        authService.deleteUserById(userId);
+        ApiResponse response = new ApiResponse("User deleted successfully.", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -84,7 +100,23 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         try {
             authService.registerUser(signUpRequest);
-            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+            // Authenticate the newly registered user
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(signUpRequest.getUsername(), signUpRequest.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
         } catch (UsernameTakenException e) {
             return ResponseEntity.ok(new MessageResponse("Error: Username is already taken!"));
         } catch (EmailTakenException e) {

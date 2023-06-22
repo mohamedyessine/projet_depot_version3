@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,6 +86,13 @@ public class AuthService {
         Pattern pattern = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+    public List<User> findAllUser(){
+        return userRepo.findAll();
+    }
+
+    public void deleteUserById(Long userId) {
+        userRepo.deleteById(userId);
     }
 
 }

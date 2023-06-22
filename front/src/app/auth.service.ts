@@ -3,6 +3,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+// import * as bcrypt from 'bcryptjs';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,36 @@ export class AuthService {
         })
       );
   }
+// Encrypt the password using bcrypt
+// private encryptPassword(password: string): string {
+//   const saltRounds = 10; // Number of salt rounds to use (recommended value: 10)
+//   const salt = bcrypt.genSaltSync(saltRounds);
+//   const encryptedPassword = bcrypt.hashSync(password, salt);
+//   return encryptedPassword;
+// }
+signup(username: string, password: string, email: string): Observable<boolean> {
+  return this.http.post('http://localhost:8080/api/auth/signup', { username, password, email })
+    .pipe(
+      map((response: any) => {
+        const token = response.accessToken;
+        if (token) {
+          // localStorage.setItem('currentUser', JSON.stringify({ username, token }));
+          // this.isAuthenticatedSubject.next(true);
+          return true;
+        } else {
+          return false;
+        }
+      }),
+      catchError((error) => {
+        console.error('Error during signup:', error);
+        return of(false);
+      })
+    );
+}
+deleteUserById(userId: number): Observable<void> {
+  const url = `http://localhost:8080/api/auth/${userId}`;
+  return this.http.delete<void>(url);
+}
 
   logout(): void {
     // remove user from local storage to log user out

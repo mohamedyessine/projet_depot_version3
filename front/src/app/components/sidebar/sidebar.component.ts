@@ -21,8 +21,9 @@ export const ROUTES: RouteInfo[] = [
   { path: '/transfer', title: 'Transfert',  icon:'local_shipping', class: '' },
   { path: '/historique-transfert', title: 'Historique Transfert',  icon:'history', class: 'active-pro' },
   { path: '/list-defect', title: 'Historique Defectieux',  icon:'history', class: 'active-pro' },
+  { path: '/liste-users', title: 'Liste des utilisateur',  icon:'list', class: '' },
   { path: '/login', title: 'Login',  icon:'person', class: 'active-pro' },
-  
+
   //{ path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
   //{ path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
   //{ path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },

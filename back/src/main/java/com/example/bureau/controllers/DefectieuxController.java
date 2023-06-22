@@ -117,7 +117,7 @@ public class DefectieuxController {
     }*/
    @PostMapping("/update")
    @ResponseBody
-   public ResponseEntity<Map<String, Object>> updateReparation( 
+   public ResponseEntity<Map<String, Object>> updateReparation(
            @RequestParam("articleId") Long articleId,
            @RequestParam("sourceBureauId") Long sourceBureauId,
            @RequestParam("quantity") int quantity) {

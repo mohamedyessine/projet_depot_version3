@@ -8,11 +8,18 @@ import com.example.bureau.payload.request.ArticleWithQuantity;
 import com.example.bureau.repo.ArticleBureauRepo;
 import com.example.bureau.repo.BureauRepo;
 import com.example.bureau.repo.DepotRepo;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -127,6 +134,136 @@ public class StockService {
         }
     }
 
+   /* public void exportArticlesWithQuantityAndDefectToPDFByDepotId(Long depotId, HttpServletResponse response) throws IOException, DocumentException, SQLException {
+        Depot depot = depotRepo.findById(depotId).orElse(null);
+        if (depot == null) {
+            // Handle the case when depot is not found
+            return;
+        }
+
+        List<ArticleWithQuantities> articlesWithQuantity = depotService.findAllArticlesWithQuantityAndQuantityDefectByDepotId(depotId);
+
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+
+        // Set response headers
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + depot.getName() + ".pdf");
+
+        document.open();
+
+        // Create a new PDF table with 3 columns
+        PdfPTable table = new PdfPTable(3);
+
+        // Set column widths
+        table.setWidths(new float[]{3, 2, 2});
+
+        // Add table headers
+        table.addCell("Article Name");
+        table.addCell("Quantity");
+        table.addCell("Quantity Defectieux");
+
+        // Populate data rows
+        for (ArticleWithQuantities articleWithQuantity : articlesWithQuantity) {
+            table.addCell(articleWithQuantity.getArticle().getName());
+            table.addCell(String.valueOf(articleWithQuantity.getQuantity()));
+            table.addCell(String.valueOf(articleWithQuantity.getQuantityDefect()));
+        }
+
+        // Add the table to the document
+        document.add(table);
+
+        // Close the document
+        document.close();
+    }*/
+
+    public void exportArticlesWithQuantityAndDefectToPDFByDepotId(Long depotId, HttpServletResponse response) throws IOException, DocumentException, SQLException {
+        Depot depot = depotRepo.findById(depotId).orElse(null);
+        if (depot == null) {
+            // Handle the case when depot is not found
+            return;
+        }
+
+        List<ArticleWithQuantities> articlesWithQuantity = depotService.findAllArticlesWithQuantityAndQuantityDefectByDepotId(depotId);
+
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+
+        // Set response headers
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + depot.getName() + ".pdf");
+
+        document.open();
+
+        // Create a title paragraph with blue color
+        Paragraph title = new Paragraph();
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.setSpacingAfter(30f); // Add spacing after the title
+
+        // Add image1 at the left of the title
+        Image image1 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg"); // Replace with the path to your image1
+        image1.scaleToFit(50, 50); // Adjust the width and height of image1
+        title.add(new Chunk(image1, 0, -20));
+
+        // Add title text with black color
+        Chunk titleText = new Chunk("Inventory of " + depot.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
+        title.add(titleText);
+
+        // Add image2 at the right of the title
+        Image image2 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png"); // Replace with the path to your image2
+        image2.scaleToFit(50, 50); // Adjust the width and height of image2
+        title.add(new Chunk(image2, 0, -20));
+
+        // Add spacing between the title and the table
+        title.setSpacingAfter(40f);
+
+        // Add the title to the document
+        document.add(title);
+
+        // Create a new PDF table with 3 columns
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100); // Set table width to 100% of the document
+
+        // Set column widths
+        table.setWidths(new float[]{2, 2, 2});
+
+        // Add table headers
+        PdfPCell headerCell = new PdfPCell();
+        headerCell.setBackgroundColor(BaseColor.GRAY);
+        headerCell.setPhrase(new Phrase("Article Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Defective Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        // Populate data rows
+        PdfPCell dataCell = new PdfPCell();
+        dataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        dataCell.setPadding(5);
+        dataCell.setNoWrap(true);
+
+        for (ArticleWithQuantities articleWithQuantity : articlesWithQuantity) {
+            dataCell.setPhrase(new Phrase(articleWithQuantity.getArticle().getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+            table.addCell(dataCell);
+
+            dataCell.setPhrase(new Phrase(String.valueOf(articleWithQuantity.getQuantity()), new Font(Font.FontFamily.HELVETICA, 8)));
+            table.addCell(dataCell);
+
+            dataCell.setPhrase(new Phrase(String.valueOf(articleWithQuantity.getQuantityDefect()), new Font(Font.FontFamily.HELVETICA, 8)));
+            table.addCell(dataCell);
+        }
+
+        // Add the table to the document
+        document.add(table);
+
+        // Close the document
+        document.close();
+    }
+
+
     public void exportArticlesWithQuantityToExcelByBureauId(Long bureauId, HttpServletResponse response) throws IOException {
         Bureau bureau = bureauRepo.findById(bureauId).orElse(null);
         if (bureau == null) {
@@ -171,6 +308,105 @@ public class StockService {
             throw e;
         }
     }
+
+
+
+
+    public void exportArticlesWithQuantityToPDFByBureauId(Long bureauId, HttpServletResponse response) throws IOException, DocumentException {
+        Bureau bureau = bureauRepo.findById(bureauId).orElse(null);
+        if (bureau == null) {
+            // Handle the case when bureau is not found
+            return;
+        }
+
+        List<ArticleBureau> articleBureaux = articleBureauRepo.findByBureauId(bureauId);
+
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+
+        // Set response headers
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + bureau.getName() + ".pdf");
+
+        document.open();
+
+        // Create a title paragraph with blue color
+        Paragraph title = new Paragraph();
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.setSpacingAfter(30f); // Add spacing after the title
+
+
+        // Add image1 at the left of the title
+        Image image1 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg"); // Replace with the path to your image1
+        image1.scaleToFit(50, 50); // Adjust the width and height of image1
+        title.add(new Chunk(image1, 0, -20));
+
+        // Add title text with blue color
+        Chunk titleText = new Chunk("Inventaire of" + bureau.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
+        title.add(titleText);
+
+        // Add image2 at the right of the title
+        Image image2 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png"); // Replace with the path to your image2
+        image2.scaleToFit(50, 50); // Adjust the width and height of image2
+        title.add(new Chunk(image2, 0, -20));
+
+        // Add spacing between the title and the table
+        title.setSpacingAfter(40f);
+
+        // Add the title to the document
+        document.add(title);
+
+        // Create a new PDF table with 4 columns
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100); // Set table width to 100% of the document
+
+        // Set column widths
+        table.setWidths(new float[]{ 7, 3, 3});
+
+        // Add table headers with color
+        PdfPCell headerCell = new PdfPCell();
+        headerCell.setBackgroundColor(BaseColor.GRAY);
+//        headerCell.setPhrase(new Phrase("Bureau Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+//        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Article Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Defectieux", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        // Populate data rows with styled cells
+        PdfPCell dataCell = new PdfPCell();
+        dataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        dataCell.setPadding(5);
+        dataCell.setNoWrap(true);
+
+        for (ArticleBureau articleBureau : articleBureaux) {
+//            dataCell.setPhrase(new Phrase(bureau.getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+//            table.addCell(dataCell);
+
+            dataCell.setPhrase(new Phrase(articleBureau.getArticle().getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+            table.addCell(dataCell);
+
+            dataCell.setPhrase(new Phrase(String.valueOf(articleBureau.getQuantity()), new Font(Font.FontFamily.HELVETICA, 8)));
+            table.addCell(dataCell);
+
+            dataCell.setPhrase(new Phrase(String.valueOf(articleBureau.getQuantityDefect()), new Font(Font.FontFamily.HELVETICA, 8)));
+            table.addCell(dataCell);
+        }
+
+        // Add the table to the document
+        document.add(table);
+
+        // Close the document
+        document.close();
+    }
+
+
+
 
 
     public void exportsArticlesWithQuantityToExcelByDepotId(Long depotId, HttpServletResponse response) throws IOException, SQLException {
@@ -311,11 +547,168 @@ public class StockService {
             throw e;
         }
     }
+
+  /*  public void exportsAllArticlesWithQuantityAndQuantityDefectToPDFByAllDepotId(HttpServletResponse response) throws IOException, DocumentException, SQLException {
+        List<Depot> depots = depotRepo.findAll();
+        if (depots.isEmpty()) {
+            // Handle the case when no depots are found
+            return;
+        }
+
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+
+        // Set response headers
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=Inventaire " + getCurrentDateAsString() + ".pdf");
+
+        document.open();
+
+        // Create a new PDF table with 4 columns
+        PdfPTable table = new PdfPTable(4);
+
+        // Set column widths
+        table.setWidths(new float[]{2, 3, 2, 2});
+
+        // Add table headers
+        table.addCell("Depot Name");
+        table.addCell("Article Name");
+        table.addCell("Quantity");
+        table.addCell("Quantity Defectieux");
+
+        // Populate data rows
+        for (Depot depot : depots) {
+            List<ArticleWithQuantities> articlesWithQuantity = depotService.findAllArticlesWithQuantityAndQuantityDefectByDepotId(depot.getId());
+            if (articlesWithQuantity.isEmpty()) {
+                // Skip the depot if it doesn't have any articles
+                continue;
+            }
+
+            for (ArticleWithQuantities articleWithQuantity : articlesWithQuantity) {
+                table.addCell(depot.getName());
+                table.addCell(articleWithQuantity.getArticle().getName());
+                table.addCell(String.valueOf(articleWithQuantity.getQuantity()));
+                table.addCell(String.valueOf(articleWithQuantity.getQuantityDefect()));
+            }
+        }
+
+        // Add the table to the document
+        document.add(table);
+
+        // Close the document
+        document.close();
+    }*/
+
+    public void exportsAllArticlesWithQuantityAndQuantityDefectToPDFByAllDepotId(HttpServletResponse response) throws IOException, DocumentException, SQLException {
+        List<Depot> depots = depotRepo.findAll();
+        if (depots.isEmpty()) {
+            // Handle the case when no depots are found
+            return;
+        }
+
+        Document document = new Document();
+        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+
+        // Set response headers
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=Inventaire " + getCurrentDateAsString() + ".pdf");
+
+        document.open();
+
+        // Create a title paragraph with blue color
+        Paragraph title = new Paragraph();
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.setSpacingAfter(30f); // Add spacing after the title
+
+        // Add image1 at the left of the title
+        Image image1 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg"); // Replace with the path to your image1
+        image1.scaleToFit(50, 50); // Adjust the width and height of image1
+        title.add(new Chunk(image1, 0, -20));
+
+        // Add title text with black color
+        Chunk titleText = new Chunk("Full Inventory", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
+        title.add(titleText);
+
+        // Add image2 at the right of the title
+        Image image2 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png"); // Replace with the path to your image2
+        image2.scaleToFit(50, 50); // Adjust the width and height of image2
+        title.add(new Chunk(image2, 0, -20));
+
+        // Add spacing between the title and the table
+        title.setSpacingAfter(40f);
+
+        // Add the title to the document
+        document.add(title);
+
+        // Create a new PDF table with 4 columns
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100); // Set table width to 100% of the document
+
+        // Set column widths
+        table.setWidths(new float[]{8, 7, 3, 3, 3});
+
+        // Add table headers with color
+        PdfPCell headerCell = new PdfPCell();
+        headerCell.setBackgroundColor(BaseColor.GRAY);
+        headerCell.setPhrase(new Phrase("Depot Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Article Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Article Code", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        headerCell.setPhrase(new Phrase("Defective", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        table.addCell(headerCell);
+
+        // Populate data rows with styled cells
+        PdfPCell dataCell = new PdfPCell();
+        dataCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        dataCell.setPadding(5);
+        dataCell.setNoWrap(true);
+
+        for (Depot depot : depots) {
+            List<ArticleWithQuantities> articlesWithQuantity = depotService.findAllArticlesWithQuantityAndQuantityDefectByDepotId(depot.getId());
+            if (articlesWithQuantity.isEmpty()) {
+                // Skip the depot if it doesn't have any articles
+                continue;
+            }
+
+            for (ArticleWithQuantities articleWithQuantity : articlesWithQuantity) {
+                dataCell.setPhrase(new Phrase(depot.getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+                table.addCell(dataCell);
+
+                dataCell.setPhrase(new Phrase(articleWithQuantity.getArticle().getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+                table.addCell(dataCell);
+
+                dataCell.setPhrase(new Phrase(articleWithQuantity.getArticle().getCode(), new Font(Font.FontFamily.HELVETICA, 8)));
+                table.addCell(dataCell);
+
+                dataCell.setPhrase(new Phrase(String.valueOf(articleWithQuantity.getQuantity()), new Font(Font.FontFamily.HELVETICA, 8)));
+                table.addCell(dataCell);
+
+                dataCell.setPhrase(new Phrase(String.valueOf(articleWithQuantity.getQuantityDefect()), new Font(Font.FontFamily.HELVETICA, 8)));
+                table.addCell(dataCell);
+            }
+        }
+
+        // Add the table to the document
+        document.add(table);
+
+        // Close the document
+        document.close();
+    }
+
     private String getCurrentDateAsString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date currentDate = new Date();
         return dateFormat.format(currentDate);
     }
+
 
 
 
