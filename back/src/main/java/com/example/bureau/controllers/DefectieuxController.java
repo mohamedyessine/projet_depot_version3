@@ -4,7 +4,8 @@ package com.example.bureau.controllers;
 import com.example.bureau.models.Article;
 import com.example.bureau.models.Bureau;
 import com.example.bureau.models.Defectieux;
-import com.example.bureau.payload.request.CreateDefectueuxRequest;
+import com.example.bureau.payload.response.ApiResponse;
+import com.example.bureau.payload.response.ErrorResponse;
 import com.example.bureau.repo.ArticleRepo;
 import com.example.bureau.repo.BureauRepo;
 import com.example.bureau.services.ArticleService;
@@ -13,6 +14,7 @@ import com.example.bureau.services.DefectieuxService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -60,22 +62,26 @@ public class DefectieuxController {
    }*/
 
     @PostMapping("/add")
-    public ResponseEntity<Defectieux> createDefectueux(@RequestParam Long articleId,
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> createDefectueux(@RequestParam Long articleId,
                                                        @RequestParam Long sourceBureauId,
                                                        @RequestParam int quantity) {
         if (quantity <= 0) {
-            return ResponseEntity.badRequest().body(null);
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid quantity");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
+
         try {
             Defectieux defectueux = defectieuxService.createDefectueux(articleId, sourceBureauId, quantity);
             return ResponseEntity.ok(defectueux);
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Entity not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid request");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
-
 
    /* @PostMapping("/reparation")
     public ResponseEntity<String> updateReparation(@RequestBody ReparationRequest request) {
@@ -116,13 +122,14 @@ public class DefectieuxController {
         }
     }*/
    @PostMapping("/update")
+   @PreAuthorize("hasRole('ROLE_USER')")
    @ResponseBody
-   public ResponseEntity<Map<String, Object>> updateReparation(
-           @RequestParam("articleId") Long articleId,
-           @RequestParam("sourceBureauId") Long sourceBureauId,
-           @RequestParam("quantity") int quantity) {
+   public ResponseEntity<?> updateReparation(@RequestParam("articleId") Long articleId,
+                                             @RequestParam("sourceBureauId") Long sourceBureauId,
+                                             @RequestParam("quantity") int quantity) {
        if (quantity <= 0) {
-           return ResponseEntity.badRequest().body(null);
+           ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid quantity");
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
        }
 
        try {
@@ -131,27 +138,22 @@ public class DefectieuxController {
 
            defectieuxService.updateReparation(article, sourceBureau, quantity);
 
-           // Create a map to hold the response data
+           // Create a map to hold the success response data
            Map<String, Object> response = new HashMap<>();
            response.put("status", "success");
            response.put("message", "Reparation updated successfully");
            return ResponseEntity.ok(response);
        } catch (EntityNotFoundException e) {
-           // Create a map to hold the error response data
-           Map<String, Object> response = new HashMap<>();
-           response.put("status", "error");
-           response.put("message", "Article or Bureau not found");
-           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+           ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Article or Bureau not found");
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
        } catch (IllegalArgumentException e) {
-           // Create a map to hold the error response data
-           Map<String, Object> response = new HashMap<>();
-           response.put("status", "error");
-           response.put("message", e.getMessage());
-           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+           ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
        }
    }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<Defectieux> getAllDefectieux() {
         return defectieuxService.getAllDefectieux();
     }

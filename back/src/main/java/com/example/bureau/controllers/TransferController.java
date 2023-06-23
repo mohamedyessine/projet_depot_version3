@@ -14,6 +14,7 @@ import com.example.bureau.services.BureauService;
 import com.example.bureau.services.TransferService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -43,10 +44,13 @@ public class TransferController {
 
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<Transfer> getAllTransfers() {
         return transferService.getAllTransfers();
     }
+
     @PostMapping("/transfer")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Map<String, String>> transfer(@RequestBody TransferRequest request) {
         Article article = articleService.findById(request.getArticleId());
         Bureau targetDepot = bureauService.findById(request.getTargetBureauId());
@@ -69,6 +73,7 @@ public class TransferController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Map<String, String>> transferArticles(@RequestBody TransferRequest transferRequest) {
         Article article = articleRepo.findById(transferRequest.getArticleId()).orElse(null);
         Bureau sourceBureau = bureauRepo.findById(transferRequest.getSourceBureauId()).orElse(null);

@@ -10,6 +10,9 @@ import com.example.bureau.models.User;
 import com.example.bureau.payload.request.SignupRequest;
 import com.example.bureau.repo.RoleRepo;
 import com.example.bureau.repo.UserRepo;
+import com.example.bureau.security.jwt.JwtUtils;
+import com.example.bureau.security.services.UserDetailsImpl;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +29,13 @@ public class AuthService {
     private final RoleRepo roleRepo;
 
     private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
 
-    public AuthService(UserRepo userRepo, RoleRepo roleRepo, PasswordEncoder encoder) {
+    public AuthService(UserRepo userRepo, RoleRepo roleRepo, PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
     }
 
     public void registerUser(SignupRequest signUpRequest) throws UsernameTakenException, EmailTakenException, InvalidEmailException, PasswordTooLongException {
@@ -95,5 +100,20 @@ public class AuthService {
         userRepo.deleteById(userId);
     }
 
+    public boolean isUserExists(String username, String email) {
+        return userRepo.existsByUsernameOrEmail(username, email);
+    }
+    public UserDetailsImpl getUser(String token) {
+        String username = jwtUtils.getUserNameFromJwtToken(token);
+        String email = jwtUtils.getEmailFromJwtToken(token);
+
+        // Assuming you have a method to retrieve the user based on the username or email
+        User user = userRepo.findByUsernameOrEmail(username, email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return UserDetailsImpl.build(user);
+    }
 }
 

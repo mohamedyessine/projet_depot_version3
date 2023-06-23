@@ -43,6 +43,7 @@ public class ArticleController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Article addArticle(@RequestBody Article article) {
 
         // Check if any field contains only spaces
@@ -67,10 +68,13 @@ public class ArticleController {
 
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<Article> getAllArticles() {
         return articleService.getAllArticles();
     }
+
     @GetMapping("/{articleId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Article> findById(@PathVariable Long articleId) {
         Article article = articleService.findById(articleId);
         if (article == null) {
@@ -80,6 +84,7 @@ public class ArticleController {
     }
 
     @PostMapping("/code")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getByCode(@RequestBody Map<String, Object> requestBody) {
         String articleCode = String.valueOf(requestBody.get("code").toString());
         Article article = articleService.findByCode(articleCode);
@@ -93,6 +98,7 @@ public class ArticleController {
         }
     }
     @GetMapping("/articles/{code}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getByCode(@PathVariable("code") String code) {
         Article article = articleService.findByCode(code);
 
@@ -106,6 +112,7 @@ public class ArticleController {
     }
 
     @PostMapping("/add-to-depot--general")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ArticleBureauResponse> addArticleToDepot(@RequestBody ArticleBureauRequest request) {
         Article article = articleService.findById(request.getArticleId());
         Bureau bureau = bureauService.findById(request.getBureauId());
@@ -123,7 +130,13 @@ public class ArticleController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ArticleBureauResponse> addArticleToBureauAboutDepot(@RequestBody ArticleBureauRequest request) {
+
+        // Validate quantity
+        if (request.getQuantity() <= 0) {
+            return ResponseEntity.badRequest().body(new ArticleBureauResponse("Quantity must be greater than zero", 400, "Bad Request"));
+        }
         Article article = articleService.findById(request.getArticleId());
         Bureau bureau = bureauService.findById(request.getBureauId());
         Depot depot = depotService.findById(request.getDepotId());
@@ -143,6 +156,7 @@ public class ArticleController {
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
 
         try {
@@ -154,6 +168,7 @@ public class ArticleController {
         }
     }
     @GetMapping("/exportToPDF")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> exportArticlesToPDF() {
         try {
             // Call the exportAllArticleToPDF method from the service

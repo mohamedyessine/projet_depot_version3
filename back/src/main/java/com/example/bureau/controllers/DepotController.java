@@ -12,6 +12,7 @@ import com.example.bureau.payload.request.ArticleWithQuantityAndBureau;
 import com.example.bureau.services.DepotService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +32,7 @@ public class DepotController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Depot addDepot(@RequestBody Depot depot) {
         // Check if any field contains only spaces
         if (containsOnlySpaces(depot)) {
@@ -64,15 +66,18 @@ public class DepotController {
     }*/
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<Depot> getAllDepots() {
         return depotService.getAllDepots();
     }
     @GetMapping("/{depotId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Depot findById(@PathVariable Long depotId) {
         return depotService.findById(depotId);
     }
 
     @PostMapping("/numero")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getByNumero(@RequestBody Map<String, Object> requestBody) {
         String depotNumero = String.valueOf(requestBody.get("numero").toString());
         Depot depot = depotService.findByNumero(depotNumero);
@@ -86,6 +91,7 @@ public class DepotController {
         }
     }
     @GetMapping("/numero/{depotNumero}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getByNumero(@PathVariable String depotNumero) {
         Depot depot = depotService.findByNumero(depotNumero);
 
@@ -99,6 +105,7 @@ public class DepotController {
     }
 
     @PostMapping("/name")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> findDepotsByNameContaining(@RequestBody Map<String, String> request) {
         String name = request.get("name");
         List<Depot> depots = depotService.findDepotsByNameContaining(name);
@@ -111,31 +118,37 @@ public class DepotController {
         return ResponseEntity.ok(depots);
     }
     @GetMapping("/depot/{depotId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Article>> findAllArticlesByDepotId(@PathVariable Long depotId) {
         List<Article> articles = depotService.findAllArticlesByDepotId(depotId);
         return ResponseEntity.ok(articles);
     }
 
     @GetMapping("/{depotId}/allQte")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Integer> getAllQteForDepot(@PathVariable Long depotId) {
         int totalQuantity = depotService.getAllQte(depotId);
         return ResponseEntity.ok(totalQuantity);
     }
     @GetMapping("/{depotId}/articles")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<ArticleWithQuantity> findAllArticlesWithQuantityByDepotId(@PathVariable Long depotId) {
         return depotService.findAllArticlesWithQuantityByDepotId(depotId);
     }
     @GetMapping("/{depotId}/articlesWithDefect")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<ArticleWithQuantities> findAllArticlesWithQuantityAndQuantityDefectByDepotId(@PathVariable Long depotId) {
         return depotService.findAllArticlesWithQuantityAndQuantityDefectByDepotId(depotId);
     }
 
     @GetMapping("/ArticleWithQuantityAndBureau/{depotId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<ArticleWithQuantityAndBureau> getArticlesWithQuantityAndBureauByDepotId(@PathVariable Long depotId) {
         return depotService.findAllArticlesWithQuantityAndBureauByDepotId(depotId);
     }
 
     @PostMapping("/upload")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
 
         try {

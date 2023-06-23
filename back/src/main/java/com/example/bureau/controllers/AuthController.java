@@ -25,6 +25,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -143,5 +144,23 @@ public class AuthController {
         }
         return ResponseEntity.ok(new MessageResponse("User logged out successfully!"));
     }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> checkUserExists(@RequestParam String username, @RequestParam String email) {
+        boolean userExists = authService.isUserExists(username, email);
+        return ResponseEntity.ok(userExists);
+    }
+
+    @GetMapping("/user-details")
+    public ResponseEntity<UserDetailsImpl> getUserDetails(@RequestParam("token") String token) {
+        try {
+            UserDetailsImpl userDetails = authService.getUser(token);
+            return ResponseEntity.ok(userDetails);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    // Helper method to map UserDetailsImpl to UserDetailsDto
+
 
 }

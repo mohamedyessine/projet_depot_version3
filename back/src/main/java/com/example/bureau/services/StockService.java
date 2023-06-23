@@ -45,7 +45,8 @@ public class StockService {
         this.bureauRepo = bureauRepo;
         this.bureauService = bureauService;
     }
-
+    String image1Filename = "D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg";
+    String image2Filename = "D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png";
     public List<ArticleBureau> getAllStock() {
         return articleBureauRepo.findAll();
     }
@@ -201,7 +202,7 @@ public class StockService {
         title.setSpacingAfter(30f); // Add spacing after the title
 
         // Add image1 at the left of the title
-        Image image1 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg"); // Replace with the path to your image1
+        Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
         image1.scaleToFit(50, 50); // Adjust the width and height of image1
         title.add(new Chunk(image1, 0, -20));
 
@@ -210,7 +211,7 @@ public class StockService {
         title.add(titleText);
 
         // Add image2 at the right of the title
-        Image image2 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png"); // Replace with the path to your image2
+        Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
         image2.scaleToFit(50, 50); // Adjust the width and height of image2
         title.add(new Chunk(image2, 0, -20));
 
@@ -337,7 +338,7 @@ public class StockService {
 
 
         // Add image1 at the left of the title
-        Image image1 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg"); // Replace with the path to your image1
+        Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
         image1.scaleToFit(50, 50); // Adjust the width and height of image1
         title.add(new Chunk(image1, 0, -20));
 
@@ -346,7 +347,7 @@ public class StockService {
         title.add(titleText);
 
         // Add image2 at the right of the title
-        Image image2 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png"); // Replace with the path to your image2
+        Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
         image2.scaleToFit(50, 50); // Adjust the width and height of image2
         title.add(new Chunk(image2, 0, -20));
 
@@ -621,7 +622,7 @@ public class StockService {
         title.setSpacingAfter(30f); // Add spacing after the title
 
         // Add image1 at the left of the title
-        Image image1 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg"); // Replace with the path to your image1
+        Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
         image1.scaleToFit(50, 50); // Adjust the width and height of image1
         title.add(new Chunk(image1, 0, -20));
 
@@ -630,7 +631,7 @@ public class StockService {
         title.add(titleText);
 
         // Add image2 at the right of the title
-        Image image2 = Image.getInstance("D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png"); // Replace with the path to your image2
+        Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
         image2.scaleToFit(50, 50); // Adjust the width and height of image2
         title.add(new Chunk(image2, 0, -20));
 

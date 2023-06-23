@@ -5,6 +5,7 @@ import com.example.bureau.models.Bureau;
 import com.example.bureau.models.Depot;
 import com.example.bureau.services.BureauService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class BureauController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Bureau> createBureauInDepot(@RequestBody Bureau bureau, @RequestParam Long depotId) {
         // Check if any field contains only spaces
         if (containsOnlySpaces(bureau)) {
@@ -34,11 +36,13 @@ public class BureauController {
         return !numero.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$") || !name.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$");
     }
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<Bureau> findAll(){
         return bureauService.getAllBureau();
     }
 
     @GetMapping("/{depotId}/bureau")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public List<Bureau> getAllBureauByDepot(@PathVariable("depotId") Long depotId) {
         Depot depot = new Depot();
         depot.setId(depotId);
