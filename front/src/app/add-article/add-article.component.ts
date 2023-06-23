@@ -21,7 +21,10 @@ export class AddArticleComponent implements OnInit {
     name: '',
     lebelle: ''
   };
-
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
   onSubmit(form: NgForm) {
     //if (form.invalid) {
       //return;
@@ -30,7 +33,8 @@ export class AddArticleComponent implements OnInit {
     // Check if numeroDepot already exists
         // Form is valid and numeroDepot doesn't exist, send the form data to the server
         const url = `${this.baseUrl}/articles`;
-        this.http.post(url, this.formData).subscribe(response => {
+        const headers = this.getHeaders();
+        this.http.post(url, this.formData, {headers}).subscribe(response => {
           this.snackBar.open("Added successfully", 'Close', { 
             duration: 3000,
             panelClass: ['success-snackbar'] // Add a custom class to the snackbar

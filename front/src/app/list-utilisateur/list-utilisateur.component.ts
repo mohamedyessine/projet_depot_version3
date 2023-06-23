@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -26,14 +26,21 @@ export class ListUtilisateurComponent implements OnInit {
     });
   }
 
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
+
   getData() {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/api/auth`;
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>(url, {headers});
   }
 
   deleteUser(userId: number) {
+    const headers = this.getHeaders();
     const url = `http://localhost:8080/api/auth/${userId}`;
-    this.http.delete(url).subscribe(
+    this.http.delete(url, {headers}).subscribe(
       response => {
         this.getData();
         console.log(response);

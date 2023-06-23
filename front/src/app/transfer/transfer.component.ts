@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -49,13 +49,20 @@ export class TransferComponent implements OnInit {
      this.filteredArticles = this.articles;
      this.selectedValue = ''; 
   }
+
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  } 
   getBureaux(): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/bureau`;
-    return this.http.get(url);
+    return this.http.get(url, {headers});
   }
   getStocks(): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/stock`;
-    return this.http.get(url);
+    return this.http.get(url, {headers});
   }
 
   selectedDepotValue: string;
@@ -63,13 +70,15 @@ export class TransferComponent implements OnInit {
   depots1: Depot[] = [];
 
   getDepots(): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/depots`;
-    return this.http.get(url);
+    return this.http.get(url, {headers});
   }
 
   getAllBureauByDepot(depotId: string): Observable<Bureau[]> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/bureau/`;
-    return this.http.get<Bureau[]>(url + depotId + '/bureau');
+    return this.http.get<Bureau[]>(url + depotId + '/bureau', {headers});
   }
  
 
@@ -167,8 +176,9 @@ export class TransferComponent implements OnInit {
   }
 
   getData() {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/articles`;
-    this.http.get<any[]>(url).subscribe(
+    this.http.get<any[]>(url, {headers}).subscribe(
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
@@ -276,8 +286,9 @@ export class TransferComponent implements OnInit {
    
   }
   onSubmit(form: NgForm) {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/articles/articles/`;
-    this.http.get<any>(url + this.data.code)
+    this.http.get<any>(url + this.data.code, {headers})
       .subscribe(response => {
         const articleId = response.id;
         const formData = {
@@ -289,7 +300,7 @@ export class TransferComponent implements OnInit {
           targetDepotId: this.selectedTargetDepotValue
         };
         const url1 = `${this.baseUrl}/transfers`;
-        this.http.post(url1, formData)
+        this.http.post(url1, formData, {headers})
           .subscribe(
             (response) => {
               console.log(response);

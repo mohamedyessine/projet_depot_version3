@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit, Output, Renderer2, ViewChild , EventEmitter} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 // import * as XLSX from 'xlsx';
 
 
@@ -70,6 +71,7 @@ interface TableFullData {
 })
 export class StockComponent implements OnInit {
   @Output() closeModalEvent = new EventEmitter<void>();
+  @ViewChild('myModalRef', { static: false }) myModalRef: ElementRef;
 
 
 
@@ -85,10 +87,16 @@ export class StockComponent implements OnInit {
   page = 1;
   pageSize = 10;
   item: TableData;
-  constructor(private http: HttpClient, private renderer: Renderer2) { }
+  constructor(private http: HttpClient, private renderer: Renderer2, private snackBar: MatSnackBar) { }
   bureaux: Bureau[] = [];
   defectueuxCreated = false;
   action: string;
+
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
+
   setSelectedItem(item: any) {
     this.selectedItem = item;
   }
@@ -97,53 +105,65 @@ export class StockComponent implements OnInit {
   }
  
   getBureau(): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/bureau`;
-    return this.http.get(url);
+    return this.http.get(url, {headers});
   }
 
   selectedDepotValue: string;
   depots: Bureau[] = [];
 
   getDepots(): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/depots`;
-    return this.http.get(url);
+    return this.http.get(url, {headers});
   }
 
   getAllBureauByDepot(depotId: string): Observable<Bureau[]> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/bureau/`;
-    return this.http.get<Bureau[]>(url + depotId + '/bureau');
+    return this.http.get<Bureau[]>(url + depotId + '/bureau', {headers});
   }
   closeModal() {
-    this.defectueuxCreated = false;
-    this.newQuantity = null;
-    this.closeModalEvent.emit();
+    this.myModalRef.nativeElement.classList.remove('show');
+    this.myModalRef.nativeElement.style.display = 'none';
+    const modalBackdrop = document.getElementsByClassName('modal-backdrop')[0];
+    modalBackdrop.parentNode.removeChild(modalBackdrop);
+    this.newQuantity=null;
   }
   
   createDefectueux(articleId: number, sourceBureauId: number, quantity: number) {
     const selectedArticleId = this.selectedItem.article.id;
     const selectedBureauId = this.selectedItem.bureau.id;
-  
+    const headers = this.getHeaders();
     const request = {
       articleId: selectedArticleId,
       sourceBureauId: selectedBureauId,
       quantity: quantity
     };
     const url = `${this.apiUrl}/add?articleId=${articleId}&sourceBureauId=${sourceBureauId}&quantity=${quantity}`;
-    this.http.post<Defectieux>(url, {}).subscribe(
+    this.http.post<Defectieux>(url, {headers}).subscribe(
       (defectueux: Defectieux) => {
         this.defectueuxCreated = true;
         setTimeout(() => {
           this.defectueuxCreated = false; // Reset the flag after a certain time (e.g., 3 seconds)
           this.closeModal();
-          this.closeModalEvent.emit();
-        }, 3000);
-       
+          // this.closeModalEvent.emit();
+        }, 300);
+        this.snackBar.open('Defectueux added successfully', 'Close', {
+          duration: 3000,
+          panelClass: ['success-snackbar'] // Add a custom class to the snackbar
+        });
         console.log('Defectueux created:', defectueux);
         // Handle any necessary actions upon successful creation
         this.getStock();
        
       },
       (error: any) => {
+        this.snackBar.open(error.error.message, 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar'] // Add a custom class to the snackbar
+        });
         console.error('Error creating defectueux:', error);
         // Handle error if the creation fails
       }
@@ -156,31 +176,39 @@ export class StockComponent implements OnInit {
   reparerArticle(articleId: number, sourceBureauId: number, quantity: number) {
     const selectedArticleId = this.selectedItem.article.id;
     const selectedBureauId = this.selectedItem.bureau.id;
-  
+    const headers = this.getHeaders();
     const request = {
       articleId: selectedArticleId,
       sourceBureauId: selectedBureauId,
       quantity: quantity
     };
     const url = `${this.apiUrl}/update?articleId=${articleId}&sourceBureauId=${sourceBureauId}&quantity=${quantity}`;
-    this.http.post<Defectieux>(url, {}).subscribe(
+    this.http.post<Defectieux>(url, {headers}).subscribe(
       (defectueux: Defectieux) => {
         this.defectueuxCreated = true;
         setTimeout(() => {
           this.defectueuxCreated = false; // Reset the flag after a certain time (e.g., 3 seconds)
           this.closeModal();
-          this.closeModalEvent.emit();
-        }, 3000);
-       
+          // this.closeModalEvent.emit();
+        }, 300);
+        this.snackBar.open('Article réparer avec succés', 'Close', {
+          duration: 3000,
+          panelClass: ['success-snackbar'] // Add a custom class to the snackbar
+        });
         console.log('Article réparer:', defectueux);
         // Handle any necessary actions upon successful creation
         this.getStock();
        
       },
       (error: any) => {
+        this.snackBar.open(error.error.message, 'Close', {
+          duration: 3000,
+          panelClass: ['error-snackbar'] // Add a custom class to the snackbar
+        });
         console.error('Error creating reparation:', error);
         // Handle error if the creation fails
       }
+    
       
     );
     
@@ -268,7 +296,7 @@ export class StockComponent implements OnInit {
   exportToExcel() {
     let exportUrl = '';
     let exportFileName = '';
-  
+    const headers = this.getHeaders();
     if (this.selectedValue === 'all') {
 
 
@@ -287,7 +315,7 @@ export class StockComponent implements OnInit {
   
     if (exportUrl && exportFileName) {
       this.http.get(exportUrl, {
-        responseType: 'blob' // Specify the response type as a blob
+        responseType: 'blob', headers // Specify the response type as a blob
       }).subscribe(
         (response: Blob) => {
           // Create a blob URL for the response
@@ -423,9 +451,11 @@ export class StockComponent implements OnInit {
   }
 
   getStock() {
+    const headers = this.getHeaders();
+    const url = `${this.baseUrl}/depots/ArticleWithQuantityAndBureau/`;
     if (this.selectedValue === 'all') {
       if (this.selectedDepotValue) {
-        this.http.get('http://localhost:8080/depots/ArticleWithQuantityAndBureau/' + this.selectedDepotValue).subscribe(
+        this.http.get(url + this.selectedDepotValue, {headers}).subscribe(
           (data: TableFullData[]) => {
             this.tableFullData = data;
           },
@@ -440,7 +470,8 @@ export class StockComponent implements OnInit {
         this.tableFullData = []; // Set the table data to an empty array to clear the table
       }
     } else {
-      this.http.get('http://localhost:8080/stock/bureau/' + this.selectedValue).subscribe(
+      const url1 = `${this.baseUrl}/stock/bureau/`;
+      this.http.get(url1 + this.selectedValue, {headers}).subscribe(
         (data: TableData[]) => {
           this.tableData = data;
         },
@@ -454,10 +485,11 @@ export class StockComponent implements OnInit {
   }
 
   onChangeBureau() {
+    const headers = this.getHeaders();
     if (this.selectedValue === 'all') {
       if (this.selectedDepotValue) {
         const url = `${this.baseUrl}/depots/`;
-        this.http.get(url + this.selectedDepotValue + '/articlesWithDefect').subscribe(
+        this.http.get(url + this.selectedDepotValue + '/articlesWithDefect', {headers}).subscribe(
           (data: TableFullData[]) => {
             this.tableFullData = data;
             this.tableData = []; // Clear the tableData array

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -21,6 +21,11 @@ export class AddDepotComponent implements OnInit {
 
   ngOnInit() { }
 
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
+
   onSubmit(form: NgForm) {
     //if (form.invalid) {
       //return;
@@ -28,15 +33,16 @@ export class AddDepotComponent implements OnInit {
   
     // Check if numeroDepot already exists
         // Form is valid and numeroDepot doesn't exist, send the form data to the server
+        const headers = this.getHeaders();
         const url = `${this.baseUrl}/depots`;
-        this.http.post(url, this.formData).subscribe(response => {
+        this.http.post(url, this.formData, {headers}).subscribe(response => {
           this.snackBar.open('Ajout réussie', 'Close', { 
             duration: 3000,
             panelClass: ['success-snackbar'] // Add a custom class to the snackbar
           });
           form.resetForm();
         }, error => {
-          this.snackBar.open('Ce numero de depot est dejà utilisé', 'Close', { 
+          this.snackBar.open(error.error.message, 'Close', { 
             duration: 3000,
             panelClass: ['error-snackbar'] // Add a custom class to the snackbar
           });

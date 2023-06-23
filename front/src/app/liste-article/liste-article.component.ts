@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as JsBarcode from 'jsbarcode';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import html2canvas from 'html2canvas';
@@ -25,15 +25,20 @@ export class ListeArticleComponent implements OnInit {
       this.tableData = data.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
     });
   }
-
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
   getData() {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/articles`;
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>(url, {headers});
   }
 
   deleteData(id: number) {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/articles/${id}`;
-    this.http.delete(url).subscribe(
+    this.http.delete(url, {headers}).subscribe(
       response => {
         console.log(response);
         this.snackBar.open(response['message'], 'Close', {
@@ -116,12 +121,6 @@ export class ListeArticleComponent implements OnInit {
     saveAs(jpegDataUrl, 'barcode.jpg');
   }
   
-  
-
-
- 
-
-
 
   generateAndExportBarcode(code: string) {
     const canvas = document.createElement('canvas'); // Create a new canvas element
@@ -174,11 +173,12 @@ export class ListeArticleComponent implements OnInit {
   }
 
   exportInventaireToExcel(): void {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/stock/export/articles_with_quantityAndDefectWithPDF`;
     const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const fileName = `Inventaire ${currentDate}.pdf`;
 
-    this.http.get(url, { responseType: 'blob' }).subscribe((response: Blob) => {
+    this.http.get(url, { responseType: 'blob', headers }).subscribe((response: Blob) => {
       const url = window.URL.createObjectURL(response);
       const link = document.createElement('a');
       link.href = url;

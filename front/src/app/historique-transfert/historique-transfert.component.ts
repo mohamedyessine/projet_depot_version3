@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-historique-transfert',
@@ -26,9 +26,15 @@ export class HistoriqueTransfertComponent implements OnInit {
     });
   }
 
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
+
   getData() {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/transfers`;
-    return this.http.get<any[]>(url);
+    return this.http.get<any[]>(url, {headers});
   }
 
   filterTable() {

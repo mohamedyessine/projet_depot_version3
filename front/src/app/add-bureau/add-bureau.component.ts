@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -22,9 +22,15 @@ export class AddBureauComponent implements OnInit {
 
   ngOnInit() { this.getData();}
 
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
+
   getData() {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/depots`;
-    this.http.get<any[]>(url).subscribe(
+    this.http.get<any[]>(url, {headers}).subscribe(
       (response) => {
         this.depots = response;
       },
@@ -48,10 +54,10 @@ export class AddBureauComponent implements OnInit {
     //   return;
     // }
 
-   
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/depots/numero/`;
    // Make an HTTP request to get the ID of the depot
-  this.http.get<any>(url + this.data.numero)
+  this.http.get<any>(url + this.data.numero, {headers})
   .subscribe(response => {
     // Get the ID from the response
     const depotId = response.id;
@@ -63,7 +69,7 @@ export class AddBureauComponent implements OnInit {
     };
     const url1 = `${this.baseUrl}/bureau/create?depotId=`;
     // Make an HTTP request to create the bureau in the depot
-    this.http.post(url1 + depotId, bureauData)
+    this.http.post(url1 + depotId, bureauData, {headers})
       .subscribe(response => {
         console.log('Bureau created:', response);
         this.snackBar.open('Bureau created successfully.', 'Close', {
@@ -72,7 +78,7 @@ export class AddBureauComponent implements OnInit {
         });
         form.resetForm();
       }, error => {
-        this.snackBar.open('Ce numero de depot est dejà utilisé', 'Close', { 
+        this.snackBar.open(error.error.message, 'Close', { 
           duration: 3000,
           panelClass: ['error-snackbar'] // Add a custom class to the snackbar
         });

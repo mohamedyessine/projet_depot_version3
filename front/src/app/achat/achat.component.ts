@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 
@@ -35,6 +35,10 @@ export class AchatComponent implements OnInit{
   constructor(private http: HttpClient, private snackBar: MatSnackBar, private elementRef: ElementRef) { }
   @ViewChild('selectElement', { static: true }) selectElement: ElementRef;
 
+  getHeaders(): HttpHeaders {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+  }
   ngAfterViewInit() {
      this.getData();
      this.filteredArticles = this.articles;
@@ -50,12 +54,14 @@ export class AchatComponent implements OnInit{
   }
   
   getDepots(): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/depots`;
-    return this.http.get(url);
+    return this.http.get(url, {headers});
   }
   getAllBureauByDepot(depotId: string): Observable<Bureau[]> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/bureau/`;
-    return this.http.get<Bureau[]>(url + depotId + '/bureau');
+    return this.http.get<Bureau[]>(url + depotId + '/bureau', {headers});
   }
  
   getBureauxByDepot() {
@@ -112,8 +118,9 @@ export class AchatComponent implements OnInit{
   }
 
   getData() {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/articles`;
-    this.http.get<any[]>(url).subscribe(
+    this.http.get<any[]>(url, {headers}).subscribe(
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
@@ -162,8 +169,9 @@ export class AchatComponent implements OnInit{
     $(this.selectElement.nativeElement).selectpicker('refresh');
   }
   getBureau(): Observable<any> {
+    const headers = this.getHeaders();
     const url = `${this.baseUrl}/bureau`;
-    return this.http.get(url);
+    return this.http.get(url, {headers});
   }
 
   // onArticleSelection() {
@@ -205,7 +213,8 @@ onCodeInput() {
   
     // Make an HTTP request to get the ID of the article
     const url = `${this.baseUrl}/articles/articles/`;
-    this.http.get<any>(url + this.formData.code)
+    const headers = this.getHeaders();
+    this.http.get<any>(url + this.formData.code, {headers})
       .subscribe(response => {
         // Get the ID from the response
         const articleId = response.id;
@@ -222,7 +231,7 @@ onCodeInput() {
   
         // Make an HTTP request to send the form data to the backend with the ID
         const url1 = `${this.baseUrl}/articles/add`;
-        this.http.post(url1, formDataWithId)
+        this.http.post(url1, formDataWithId, {headers})
           .subscribe(response => {
             console.log('Form submitted:', response);
             this.snackBar.open(response['message'], 'Close', { 
