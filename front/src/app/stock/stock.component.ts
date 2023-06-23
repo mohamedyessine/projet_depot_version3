@@ -136,13 +136,14 @@ export class StockComponent implements OnInit {
     const selectedArticleId = this.selectedItem.article.id;
     const selectedBureauId = this.selectedItem.bureau.id;
     const headers = this.getHeaders();
+    const options = { headers: headers };
     const request = {
       articleId: selectedArticleId,
       sourceBureauId: selectedBureauId,
       quantity: quantity
     };
     const url = `${this.apiUrl}/add?articleId=${articleId}&sourceBureauId=${sourceBureauId}&quantity=${quantity}`;
-    this.http.post<Defectieux>(url, {headers}).subscribe(
+    this.http.post<Defectieux>(url, {},options).subscribe(
       (defectueux: Defectieux) => {
         this.defectueuxCreated = true;
         setTimeout(() => {
@@ -160,6 +161,7 @@ export class StockComponent implements OnInit {
        
       },
       (error: any) => {
+        this.closeModal();
         this.snackBar.open(error.error.message, 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar'] // Add a custom class to the snackbar
@@ -177,13 +179,14 @@ export class StockComponent implements OnInit {
     const selectedArticleId = this.selectedItem.article.id;
     const selectedBureauId = this.selectedItem.bureau.id;
     const headers = this.getHeaders();
+    const options = { headers: headers };
     const request = {
       articleId: selectedArticleId,
       sourceBureauId: selectedBureauId,
       quantity: quantity
     };
     const url = `${this.apiUrl}/update?articleId=${articleId}&sourceBureauId=${sourceBureauId}&quantity=${quantity}`;
-    this.http.post<Defectieux>(url, {headers}).subscribe(
+    this.http.post<Defectieux>(url, {}, options).subscribe(
       (defectueux: Defectieux) => {
         this.defectueuxCreated = true;
         setTimeout(() => {
@@ -201,6 +204,7 @@ export class StockComponent implements OnInit {
        
       },
       (error: any) => {
+        this.closeModal();
         this.snackBar.open(error.error.message, 'Close', {
           duration: 3000,
           panelClass: ['error-snackbar'] // Add a custom class to the snackbar
