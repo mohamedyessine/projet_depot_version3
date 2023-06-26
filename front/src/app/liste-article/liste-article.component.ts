@@ -3,7 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as JsBarcode from 'jsbarcode';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import html2canvas from 'html2canvas';
-import { saveAs } from 'file-saver';
+// import { saveAs } from 'file-saver';
+import * as FileSaver from 'file-saver';
+
 @Component({
   selector: 'app-liste-article',
   templateUrl: './liste-article.component.html',
@@ -118,7 +120,7 @@ export class ListeArticleComponent implements OnInit {
   
     // Export the container as an image
     const jpegDataUrl = resizedCanvas.toDataURL('image/jpeg');
-    saveAs(jpegDataUrl, 'barcode.jpg');
+    FileSaver.saveAs(jpegDataUrl, 'barcode.jpg');
   }
   
 
@@ -128,7 +130,7 @@ export class ListeArticleComponent implements OnInit {
 
     html2canvas(canvas).then((canvas) => {
       const jpegDataUrl = canvas.toDataURL('image/jpeg');
-      saveAs(jpegDataUrl, 'barcode.jpg');
+      FileSaver.saveAs(jpegDataUrl, 'barcode.jpg');
     });
   }
 
