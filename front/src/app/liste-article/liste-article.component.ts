@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as JsBarcode from 'jsbarcode';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import html2canvas from 'html2canvas';
-// import { saveAs } from 'file-saver';
 import * as FileSaver from 'file-saver';
 
 @Component({
