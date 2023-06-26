@@ -1,0 +1,23 @@
+::ng-deep .success-snackbar {
+    background-color: green;
+    color: white;
+  }
+  
+::ng-deep .mat-simple-snackbar-action > button { color: white !important;} 
+
+::ng-deep .error-snackbar {
+    background-color: red;
+    color: white;
+  }
+
+  ::ng-deep .mat-snack-bar-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+  }
+  
+::ng-deep .mat-simple-snackbar {
+  text-align: center;
+  margin: 0 auto;
+}

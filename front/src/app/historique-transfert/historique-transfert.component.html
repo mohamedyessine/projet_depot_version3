@@ -1,0 +1,50 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title ">Historique de transfert</h4>
+            </div>
+            <div class="card-body">
+              <div class="row align-items-center mb-3">
+                <div class="col-md-12">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Recherche..." [(ngModel)]="searchText" (ngModelChange)="filterTable()">
+                  </div>
+                </div>
+              </div>
+              <div class="table-responsive"  *ngIf="transfersToShow.length > 0">
+                <table class="table">
+                  <thead class=" text-primary">
+                    <th>Source</th>
+                    <th>Recepteur</th>
+                    <th>Article</th>
+                    <th>Quantité</th>
+                    <th>Date de transfert</th>
+                  </thead>
+                  <tbody>
+                    <tr  *ngFor="let item of transfersToShow">
+                      <td>{{ item.sourceBureau.name  }}</td>
+                      <td>{{ item.targetBureau.name  }}</td>
+                      <td>{{ item.article.name }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>{{ item.dateTransfer | slice: 0:10 }}</td>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row text-center " *ngIf="!(tableData.length <8)">
+              <div class="col-md-12">
+                <button mat-button (click)="prevPage()" [disabled]="page === 1">Previous</button>
+                <button mat-button (click)="nextPage()" [disabled]="page === pageCount">Next</button>
+                <div class="pagination-info">
+                  Page {{page}} of {{pageCount}} pages
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
