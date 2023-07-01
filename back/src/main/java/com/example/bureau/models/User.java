@@ -85,6 +85,9 @@ public class User {
         this.password = password;
     }
 
+    @ElementCollection(targetClass = ERole.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
     public Set<Role> getRoles() {
         return roles;
     }
