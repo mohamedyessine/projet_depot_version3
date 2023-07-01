@@ -34,7 +34,7 @@ public class DatabaseSeeder implements ApplicationRunner {
         createRoleIfNotExists(ERole.ROLE_ADMIN);
 
         if (!userRepo.existsByUsername("admin")) {
-            Role adminRole = roleRepo.findByName(ERole.ROLE_ADMIN)
+            Role adminRole = roleRepo.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Admin role not found."));
 
             Set<Role> roles = new HashSet<>();
