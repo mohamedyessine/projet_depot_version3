@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
+//@Component
 public class DatabaseSeeder implements ApplicationRunner {
       private final UserRepo userRepo;
     private final RoleRepo roleRepo;
