@@ -40,10 +40,11 @@ public class DatabaseSeeder implements ApplicationRunner {
             Set<Role> roles = new HashSet<>();
             roles.add(adminRole);
 
-            User admin = new User("admin", "admin@example.com", passwordEncoder.encode("yessine07"));
-            admin.setRoles(roles);
-
-            userRepo.save(admin);
+            if (!userRepo.existsByEmail("admin@example.com")) {
+                User admin = new User("admin", "admin@example.com", passwordEncoder.encode("yessine07"));
+                admin.setRoles(roles);
+                userRepo.save(admin);
+            }
         }
     }
 
