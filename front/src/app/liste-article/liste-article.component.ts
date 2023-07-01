@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as JsBarcode from 'jsbarcode';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import html2canvas from 'html2canvas';
-import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-liste-article',
   templateUrl: './liste-article.component.html',
@@ -17,28 +17,35 @@ export class ListeArticleComponent implements OnInit {
   page = 1;
   pageSize = 10;
 
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.tableData = []; // Initialize tableData with an empty array
     this.getData().subscribe((data: any[]) => {
-      this.tableData = data.filter(item => item.name.toLowerCase().includes(this.searchText.toLowerCase()));
+      this.tableData = data.filter(item =>
+        item.name.toLowerCase().includes(this.searchText.toLowerCase())
+      );
     });
   }
+
   getHeaders(): HttpHeaders {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    return new HttpHeaders().set('Authorization', `Bearer ${currentUser?.token}`);
+    return new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${currentUser?.token}`
+    );
   }
+
   getData() {
     const headers = this.getHeaders();
     const url = `${this.baseUrl}/articles`;
-    return this.http.get<any[]>(url, {headers});
+    return this.http.get<any[]>(url, { headers });
   }
 
   deleteData(id: number) {
     const headers = this.getHeaders();
     const url = `${this.baseUrl}/articles/${id}`;
-    this.http.delete(url, {headers}).subscribe(
+    this.http.delete(url, { headers }).subscribe(
       response => {
         console.log(response);
         this.snackBar.open(response['message'], 'Close', {
@@ -58,14 +65,11 @@ export class ListeArticleComponent implements OnInit {
     );
   }
 
-
-
-
-  item = { code: '', article:'' }; // Sample barcode code
+  item = { code: '', article: '' }; // Sample barcode code
   ngAfterViewInit() {
     this.generateBarcode(this.item.code, this.item.article);
   }
-  
+
   generateBarcode(code: string, name: string) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -75,21 +79,21 @@ export class ListeArticleComponent implements OnInit {
       textAlign: 'center',
       fontSize: 14,
       width: 2,
-      height: 60,
+      height: 60
     };
     JsBarcode(canvas, code, barcodeOptions);
-  
+
     const targetWidth = 440; // Desired width in millimeters
     const targetHeight = 200; // Desired height in millimeters
-  
+
     const scale = targetWidth / canvas.offsetWidth;
-  
+
     // Create a new hidden canvas element to perform the resizing
     const resizedCanvas = document.createElement('canvas');
     resizedCanvas.width = targetWidth;
     resizedCanvas.height = targetHeight;
     const resizedContext = resizedCanvas.getContext('2d');
-  
+
     // Resize the original canvas content to the target size
     resizedContext.drawImage(
       canvas,
@@ -97,30 +101,29 @@ export class ListeArticleComponent implements OnInit {
       0,
       canvas.width,
       canvas.height,
-      0,
-      0,
-      targetWidth,
-      targetHeight
-    );
-  
+       0,
+       0,
+       targetWidth,
+       targetHeight
+     );
+
     // Create a new container element for the barcode and name
     const container = document.createElement('div');
     container.style.textAlign = 'center';
-  
+
     // Append the resized barcode canvas to the container
     container.appendChild(resizedCanvas);
-  
+
     // Create a new h3 element for the name
     const nameElement = document.createElement('h3');
     nameElement.style.textAlign = 'center';
     nameElement.innerText = name;
     container.appendChild(nameElement);
-  
+
     // Export the container as an image
     const jpegDataUrl = resizedCanvas.toDataURL('image/jpeg');
-    saveAs(jpegDataUrl, 'barcode.jpg');
+    this.download(jpegDataUrl, 'barcode.jpg');
   }
-  
 
   generateAndExportBarcode(code: string) {
     const canvas = document.createElement('canvas'); // Create a new canvas element
@@ -128,11 +131,9 @@ export class ListeArticleComponent implements OnInit {
 
     html2canvas(canvas).then((canvas) => {
       const jpegDataUrl = canvas.toDataURL('image/jpeg');
-      saveAs(jpegDataUrl, 'barcode.jpg');
+      this.download(jpegDataUrl, 'barcode.jpg');
     });
   }
-
-
 
   printBarcode(code: string) {
     // Retrieve the barcode canvas element
@@ -156,7 +157,6 @@ export class ListeArticleComponent implements OnInit {
     });
   }
 
-
   filterTable() {
     if (this.searchText === '') {
       this.getData().subscribe((data: any[]) => {
@@ -175,48 +175,54 @@ export class ListeArticleComponent implements OnInit {
   exportInventaireToExcel(): void {
     const headers = this.getHeaders();
     const url = `${this.baseUrl}/stock/export/articles_with_quantityAndDefectWithPDF`;
-    const currentDate = new Date().toLocaleDateString('en-CA', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const currentDate = new Date().toLocaleDateString('en-CA', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
     const fileName = `Inventaire ${currentDate}.pdf`;
 
-    this.http.get(url, { responseType: 'blob', headers }).subscribe((response: Blob) => {
-      const url = window.URL.createObjectURL(response);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName;
-      link.dispatchEvent(new MouseEvent('click'));
-      window.URL.revokeObjectURL(url);
-    }, (error) => {
-      console.error(error);
-      // Handle the error, e.g. show an error message to the user
-    });
+    this.http.get(url, { responseType: 'blob', headers }).subscribe(
+      (response: Blob) => {
+        const url = window.URL.createObjectURL(response);
+        this.download(url, fileName);
+        window.URL.revokeObjectURL(url);
+      },
+      error => {
+        console.error(error);
+        // Handle the error, e.g. show an error message to the user
+      }
+    );
   }
-
 
   get articlesToShow(): any[] {
     const startIndex = (this.page - 1) * this.pageSize;
     return this.tableData.slice(startIndex, startIndex + this.pageSize);
   }
-  
-  
-  
+
   // Navigate to the next page
   nextPage() {
     if (this.page < this.pageCount) {
       this.page++;
     }
   }
-  
+
   // Navigate to the previous page
   prevPage() {
     if (this.page > 1) {
       this.page--;
     }
   }
-  
+
   // Return the total number of pages
   get pageCount(): number {
     return Math.ceil(this.tableData.length / this.pageSize);
   }
 
-
+  private download(url: string, fileName: string) {
+    const anchorElement = document.createElement('a');
+    anchorElement.href = url;
+    anchorElement.download = fileName;
+    anchorElement.click();
+  }
 }
