@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Component
 public class DatabaseSeeder implements ApplicationRunner {
-    private final UserRepo userRepo;
+      private final UserRepo userRepo;
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,8 +29,12 @@ public class DatabaseSeeder implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        // Create roles if they don't exist
+        createRoleIfNotExists(ERole.ROLE_USER);
+        createRoleIfNotExists(ERole.ROLE_ADMIN);
+
         if (!userRepo.existsByUsername("admin")) {
-            Role adminRole = roleRepo.findByName(ERole.ROLE_USER)
+            Role adminRole = roleRepo.findByName(ERole.ROLE_ADMIN)
                     .orElseThrow(() -> new RuntimeException("Error: Admin role not found."));
 
             Set<Role> roles = new HashSet<>();
@@ -40,6 +44,13 @@ public class DatabaseSeeder implements ApplicationRunner {
             admin.setRoles(roles);
 
             userRepo.save(admin);
+        }
+    }
+
+    private void createRoleIfNotExists(ERole roleName) {
+        if (!roleRepo.existsByName(roleName)) {
+            Role role = new Role(roleName);
+            roleRepo.save(role);
         }
     }
 }
