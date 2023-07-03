@@ -29,14 +29,14 @@ public class DatabaseSeeder implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (!roleRepo.existsByName(ERole.ROLE_USER)) {
+        if (!roleRepo.existsByName(ERole.ROLE_ADMIN)) {
             Role adminRole = new Role();
-            adminRole.setName(ERole.ROLE_USER);
+            adminRole.setName(ERole.ROLE_ADMIN);
             roleRepo.save(adminRole);
         }
 
-        if (!userRepo.existsByUsername("user")) {
-            Role adminRole = roleRepo.findByName(ERole.ROLE_USER)
+        if (!userRepo.existsByUsername("admin")) {
+            Role adminRole = roleRepo.findByName(ERole.ROLE_ADMIN)
                     .orElseThrow(() -> new RuntimeException("Error: Admin role not found."));
 
             Set<Role> roles = new HashSet<>();
@@ -52,3 +52,4 @@ public class DatabaseSeeder implements ApplicationRunner {
         }
     }
 }
+
