@@ -38,9 +38,12 @@ export class HistoriqueTransfertComponent implements OnInit {
   }
 
   filterTable() {
-    if (this.searchText === '') {
+    const searchText = this.searchText.trim().replace(/\s+/g, ' '); // Remove leading, trailing, and extra spaces
+  
+    if (searchText === '') {
       this.getData().subscribe((data: any[]) => {
         this.tableData = data;
+        this.page = 1;
       });
     } else {
       this.getData().subscribe((data: any[]) => {
@@ -51,16 +54,21 @@ export class HistoriqueTransfertComponent implements OnInit {
             }
             return value;
           }).join(' ').toLowerCase();
-          return values.includes(this.searchText.toLowerCase());
+  
+          const sanitizedSearchText = searchText.toLowerCase();
+          return values.includes(sanitizedSearchText);
         });
+        this.page = 1;
       });
     }
   }
   
+  
 
   get transfersToShow(): any[] {
     const startIndex = (this.page - 1) * this.pageSize;
-    return this.tableData.slice(startIndex, startIndex + this.pageSize);
+    const endIndex = startIndex + this.pageSize;
+    return this.tableData.slice(startIndex, endIndex);
   }
   
   

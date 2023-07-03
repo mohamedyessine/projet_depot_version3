@@ -47,7 +47,10 @@ export class TransferComponent implements OnInit {
   ngAfterViewInit() {
      this.getData();
      this.filteredArticles = this.articles;
-     this.selectedValue = ''; 
+     setTimeout(() => {
+      this.selectedValue = ''; // Set it to null after a short delay
+    }, 0);
+
   }
 
   getHeaders(): HttpHeaders {

@@ -12,7 +12,7 @@ export class AddBureauComponent implements OnInit {
   private baseUrl = 'http://localhost:8080';
   data: any = {};
   formData = {
-    depotId:'',
+    depotId: '',
     numero: '',
     name: ''
   };
@@ -20,7 +20,7 @@ export class AddBureauComponent implements OnInit {
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
-  ngOnInit() { this.getData();}
+  ngOnInit() { this.getData(); }
 
   getHeaders(): HttpHeaders {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -30,7 +30,7 @@ export class AddBureauComponent implements OnInit {
   getData() {
     const headers = this.getHeaders();
     const url = `${this.baseUrl}/depots`;
-    this.http.get<any[]>(url, {headers}).subscribe(
+    this.http.get<any[]>(url, { headers }).subscribe(
       (response) => {
         this.depots = response;
       },
@@ -43,9 +43,9 @@ export class AddBureauComponent implements OnInit {
   onDepotsSelection() {
     // Get the selected article
     const selectedDepot = this.depots.find(depot => depot.name === this.data.depot);
-    
+
     // Update the code field with the selected article's code
-    this.data.numero   = selectedDepot.numero;
+    this.data.numero = selectedDepot.numero;
   }
 
   onSubmit(form: NgForm) {
@@ -53,37 +53,40 @@ export class AddBureauComponent implements OnInit {
     // if (form.invalid) {
     //   return;
     // }
-
+  
     const headers = this.getHeaders();
     const url = `${this.baseUrl}/depots/numero/`;
-   // Make an HTTP request to get the ID of the depot
-  this.http.get<any>(url + this.data.numero, {headers})
-  .subscribe(response => {
-    // Get the ID from the response
-    const depotId = response.id;
-
-    // Create a new bureau object
-    const bureauData = {
-      numero: this.formData.numero,
-      name: this.formData.name
-    };
-    const url1 = `${this.baseUrl}/bureau/create?depotId=`;
-    // Make an HTTP request to create the bureau in the depot
-    this.http.post(url1 + depotId, bureauData, {headers})
+    // Make an HTTP request to get the ID of the depot
+    this.http.get<any>(url + this.data.numero, { headers })
       .subscribe(response => {
-        console.log('Bureau created:', response);
-        this.snackBar.open('Bureau created successfully.', 'Close', {
-          duration: 3000,
-          panelClass: ['success-snackbar'] // Add a custom class to the snackbar
-        });
-        form.resetForm();
-      }, error => {
-        this.snackBar.open(error.error.message, 'Close', { 
-          duration: 3000,
-          panelClass: ['error-snackbar'] // Add a custom class to the snackbar
-        });
+        // Get the ID from the response
+        const depotId = response.id;
+  
+        // Create a new bureau object
+        const bureauData = {
+          numero: this.formData.numero,
+          name: this.formData.name
+        };
+        const url1 = `${this.baseUrl}/bureau/create?depotId=`;
+        // Make an HTTP request to create the bureau in the depot
+        this.http.post(url1 + depotId, bureauData, { headers })
+          .subscribe(response => {
+            console.log('Bureau created:', response);
+            this.snackBar.open('Bureau created successfully.', 'Close', {
+              duration: 3000,
+              panelClass: ['success-snackbar'] // Add a custom class to the snackbar
+            });
+          }, error => {
+            this.snackBar.open(error.error.message, 'Close', {
+              duration: 3000,
+              panelClass: ['error-snackbar'] // Add a custom class to the snackbar
+            });
+          })
+          .add(() => {
+            form.resetForm(); // Reset the form after the HTTP request completes
+          });
       });
-  });
   }
   
+
 }

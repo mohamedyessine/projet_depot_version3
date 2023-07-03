@@ -47,7 +47,8 @@
                  --> 
                  <div class="col-md-4">
                   <div class="input-group">
-                    <select #selectElement data-live-search="true" [(ngModel)]="selectedValue" >
+                    <select #selectElement  data-live-search="true" [(ngModel)]="selectedValue" class="form-control">
+                      <option value="" disabled selected style="color: blueviolet;">Select Article</option> <!-- Add the initial placeholder option -->
                       <option *ngFor="let article of filteredArticles" [value]="article.name">{{ article.name }}</option>
                     </select>
                   </div>
@@ -58,10 +59,8 @@
                 
                 <div class="col-md-4">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="formData.code" required (input)="onCodeInput()">
-                    <mat-error *ngIf="myForm.submitted && myForm.controls['code'].invalid">
-                      The code à barre must be 12 digits long and only contain numbers.
-                    </mat-error>
+                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="formData.code" required (input)="onCodeInput()" #code="ngModel" required pattern="^[^\s].*[^\s]$">
+                    <mat-error *ngIf="code.invalid">Le code article doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
                   </mat-form-field>
                 </div>
                 

@@ -37,3 +37,16 @@
 .mat-select-filter .mat-select-panel .mat-form-field {
   margin-bottom: 8px;
 }
+
+
+
+.custom-select {
+ 
+  color: #333;
+  width: 100%;
+}
+
+/* .custom-select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+} */

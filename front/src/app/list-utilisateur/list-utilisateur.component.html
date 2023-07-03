@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">Liste des utilisateur</h4>
+            <h4 class="card-title">Liste des utilisateurs</h4>
           </div>
           <div class="card-body">
             <div class="row align-items-center mb-3">
@@ -17,17 +17,17 @@
             </div>
             <div class="row">
               <div class="col-md-12">
-                <div class="table-responsive" *ngIf="articlesToShow.length > 0">
+                <div class="table-responsive" *ngIf="usersToShow.length > 0">
                   <button mat-raised-button type="button" class="btn btn-danger pull-right" (click)="rederiger()">Ajouter</button> 
                   <table class="table">
                     <thead class="text-primary">
                       <tr>
-                        <th>User</th>
+                        <th>User</th> 
                         <th>Email</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let item of articlesToShow ">
+                      <tr *ngFor="let item of usersToShow ">
                         <td>{{ item.username }}</td>
                         <td>{{ item.email }}</td>
                         <td>
@@ -39,7 +39,7 @@
                 </div>
               </div>
             </div>
-            <div class="row text-center " *ngIf="!(tableData.length <8 )">
+            <div class="row text-center " *ngIf="!(tableData.length <4 )">
               <div class="col-md-12">
                 <button mat-button (click)="prevPage()" [disabled]="page === 1">Previous</button>
                 <button mat-button (click)="nextPage()" [disabled]="page === pageCount">Next</button>

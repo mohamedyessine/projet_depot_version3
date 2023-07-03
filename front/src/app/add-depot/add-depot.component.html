@@ -10,14 +10,18 @@
                       <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
                         <div class="row">
                           <div class="col-md-6">
+                            <!-- contain only 4 character pattern="^\d{4}$" -->
+                            <!-- contain  4 character pattern="^\S{4}$" -->
+                            <!-- contain 4 digits pattern="^\d{4}$" -->
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Nom Depot" name="name" [(ngModel)]="formData.name" required>
+                              <input matInput placeholder="Nom Depot" name="name" [(ngModel)]="formData.name" #name="ngModel" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]*[a-zA-Z0-9]$">
+                              <mat-error *ngIf="name.invalid">Le nom du depot doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
                             </mat-form-field>
                           </div>
                           <div class="col-md-6">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Numero Depot" type="text" name="numero" [(ngModel)]="formData.numero" #numeroDepot="ngModel" required>
-                              <mat-error *ngIf="numeroDepot.invalid">Le numero depot doit contenir que des chiffres.</mat-error>
+                              <input matInput placeholder="Numero Depot" type="text" name="numero" [(ngModel)]="formData.numero" #numeroDepot="ngModel" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]*[a-zA-Z0-9]$">
+                              <mat-error *ngIf="numeroDepot.invalid">Le numero depot doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
                             </mat-form-field>
                           </div>
                          

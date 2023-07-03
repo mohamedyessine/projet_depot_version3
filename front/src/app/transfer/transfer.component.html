@@ -18,24 +18,23 @@
                     </select>
                   </div>
                 </div> -->
-                <div class="col-md-4">
+               <div class="col-md-6">
                   <div class="input-group">
-                    <select #selectElement data-live-search="true" [(ngModel)]="selectedValue" >
+                    <select #selectElement  data-live-search="true" [(ngModel)]="selectedValue"  class="form-control">
+                      <option value="" disabled selected style="color: blueviolet;">Select Article</option> <!-- Add the initial placeholder option -->
                       <option *ngFor="let article of filteredArticles" [value]="article.name">{{ article.name }}</option>
                     </select>
                   </div>
                 </div>
-                
-                <div class="col-md-4">
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="data.code"  required (input)="onCodeInput()">
-                    <mat-error *ngIf="myForm.submitted && myForm.controls['code'].invalid">
-                      The code à barre must be 12 digits long and only contain numbers.
-                    </mat-error>
+                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="data.code"  #code="ngModel" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]*[a-zA-Z0-9]$" (input)="onCodeInput()">
+                    <mat-error *ngIf="code.invalid">Le code article doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
                   </mat-form-field>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <input matInput placeholder="Quantité" type="text" id="quantity" name="quantity"
                       [(ngModel)]="quantity" required pattern="[0-9]+">
@@ -43,10 +42,10 @@
                       numbers.</mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Depot Emetteur</mat-label>
-                    <mat-select placeholder="Select Depot" name="depotEmetteur" [(ngModel)]="selectedDepotValue"
+                    <mat-select placeholder="Select Depot" name="depotEmetteur" required [(ngModel)]="selectedDepotValue"
                                 (selectionChange)="getBureauxByDepotEmetteur()">
                       <mat-option *ngFor="let depot of depots" [value]="depot.value">
                         {{ depot.viewValue }}
@@ -55,7 +54,7 @@
                   </mat-form-field>
                 </div>
                 
-                <div class="col-md-3">
+                <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Bureau Emetteur</mat-label>
                     <mat-select placeholder="Select Bureau" name="sourceBureau" [(ngModel)]="sourceBureau" required
@@ -68,10 +67,10 @@
                 </div>
                 
                 
-                <div class="col-md-3">
+                <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Depot Recepteur</mat-label>
-                    <mat-select placeholder="Select Depot" name="depotRecepteur" [(ngModel)]="selectedTargetDepotValue"
+                    <mat-select placeholder="Select Depot" name="depotRecepteur" required [(ngModel)]="selectedTargetDepotValue"
                                 (selectionChange)="getBureauxByDepotRecepteur()">
                       <mat-option *ngFor="let depot of depots" [value]="depot.value">
                         {{ depot.viewValue }}
@@ -80,7 +79,7 @@
                   </mat-form-field>
                 </div>
                 
-                <div class="col-md-3">
+                <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Bureau Recepteur</mat-label>
                     <mat-select placeholder="Select Bureau" name="targetBureau" [(ngModel)]="targetBureau" required
