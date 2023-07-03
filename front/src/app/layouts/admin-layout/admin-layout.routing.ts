@@ -82,7 +82,7 @@ export const AdminLayoutRoutes: Routes = [
       {
         path: 'signup',
         component: SignupComponent,
-        canActivate: [AuthGuard]
+        // canActivate: [AuthGuard]
       },
       {
         path: 'liste-users',
