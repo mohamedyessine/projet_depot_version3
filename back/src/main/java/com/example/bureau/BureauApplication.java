@@ -11,8 +11,7 @@ public class BureauApplication {
         SpringApplication.run(BureauApplication.class, args);
     }
 
-
-    @Bean
+/*@Bean
 public CorsFilter corsFilter() {
    CorsConfiguration corsConfiguration = new CorsConfiguration();
    corsConfiguration.setAllowCredentials(true);
@@ -36,6 +35,6 @@ public CommonsRequestLoggingFilter requestLoggingFilter() {
    loggingFilter.setIncludePayload(true);
    loggingFilter.setMaxPayloadLength(64000);
    return loggingFilter;
-}
+}*/
 
 }
