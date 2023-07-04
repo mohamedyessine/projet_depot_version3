@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./list-utilisateur.component.css']
 })
 export class ListUtilisateurComponent implements OnInit {
-
+  @ViewChild('deleteConfirmationModal', { static: false }) deleteConfirmationModal: ElementRef;
+  userToDeleteId: string;
   private baseUrl = 'http://localhost:8080';
   searchText: string = '';
   tableData: any;
@@ -37,31 +38,91 @@ export class ListUtilisateurComponent implements OnInit {
     return this.http.get<any[]>(url, {headers});
   }
 
-  deleteUser(userId: number) {
+   // Open the modal and set the user ID to delete
+   confirmDeleteUser(userId: string) {
+    this.userToDeleteId = userId;
+    this.showDeleteConfirmationModal();
+  }
+  showDeleteConfirmationModal() {
+    const modalElement: HTMLElement = this.deleteConfirmationModal.nativeElement;
+    modalElement.classList.add('show');
+    modalElement.style.display = 'block';
+  }
+  // Close the modal
+  closeModal() {
+    const modalElement: HTMLElement = this.deleteConfirmationModal.nativeElement;
+    modalElement.classList.remove('show');
+    modalElement.style.display = 'none';
+    const modalBackdrop = document.getElementsByClassName('modal-backdrop')[0];
+    modalBackdrop.parentNode.removeChild(modalBackdrop);
+    this.userToDeleteId = null; // Reset the userToDeleteId
+
+  }
+
+  // deleteUser(userId: number) {
+  //   const headers = this.getHeaders();
+  //   const url = `http://localhost:8080/api/auth/${userId}`;
+  //   this.http.delete(url, {headers}).subscribe(
+  //     response => {
+  //       this.getData();
+  //       console.log(response);
+  //       this.snackBar.open(response['message'], 'Close', {
+  //         duration: 3000,
+  //         panelClass: ['success-snackbar'] // Add a custom class to the snackbar
+  //       });
+        
+  //       this.tableData = this.tableData.filter(item => item.id !== userId);
+  //     },
+  //     error => {
+  //       console.error(error);
+  //       this.snackBar.open(error.error.message, 'Close', {
+  //         duration: 3000,
+  //         panelClass: ['error-snackbar'] // Add a custom class to the snackbar
+  //       });
+  //       // Handle error response
+  //     }
+  //   );
+    
+  // }
+
+  deleteUserConfirmed() {
     const headers = this.getHeaders();
-    const url = `http://localhost:8080/api/auth/${userId}`;
-    this.http.delete(url, {headers}).subscribe(
+    const url = `http://localhost:8080/api/auth/${this.userToDeleteId}`;
+  
+    this.http.delete(url, { headers }).subscribe(
       response => {
         this.getData();
         console.log(response);
         this.snackBar.open(response['message'], 'Close', {
           duration: 3000,
-          panelClass: ['success-snackbar'] // Add a custom class to the snackbar
+          panelClass: ['success-snackbar']
         });
-        
-        this.tableData = this.tableData.filter(item => item.id !== userId);
+  
+        this.tableData = this.tableData.filter(item => item.id !== this.userToDeleteId);
+        this.userToDeleteId = null;
+        this.closeModal(); // Close the modal after successful deletion
       },
       error => {
         console.error(error);
         this.snackBar.open(error.error.message, 'Close', {
           duration: 3000,
-          panelClass: ['error-snackbar'] // Add a custom class to the snackbar
+          panelClass: ['error-snackbar']
         });
-        // Handle error response
+  
+        this.userToDeleteId = null;
+        this.closeModal(); // Close the modal in case of error
       }
     );
-    
   }
+  
+
+//   confirmDeleteUser(userId: number) {
+//     if (confirm("Are you sure you want to delete this user?")) {
+//         // User clicked "OK" on the confirmation popup
+//         this.deleteUser(userId);
+//     }
+// }
+
 
   rederiger() {
     

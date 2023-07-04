@@ -1,32 +1,34 @@
 <div class="main-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header card-header-danger">
-                        <h4 class="card-title">Ajout Depot</h4>
-                    </div>
-                    <div class="card-body">
-                      <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <!-- contain only 4 character pattern="^\d{4}$" -->
-                            <!-- contain  4 character pattern="^\S{4}$" -->
-                            <!-- contain 4 digits pattern="^\d{4}$" -->
-                            <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Nom Depot" name="name" [(ngModel)]="formData.name" #name="ngModel" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]*[a-zA-Z0-9]$">
-                              <mat-error *ngIf="name.invalid">Le nom du depot doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
-                            </mat-form-field>
-                          </div>
-                          <div class="col-md-6">
-                            <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Numero Depot" type="text" name="numero" [(ngModel)]="formData.numero" #numeroDepot="ngModel" required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]*[a-zA-Z0-9]$">
-                              <mat-error *ngIf="numeroDepot.invalid">Le numero depot doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
-                            </mat-form-field>
-                          </div>
-                         
-                        </div>
-                        <!-- <div class="row">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Ajout Depot</h4>
+          </div>
+          <div class="card-body">
+            <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
+              <div class="row">
+                <div class="col-md-6">
+                  <!-- contain only 4 character pattern="^\d{4}$" -->
+                  <!-- contain  4 character pattern="^\S{4}$" -->
+                  <!-- contain 4 digits pattern="^\d{4}$" -->
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Nom Depot" name="name" [(ngModel)]="formData.name" #name="ngModel"
+                      required pattern="^[^\s].*[^\s]$">
+                    <mat-error *ngIf="name.invalid">Le nom est invalide.</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Code Depot" type="text" name="numero" [(ngModel)]="formData.numero"
+                      #numeroDepot="ngModel" required pattern="^[^\s].*[^\s]$">
+                    <mat-error *ngIf="numeroDepot.invalid">Le code est invalide.</mat-error>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <!-- <div class="row">
                           <div class="col-md-12">
                             <mat-form-field class="example-full-width">
                               <input matInput placeholder="Address" type="text" name="adresse" [(ngModel)]="formData.adresse">
@@ -45,15 +47,15 @@
                             </mat-form-field>
                           </div> 
                         </div>-->
-                        <div class="row">
-                        </div>
-                        <button mat-raised-button type="submit" class="btn btn-danger pull-right" [disabled]="myForm.invalid">Ajout Depot</button>
-                        <div class="clearfix"></div>
-                      </form>
-                    </div>
-                </div>
-            </div>
+              <div class="row">
+              </div>
+              <button mat-raised-button type="submit" class="btn btn-danger pull-right"
+                [disabled]="myForm.invalid">Ajout Depot</button>
+              <div class="clearfix"></div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
   </div>
-  
+</div>

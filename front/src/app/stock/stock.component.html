@@ -54,7 +54,7 @@
                   <th *ngIf="tableData.length > 0">Bureau</th>
                   <th>Article</th>
                   <th>Quantité</th>
-                  <th >Defectieux</th>
+                  <th >Défectueux</th>
                   <th *ngIf="tableData.length > 0"></th>
                   <th *ngIf="tableData.length > 0"></th>
 
@@ -68,7 +68,7 @@
                       <td>{{ item.quantityDefect }}</td>
                       <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
-                          (click)="setSelectedItem(item); setAction('defect')">Defectieux</button>
+                          (click)="setSelectedItem(item); setAction('defect')">Défectueux</button>
                       </td>
                       <td>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"
@@ -137,12 +137,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">{{ action === 'defect' ? 'Add to Defectieux' : 'Reparer Article' }}</h4>
+        <h4 class="modal-title" id="myModalLabel">{{ action === 'defect' ? 'Add to Défectueux' : 'Reparer Article' }}</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body"> 
         <div class="col-md-12">
           <mat-form-field class="example-full-width">
             <input matInput placeholder="Quantité" id="quantity" name="quantity" [(ngModel)]="newQuantity" #quantity="ngModel" required pattern="^\d+$">

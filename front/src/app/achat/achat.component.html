@@ -48,7 +48,7 @@
                  <div class="col-md-4">
                   <div class="input-group">
                     <select #selectElement  data-live-search="true" [(ngModel)]="selectedValue" class="form-control">
-                      <option value="" disabled selected style="color: blueviolet;">Select Article</option> <!-- Add the initial placeholder option -->
+                      <option value="Article" disabled selected style="color: blueviolet;">Select Article</option> <!-- Add the initial placeholder option -->
                       <option *ngFor="let article of filteredArticles" [value]="article.name">{{ article.name }}</option>
                     </select>
                   </div>
@@ -60,7 +60,7 @@
                 <div class="col-md-4">
                   <mat-form-field class="example-full-width">
                     <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="formData.code" required (input)="onCodeInput()" #code="ngModel" required pattern="^[^\s].*[^\s]$">
-                    <mat-error *ngIf="code.invalid">Le code article doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
+                    <mat-error *ngIf="code.invalid">Le code est invalide.</mat-error>
                   </mat-form-field>
                 </div>
                 

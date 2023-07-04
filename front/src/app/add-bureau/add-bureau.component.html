@@ -12,8 +12,8 @@
 
                           <div class="col-md-4">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Name" id="name" name="name" [(ngModel)]="formData.name" #name="ngModel"  required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]*[a-zA-Z0-9]$">
-                              <mat-error *ngIf="name.invalid">Le nom du bureau contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
+                              <input matInput placeholder="Name" id="name" name="name" [(ngModel)]="formData.name" #name="ngModel"  required pattern="^[^\s].*[^\s]$">
+                              <mat-error *ngIf="name.invalid">Le nom est invalide</mat-error>
                             </mat-form-field>
                           </div>
                           <div class="col-md-4">
@@ -32,8 +32,8 @@
                       
                           <div class="col-md-4">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Code bureau" id="numero" name="numero" [(ngModel)]="formData.numero" #numeroBureau="ngModel"  required pattern="^[a-zA-Z0-9][a-zA-Z0-9\s]*[a-zA-Z0-9]$">
-                              <mat-error *ngIf="numeroBureau.invalid">Le numero bureau doit contenir que des chiffres et ne peut pas commencer ou se terminer par un espace.</mat-error>
+                              <input matInput placeholder="Code bureau" id="numero" name="numero" [(ngModel)]="formData.numero" #numeroBureau="ngModel"  required pattern="^[^\s].*[^\s]$">
+                              <mat-error *ngIf="numeroBureau.invalid">Le code est invalide</mat-error>
                             </mat-form-field>
                           </div>
                           
