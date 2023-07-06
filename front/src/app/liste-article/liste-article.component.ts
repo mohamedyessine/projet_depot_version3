@@ -10,7 +10,7 @@ import html2canvas from 'html2canvas';
   styleUrls: ['./liste-article.component.css']
 })
 export class ListeArticleComponent implements OnInit {
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://41.226.182.130:5000';
   searchText: string = '';
   tableData: any;
   // Define the page and page size variables
