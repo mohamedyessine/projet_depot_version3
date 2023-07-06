@@ -45,8 +45,8 @@ public class StockService {
         this.bureauRepo = bureauRepo;
         this.bureauService = bureauService;
     }
-    String image1Filename = "C:\\Full_Depot_Projet\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg";
-    String image2Filename = "C:\\Full_Depot_Projet\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png";
+    String image1Filename = "https://res.cloudinary.com/applicationsportif/image/upload/v1688652832/9ba4a_udxqer.jpg";
+    String image2Filename = "https://res.cloudinary.com/applicationsportif/image/upload/v1688652920/dgi_pjpwh7.png";
     public List<ArticleBureau> getAllStock() {
         return articleBureauRepo.findAll();
     }
