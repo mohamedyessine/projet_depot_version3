@@ -19,10 +19,10 @@ export const ROUTES: RouteInfo[] = [
   { path: '/achat', title: 'Achat',  icon:'shopping_cart', class: '' },
   { path: '/stock', title: 'Stock',  icon:'storage', class: '' },
   { path: '/transfer', title: 'Transfert',  icon:'local_shipping', class: '' },
-  { path: '/historique-transfert', title: 'Historique Transfert',  icon:'history', class: 'active-pro' },
+  { path: '/historique-transfert', title: 'Transfert historique',  icon:'history', class: 'active-pro' },
   { path: '/list-defect', title: 'Historique Defectieux',  icon:'history', class: 'active-pro' },
-  { path: '/liste-users', title: 'Liste des utilisateur',  icon:'list', class: '' },
-  { path: '/login', title: 'Login',  icon:'person', class: 'active-pro' },
+  { path: '/liste-users', title: 'Liste des utilisateurs',  icon:'list', class: '' },
+  { path: '/login', title: 'Connextion',  icon:'person', class: 'active-pro' },
 
   //{ path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
   //{ path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
@@ -53,7 +53,7 @@ export class SidebarComponent implements OnInit {
         this.menuItems[this.menuItems.length - 1].icon = 'exit_to_app';
         this.menuItems[this.menuItems.length - 1].class = '';
       } else {
-        this.menuItems[this.menuItems.length - 1].title = 'Login';
+        this.menuItems[this.menuItems.length - 1].title = 'Connexion';
         this.menuItems[this.menuItems.length - 1].icon = 'person';
         this.menuItems[this.menuItems.length - 1].class = 'active-pro';
       }
@@ -62,7 +62,7 @@ export class SidebarComponent implements OnInit {
   
   logout() {
     // Update the Login menu item back to Login
-    this.menuItems[this.menuItems.length - 1].title = 'Login';
+    this.menuItems[this.menuItems.length - 1].title = 'Connexion';
     this.menuItems[this.menuItems.length - 1].icon = 'person';
     this.menuItems[this.menuItems.length - 1].class = 'active-pro';
   

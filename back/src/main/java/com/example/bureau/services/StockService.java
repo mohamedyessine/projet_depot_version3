@@ -45,8 +45,8 @@ public class StockService {
         this.bureauRepo = bureauRepo;
         this.bureauService = bureauService;
     }
-    String image1Filename = "D:\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg";
-    String image2Filename = "D:\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png";
+    String image1Filename = "C:\\Full_Depot_Projet\\projet_depot_version3\\front\\src\\assets\\img\\9ba4a.jpg";
+    String image2Filename = "C:\\Full_Depot_Projet\\projet_depot_version3\\front\\src\\assets\\img\\dgi.png";
     public List<ArticleBureau> getAllStock() {
         return articleBureauRepo.findAll();
     }
@@ -207,7 +207,7 @@ public class StockService {
         title.add(new Chunk(image1, 0, -20));
 
         // Add title text with black color
-        Chunk titleText = new Chunk("Inventory of " + depot.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
+        Chunk titleText = new Chunk("Inventaire de " + depot.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
         title.add(titleText);
 
         // Add image2 at the right of the title
@@ -231,13 +231,13 @@ public class StockService {
         // Add table headers
         PdfPCell headerCell = new PdfPCell();
         headerCell.setBackgroundColor(BaseColor.GRAY);
-        headerCell.setPhrase(new Phrase("Article Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Article", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Quantité", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Defective Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Quantité défectueuse", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
         // Populate data rows
@@ -279,10 +279,10 @@ public class StockService {
 
         // Create header row
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("Bureau Name");
-        headerRow.createCell(1).setCellValue("Article Name");
-        headerRow.createCell(2).setCellValue("Quantity");
-        headerRow.createCell(3).setCellValue("Quantity Defectieux");
+        headerRow.createCell(0).setCellValue("Bureau");
+        headerRow.createCell(1).setCellValue("Article");
+        headerRow.createCell(2).setCellValue("Quantité");
+        headerRow.createCell(3).setCellValue("Quantité défectueuse");
 
 
         // Populate data rows
@@ -343,7 +343,7 @@ public class StockService {
         title.add(new Chunk(image1, 0, -20));
 
         // Add title text with blue color
-        Chunk titleText = new Chunk("Inventaire of" + bureau.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
+        Chunk titleText = new Chunk("Inventaire de " + bureau.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
         title.add(titleText);
 
         // Add image2 at the right of the title
@@ -370,13 +370,13 @@ public class StockService {
 //        headerCell.setPhrase(new Phrase("Bureau Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
 //        table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Article Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Article", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Quantité", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Defectieux", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Défectueux", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
         // Populate data rows with styled cells
@@ -510,8 +510,8 @@ public class StockService {
 
         // Create header row
         Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("Depot Name");
-        headerRow.createCell(1).setCellValue("Article Name");
+        headerRow.createCell(0).setCellValue("Depot");
+        headerRow.createCell(1).setCellValue("Article");
         headerRow.createCell(2).setCellValue("Quantity");
         headerRow.createCell(3).setCellValue("Quantity Defectieux");
 
@@ -627,7 +627,7 @@ public class StockService {
         title.add(new Chunk(image1, 0, -20));
 
         // Add title text with black color
-        Chunk titleText = new Chunk("Full Inventory", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
+        Chunk titleText = new Chunk(" Inventaire complet ", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
         title.add(titleText);
 
         // Add image2 at the right of the title
@@ -651,19 +651,19 @@ public class StockService {
         // Add table headers with color
         PdfPCell headerCell = new PdfPCell();
         headerCell.setBackgroundColor(BaseColor.GRAY);
-        headerCell.setPhrase(new Phrase("Depot Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Dépôt", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Article Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Article", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Article Code", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Code", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Quantity", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Quantité", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
-        headerCell.setPhrase(new Phrase("Defective", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
+        headerCell.setPhrase(new Phrase("Défectueux", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
         // Populate data rows with styled cells

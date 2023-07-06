@@ -54,7 +54,7 @@ export class AuthGuard implements CanActivate {
         switchMap((userDetails: any) => {
 
           if (!userDetails) {
-            const errorMessage = 'Error retrieving user details';
+            const errorMessage = "Erreur lors de la récupération des détails de l'utilisateur";
             alert(errorMessage); // Display error message
             this.router.navigate(['/login']); // Redirect to login page
             return of(false);
@@ -66,14 +66,14 @@ export class AuthGuard implements CanActivate {
           return this.authService.ExistUser(username, email).pipe(
             tap((exists: boolean) => {
               if (!exists) {
-                const message = `User with username ${username} and email ${email} does not exist`;
+                const message = `${username} et le email ${email} n'existe pas`;
                 alert(message); // Display alert for non-existing user
                 this.router.navigate(['/login']); // Redirect to login page
               }
             }),
             map((exists: boolean) => exists),
             catchError(() => {
-              const errorMessage = 'Error retrieving user details';
+              const errorMessage =  "Erreur lors de la récupération des détails de l'utilisateur";
               alert(errorMessage); // Display error message
               this.router.navigate(['/login']); // Redirect to login page
               return of(false);
@@ -81,7 +81,7 @@ export class AuthGuard implements CanActivate {
           );
         }),
         catchError(() => {
-          const errorMessage = 'Error retrieving user details';
+          const errorMessage =  "Erreur lors de la récupération des détails de l'utilisateur";
           alert(errorMessage); // Display error message
           this.router.navigate(['/login']); // Redirect to login page
           return of(false);

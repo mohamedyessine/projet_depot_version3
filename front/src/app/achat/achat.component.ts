@@ -17,7 +17,7 @@ declare var $: any;
   styleUrls: ['./achat.component.css']
 })
 export class AchatComponent implements OnInit{
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://41.226.182.130:5000';
   data: any = {};
   formData = {
     bureauId:'',
@@ -45,11 +45,11 @@ export class AchatComponent implements OnInit{
      this.selectedValue = ''; 
   }
   onArticleSelect() {
-    console.log("Selected Article Code:")
+   // console.log("Selected Article Code:")
     const selectedArticle = this.filteredArticles.find(article => article.name === this.selectedValue);
     if (selectedArticle) {
       this.formData.code = selectedArticle.code; // Set the code for the selected article
-      console.log("Selected Article Code:", selectedArticle.code);
+    //  console.log("Selected Article Code:", selectedArticle.code);
     }
   }
   
@@ -124,23 +124,26 @@ export class AchatComponent implements OnInit{
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
-        console.log("hhh "+ this.filteredArticles);
+      //  console.log("hhh "+ this.filteredArticles);
         
         // $('.selectpicker').selectpicker();
         this.populateSelect(this.filteredArticles);
         this.initializeSelectPicker();
       },
       (error) => {
-        console.log("error");
+        this.snackBar.open("Aucun article exist.", 'Close', { 
+          duration: 3000,
+          panelClass: ['error-snackbar'] // Add a custom class to the snackbar
+        });
       }
     );
   }
   populateSelect(options: any[]):void{
-    console.log("fdfddfd");
+    //console.log("fdfddfd");
     
     const select = this.selectElement.nativeElement;
-    console.log("khijhfdfhd " +select);
-    console.log("yaaaa " +options);
+    // console.log("khijhfdfhd " +select);
+    // console.log("yaaaa " +options);
 
     
     options.forEach(option => {
@@ -155,7 +158,7 @@ export class AchatComponent implements OnInit{
     select.addEventListener('change', () => {
       const selectedOption = options.find(option => option.id.toString() === select.value.toString());
   
-      console.log("selectedOption: ", selectedOption);
+    //  console.log("selectedOption: ", selectedOption);
   
       if (selectedOption) {
         this.formData.code = selectedOption.code;
@@ -208,8 +211,6 @@ onCodeInput() {
     if (form.invalid) {
       return;
     }
-
-   
   
     // Make an HTTP request to get the ID of the article
     const url = `${this.baseUrl}/articles/articles/`;
@@ -233,7 +234,7 @@ onCodeInput() {
         const url1 = `${this.baseUrl}/articles/add`;
         this.http.post(url1, formDataWithId, {headers})
           .subscribe(response => {
-            console.log('Form submitted:', response);
+            //console.log('Form submitted:', response);
             this.snackBar.open(response['message'], 'Close', { 
               duration: 3000,
               panelClass: ['success-snackbar'] // Add a custom class to the snackbar

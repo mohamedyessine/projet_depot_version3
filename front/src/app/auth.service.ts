@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://41.226.182.130:5000';
 
   constructor(private http: HttpClient) {
     this.checkAuthenticationStatus();
@@ -50,7 +50,7 @@ export class AuthService {
           }
         }),
         catchError((error) => {
-          console.error('Error during login:', error);
+          //console.error('Error during login:', error);
           return of(false);
         })
       );
@@ -72,14 +72,14 @@ export class AuthService {
           }
         }),
         catchError((error) => {
-          console.error('Error during signup:', error);
+          //console.error('Error during signup:', error);
           return of(false);
         })
       );
   }
   deleteUserById(userId: number): Observable<void> {
     const headers = this.getHeaders();
-    const url = `http://localhost:8080/api/auth/${userId}`;
+    const url = `http://41.226.182.130:5000/api/auth/${userId}`;
     return this.http.delete<void>(url, {headers});
   }
 

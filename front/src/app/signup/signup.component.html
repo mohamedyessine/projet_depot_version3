@@ -4,14 +4,14 @@
       <div class="col-md-6 ">
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">Signup</h4>
+            <h4 class="card-title">Ajouter nouvel utilisateur</h4>
           </div>
           <div class="card-body text-center">
             <div class="container">
               <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
                 <div class="col-md-12">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Username" id="username" [(ngModel)]="username" name="username" #name="ngModel" required minlength="3" pattern="^[^\s].*[^\s]$">
+                    <input matInput placeholder="Nom d'utilisateur" id="username" [(ngModel)]="username" name="username" #name="ngModel" required minlength="3" pattern="^[^\s].*[^\s]$">
                     <mat-error *ngIf="name.invalid">Le nom est invalide.</mat-error>
                   </mat-form-field>
                 </div>
@@ -23,11 +23,11 @@
                 </div>
                 <div class="col-md-12">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="mot de passe" type="password" id="password" name="password" [(ngModel)]="password" required minlength="8">
-                    <mat-error *ngIf="myForm.controls['password']?.invalid">The password must contain at least 8 characters.</mat-error>
+                    <input matInput placeholder="Mot de passe" type="password" id="password" name="password" [(ngModel)]="password" required minlength="8">
+                    <mat-error *ngIf="myForm.controls['password']?.invalid">Le mot de passe doit contenir au moins 8 caractères.</mat-error>
                   </mat-form-field>
                 </div>
-                <button type="submit" class="btn btn-danger" [disabled]="myForm.invalid">Signup</button>
+                <button type="submit" class="btn btn-danger" [disabled]="myForm.invalid">Ajouter</button>
               </form>
             </div>
           </div>

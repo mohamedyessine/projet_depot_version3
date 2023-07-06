@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-article.component.css']
 })
 export class AddArticleComponent implements OnInit {
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://41.226.182.130:5000';
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
@@ -35,7 +35,7 @@ export class AddArticleComponent implements OnInit {
         const url = `${this.baseUrl}/articles`;
         const headers = this.getHeaders();
         this.http.post(url, this.formData, {headers}).subscribe(response => {
-          this.snackBar.open("Added successfully", 'Close', { 
+          this.snackBar.open("Article créé avec succès", 'Close', { 
             duration: 3000,
             panelClass: ['success-snackbar'] // Add a custom class to the snackbar
           });

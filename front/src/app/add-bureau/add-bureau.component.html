@@ -12,27 +12,27 @@
 
                           <div class="col-md-4">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Name" id="name" name="name" [(ngModel)]="formData.name" #name="ngModel"  required pattern="^[^\s].*[^\s]$">
+                              <input matInput placeholder="Nom Bureau" id="name" name="name" [(ngModel)]="formData.name" #name="ngModel"  required pattern="^[^\s].*[^\s]$">
                               <mat-error *ngIf="name.invalid">Le nom est invalide</mat-error>
                             </mat-form-field>
                           </div>
                           <div class="col-md-4">
                             <mat-form-field class="example-full-width">
-                              <mat-label>Depot Name</mat-label>
+                              <mat-label>Nom Depot</mat-label>
                               <mat-select placeholder="Select Depot" name="depot" [(ngModel)]="data.depot" (selectionChange)="onDepotsSelection()">
                                 <mat-option *ngFor="let depot of depots" [value]="depot.name">
                                   {{ depot.name }} 
                                 </mat-option>
                               </mat-select>
                               <mat-error *ngIf="myForm.submitted && myForm.controls['article'].invalid">
-                                Please select an depot.
+                                Veuillez sélectionner un dépôt.
                               </mat-error>
                             </mat-form-field>
                           </div>
                       
                           <div class="col-md-4">
                             <mat-form-field class="example-full-width">
-                              <input matInput placeholder="Code bureau" id="numero" name="numero" [(ngModel)]="formData.numero" #numeroBureau="ngModel"  required pattern="^[^\s].*[^\s]$">
+                              <input matInput placeholder="Code Bureau" id="numero" name="numero" [(ngModel)]="formData.numero" #numeroBureau="ngModel"  required pattern="^[^\s].*[^\s]$">
                               <mat-error *ngIf="numeroBureau.invalid">Le code est invalide</mat-error>
                             </mat-form-field>
                           </div>
@@ -41,7 +41,7 @@
                         </div>
                         
                         <button mat-raised-button type="submit" class="btn btn-danger pull-right" [disabled]="myForm.invalid">
-                          Ajouter
+                          Ajouter bureau
                         </button>
                         
                         <div class="clearfix"></div>

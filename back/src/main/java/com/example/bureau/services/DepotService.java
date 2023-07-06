@@ -13,9 +13,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -269,6 +271,40 @@ public class DepotService {
         } finally {
             workbook.close();
             inputStream.close();
+        }
+    }
+
+    public void exportAllDepotsToExcel(String filePath) {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Depots");
+
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("ID");
+            headerRow.createCell(1).setCellValue("Name");
+            headerRow.createCell(2).setCellValue("Address");
+            headerRow.createCell(3).setCellValue("Number");
+
+            // Fetch all depots
+            Iterable<Depot> depots = depotRepo.findAll();
+
+            int rowNum = 1;
+            for (Depot depot : depots) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(depot.getId());
+                row.createCell(1).setCellValue(depot.getName());
+                row.createCell(2).setCellValue(depot.getAdresse());
+                row.createCell(3).setCellValue(depot.getNumero());
+            }
+
+            // Write the workbook to the file
+            try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+                workbook.write(outputStream);
+            }
+
+            System.out.println("Exported all depots to Excel successfully.");
+        } catch (Exception e) {
+            System.err.println("Error exporting depots to Excel: " + e.getMessage());
         }
     }
 

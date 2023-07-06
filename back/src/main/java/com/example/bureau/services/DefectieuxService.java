@@ -160,17 +160,17 @@ public class DefectieuxService {
         // Retrieve the ArticleBureau for the given article and depot
         ArticleBureau articleBureau = articleBureauRepo.findByArticleAndBureau(article, sourceBureau);
         if (articleBureau == null) {
-            throw new EntityNotFoundException("Article or Depot not found");
+            throw new EntityNotFoundException("Article ou dépôt introuvable");
         }
 
         // Check if the article is defectieux with a non-zero quantity
         if (articleBureau.getQuantityDefect() <= 0 ) {
-            throw new IllegalArgumentException("The article is not defectieux or has a quantity of 0");
+            throw new IllegalArgumentException("L'article n'est pas défectueux ou a une quantité de 0");
         }
 
         // Check if the quantity to be repaired is valid
         if (quantity <= 0 || quantity > articleBureau.getQuantityDefect()) {
-            throw new IllegalArgumentException("Invalid quantity to be repaired");
+            throw new IllegalArgumentException("Quantité invalide à réparer");
         }
 
         // Check if the article and depot exist in the defectieux

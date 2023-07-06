@@ -24,7 +24,7 @@ public class TransferService {
 
     public void transfer(Article article, Bureau targetBureau, int quantity, Bureau sourceBureau) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero.");
+            throw new IllegalArgumentException("La quantité doit être supérieure à zéro.");
         }
         ArticleBureau targetArticleBureau = articleBureauRepo.findByArticleAndBureau(article, targetBureau);
         ArticleBureau sourceArticleBureau = articleBureauRepo.findByArticleAndBureau(article, sourceBureau);
@@ -51,7 +51,7 @@ public class TransferService {
             transfer.setDateTransfer(new Date());
             transferRepo.save(transfer);
         } else {
-            throw new IllegalArgumentException("Insufficient quantity in source depot.");
+            throw new IllegalArgumentException("Quantité insuffisante dans le dépôt source.");
         }
     }
 
@@ -60,7 +60,7 @@ public class TransferService {
             Bureau targetBureau, Depot targetDepot, int quantity) {
 
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero.");
+            throw new IllegalArgumentException("La quantité doit être supérieure à zéro.");
         }
 
         ArticleBureau sourceArticleBureau = articleBureauRepo.findByArticleAndBureau(article, sourceBureau);
@@ -93,7 +93,7 @@ public class TransferService {
             transfer.setDateTransfer(new Date());
             transferRepo.save(transfer);
         } else {
-            throw new IllegalArgumentException("Insufficient quantity in the source depot.");
+            throw new IllegalArgumentException("Quantité insuffisante dans le dépôt source.");
         }
     }
 

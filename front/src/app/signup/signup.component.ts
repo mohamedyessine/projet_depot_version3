@@ -56,7 +56,7 @@ export class SignupComponent implements OnInit {
         .subscribe(result => {
           if (result) {
             // User signup successful, show success message or perform desired actions
-            this.snackBar.open('User added successfully', 'Close', {
+            this.snackBar.open("Utilisateur ajouté avec succès.", 'Close', {
               duration: 3000,
               panelClass: ['success-snackbar'] // Add a custom class to the snackbar
             });
@@ -65,15 +65,15 @@ export class SignupComponent implements OnInit {
             this.router.navigate(['/liste-users']);
           } else {
             // User signup failed, show error message
-            this.errorMessage = 'Failed to add user';
-            this.snackBar.open('Failed to add user', 'Close', {
+            this.errorMessage = "Échec de l'ajout de l'utilisateur.";
+            this.snackBar.open("Échec de l'ajout de l'utilisateur.", 'Close', {
               duration: 3000,
               panelClass: ['error-snackbar'] // Add a custom class to the snackbar
             });
           }
         }, error => {
-          console.error('Error during signup:', error);
-          this.errorMessage = 'An error occurred during signup';
+          console.error("Une erreur s'est produite lors de l'inscription.", error);
+          this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
           this.snackBar.open(error.error.message, 'Close', {
             duration: 3000,
             panelClass: ['error-snackbar'] // Add a custom class to the snackbar

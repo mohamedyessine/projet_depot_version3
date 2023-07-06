@@ -47,13 +47,13 @@ public class ArticleController {
     public Article addArticle(@RequestBody Article article) {
 
         // Check if any field contains only spaces
-        if (containsOnlySpaces(article)) {
+       /* if (containsOnlySpaces(article)) {
             throw new DuplicateException("Fields cannot contain only spaces");
-        }
+        }*/
         Article existingArticle = articleService.findByCode(article.getCode());
 
         if (existingArticle != null) {
-            throw new DuplicateException("Article with code '" + article.getCode() + "' already exists");
+            throw new DuplicateException("L'article avec le code '" + article.getCode() + "' existe déjà");
         }
 
         return articleService.addArticle(article);
@@ -78,7 +78,7 @@ public class ArticleController {
     public ResponseEntity<Article> findById(@PathVariable Long articleId) {
         Article article = articleService.findById(articleId);
         if (article == null) {
-            throw new ResourceNotFoundException("Article not found with id: " + articleId);
+            throw new ResourceNotFoundException("Article introuvable avec l'identifiant: " + articleId);
         }
         return ResponseEntity.ok().body(article);
     }
@@ -92,7 +92,7 @@ public class ArticleController {
         if (article != null) {
             return ResponseEntity.ok(article);
         } else {
-            String errorMessage = "Article not found with code: " + articleCode;
+            String errorMessage = "Article introuvable avec le code: " + articleCode;
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
@@ -105,7 +105,7 @@ public class ArticleController {
         if (article != null) {
             return ResponseEntity.ok(article);
         } else {
-            String errorMessage = "Article not found with code: " + code;
+            String errorMessage = "Article introuvable avec le code: " + code;
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
@@ -118,12 +118,12 @@ public class ArticleController {
         Bureau bureau = bureauService.findById(request.getBureauId());
 
         if (article == null || bureau == null) {
-            return ResponseEntity.badRequest().body(new ArticleBureauResponse("Invalid article or depot", 400, "Bad Request"));
+            return ResponseEntity.badRequest().body(new ArticleBureauResponse("Article ou dépôt invalide", 400, "Bad Request"));
         }
 
         try {
             articleService.addArticleToBureauGeneral(article, bureau, request.getQuantity());
-            return ResponseEntity.ok(new ArticleBureauResponse("Article added to depot successfully", 200, "OK"));
+            return ResponseEntity.ok(new ArticleBureauResponse("Article ajouté au dépôt avec succès", 200, "OK"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ArticleBureauResponse(e.getMessage(), 400, "Bad Request"));
         }
@@ -135,23 +135,23 @@ public class ArticleController {
 
         // Validate quantity
         if (request.getQuantity() <= 0) {
-            return ResponseEntity.badRequest().body(new ArticleBureauResponse("Quantity must be greater than zero", 400, "Bad Request"));
+            return ResponseEntity.badRequest().body(new ArticleBureauResponse("La quantité doit être supérieure à zéro", 400, "Bad Request"));
         }
         Article article = articleService.findById(request.getArticleId());
         Bureau bureau = bureauService.findById(request.getBureauId());
         Depot depot = depotService.findById(request.getDepotId());
 
         if (article == null || bureau == null || depot == null) {
-            return ResponseEntity.badRequest().body(new ArticleBureauResponse("Invalid article, bureau, or depot", 400, "Bad Request"));
+            return ResponseEntity.badRequest().body(new ArticleBureauResponse("Article, bureau ou dépôt invalide", 400, "Bad Request"));
         }
 
         try {
             articleService.addArticleToBureauAboutDepot(article, bureau, depot, request.getQuantity());
-            return ResponseEntity.ok(new ArticleBureauResponse("Article added to bureau and updated depot quantity successfully", 200, "OK"));
+            return ResponseEntity.ok(new ArticleBureauResponse("Achat ajouté avec succès", 200, "OK"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ArticleBureauResponse(e.getMessage(), 400, "Bad Request"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArticleBureauResponse("An error occurred while adding the article to the bureau and updating depot quantity", 500, "Internal Server Error"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArticleBureauResponse("Une erreur s'est produite lors de l'ajout", 500, "Internal Server Error"));
         }
     }
 
@@ -183,6 +183,18 @@ public class ArticleController {
             // Build the error response
             String message = "Failed to export articles to PDF";
             return new ResponseEntity<>(new ResponseExport(false, message), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<String> exportAllArticlesToExcel() {
+        String filePath = "D:\\excel\\articles.xlsx"; // Specify the desired file path
+        try {
+            articleService.exportAllArticleToExcel(filePath);
+            return ResponseEntity.ok("Articles exportés vers Excel avec succès.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to export articles to Excel: " + e.getMessage());
         }
     }
 

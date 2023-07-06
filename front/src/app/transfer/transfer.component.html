@@ -20,8 +20,8 @@
                 </div> -->
                <div class="col-md-6">
                   <div class="input-group">
-                    <select #selectElement  data-live-search="true" [(ngModel)]="selectedValue"  class="form-control">
-                      <option value="Article" disabled selected style="color: blueviolet;">Select Article</option> <!-- Add the initial placeholder option -->
+                    <select #selectElement  data-live-search="true" data-live-search-placeholder="Recherche.." [(ngModel)]="selectedValue"  class="form-control">
+                      <option value="Article" disabled selected style="color: blueviolet;">Sélectionner un article</option> <!-- Add the initial placeholder option -->
                       <option *ngFor="let article of filteredArticles" [value]="article.name">{{ article.name }}</option>
                     </select>
                   </div>
@@ -29,7 +29,7 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="data.code"  #code="ngModel" required pattern="^[^\s].*[^\s]$" (input)="onCodeInput()">
+                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="data.code"  #code="ngModel" required minlength="3" pattern="^[^\s].*[^\s]$" (input)="onCodeInput()">
                     <mat-error *ngIf="code.invalid">Le code est invalide.</mat-error>
                   </mat-form-field>
                 </div>
@@ -38,14 +38,13 @@
                   <mat-form-field class="example-full-width">
                     <input matInput placeholder="Quantité" type="text" id="quantity" name="quantity"
                       [(ngModel)]="quantity" required pattern="[0-9]+">
-                    <mat-error *ngIf="myForm.submitted &&myForm.controls['quantity'].invalid">The quantité must contain only
-                      numbers.</mat-error>
+                    <mat-error *ngIf="myForm.submitted &&myForm.controls['quantity'].invalid">La quantité ne doit contenir que des chiffres.</mat-error>
                   </mat-form-field>
                 </div>
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Depot Emetteur</mat-label>
-                    <mat-select placeholder="Select Depot" name="depotEmetteur" required [(ngModel)]="selectedDepotValue"
+                    <mat-select placeholder="Sélectionner un Depot" name="depotEmetteur" required [(ngModel)]="selectedDepotValue"
                                 (selectionChange)="getBureauxByDepotEmetteur()">
                       <mat-option *ngFor="let depot of depots" [value]="depot.value">
                         {{ depot.viewValue }}
@@ -57,7 +56,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Bureau Emetteur</mat-label>
-                    <mat-select placeholder="Select Bureau" name="sourceBureau" [(ngModel)]="sourceBureau" required
+                    <mat-select placeholder="Sélectionner un Bureau" name="sourceBureau" [(ngModel)]="sourceBureau" required
                                 [disabled]="!selectedDepotValue">
                       <mat-option *ngFor="let bureau of bureaux" [value]="bureau.value">
                         {{ bureau.viewValue }}
@@ -70,7 +69,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Depot Recepteur</mat-label>
-                    <mat-select placeholder="Select Depot" name="depotRecepteur" required [(ngModel)]="selectedTargetDepotValue"
+                    <mat-select placeholder="Sélectionner un Depot" name="depotRecepteur" required [(ngModel)]="selectedTargetDepotValue"
                                 (selectionChange)="getBureauxByDepotRecepteur()">
                       <mat-option *ngFor="let depot of depots" [value]="depot.value">
                         {{ depot.viewValue }}
@@ -82,7 +81,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
                     <mat-label>Bureau Recepteur</mat-label>
-                    <mat-select placeholder="Select Bureau" name="targetBureau" [(ngModel)]="targetBureau" required
+                    <mat-select placeholder="Sélectionner un Bureau" name="targetBureau" [(ngModel)]="targetBureau" required
                                 [disabled]="!selectedTargetDepotValue">
                       <mat-option *ngFor="let bureau of bureaux1" [value]="bureau.value">
                         {{ bureau.viewValue }}

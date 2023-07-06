@@ -67,7 +67,7 @@ public class DefectieuxController {
                                                        @RequestParam Long sourceBureauId,
                                                        @RequestParam int quantity) {
         if (quantity <= 0) {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid quantity");
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Quantité invalide");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
@@ -128,7 +128,7 @@ public class DefectieuxController {
                                              @RequestParam("sourceBureauId") Long sourceBureauId,
                                              @RequestParam("quantity") int quantity) {
        if (quantity <= 0) {
-           ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid quantity");
+           ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Quantité invalide");
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
        }
 
@@ -144,7 +144,7 @@ public class DefectieuxController {
            response.put("message", "Reparation updated successfully");
            return ResponseEntity.ok(response);
        } catch (EntityNotFoundException e) {
-           ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Article or Bureau not found");
+           ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Article ou Bureau introuvable");
            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
        } catch (IllegalArgumentException e) {
            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());

@@ -35,25 +35,25 @@ public class DepotController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public Depot addDepot(@RequestBody Depot depot) {
         // Check if any field contains only spaces
-        if (containsOnlySpaces(depot)) {
+       /* if (containsOnlySpaces(depot)) {
             throw new DuplicateException("Fields cannot contain only spaces");
-        }
+        }*/
 
         Depot existingDepot = depotService.findByNumero(depot.getNumero());
 
         if (existingDepot != null) {
-            throw new DuplicateException("Depot with numero '" + depot.getNumero() + "' already exists");
+            throw new DuplicateException("Dépôt avec numéro '" + depot.getNumero() + "' existe déjà");
         }
 
         return depotService.addDepot(depot);
     }
 
-    private boolean containsOnlySpaces(Depot depot) {
+    /*private boolean containsOnlySpaces(Depot depot) {
         String numero = depot.getNumero().trim();
         String name = depot.getName().trim();
 
         return !numero.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$") || !name.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$");
-    }
+    }*/
     /*public Depot addDepot(@RequestBody Depot depot) {
         Depot existingDepot = depotService.findByNumero(depot.getNumero());
 
@@ -85,7 +85,7 @@ public class DepotController {
         if (depot != null) {
             return ResponseEntity.ok(depot);
         } else {
-            String errorMessage = "Depot not found with numero: " + depotNumero;
+            String errorMessage = "Dépôt introuvable avec le numéro: " + depotNumero;
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
@@ -98,7 +98,7 @@ public class DepotController {
         if (depot != null) {
             return ResponseEntity.ok(depot);
         } else {
-            String errorMessage = "Depot not found with numero: " + depotNumero;
+            String errorMessage = "Dépôt introuvable avec le numéro: " + depotNumero;
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
@@ -111,7 +111,7 @@ public class DepotController {
         List<Depot> depots = depotService.findDepotsByNameContaining(name);
 
         if (depots.isEmpty()) {
-            String errorMessage = "No depots found containing name: " + name;
+            String errorMessage = "Aucun dépôt contenant le nom trouvé: " + name;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         }
 
@@ -159,5 +159,17 @@ public class DepotController {
             return ResponseEntity.badRequest().body("Error uploading file: " + e.getMessage());
         }
     }
+
+    @GetMapping("/export")
+    public String exportAllDepotsToExcel() {
+        String filePath = "D:\\excel\\depots.xlsx"; // Specify the desired file path
+        try {
+            depotService.exportAllDepotsToExcel(filePath);
+            return "Dépôts exportés vers Excel avec succès.";
+        } catch (Exception e) {
+            return "Erreur lors de l'exportation des dépôts vers Excel: " + e.getMessage();
+        }
+    }
+
 
 }

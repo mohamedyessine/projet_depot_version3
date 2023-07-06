@@ -12,6 +12,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -135,7 +136,7 @@ public class ArticleService {
 
     public void addArticleToBureauGeneral(Article article, Bureau bureau, int quantity) throws IllegalArgumentException {
         if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
+            throw new IllegalArgumentException("La quantité ne peut pas être négative");
         }
 
         ArticleBureau targetArticleBureau = articleBureauRepo.findByArticleAndBureau(article, bureau);
@@ -152,7 +153,7 @@ public class ArticleService {
     }
     public void addArticleToBureauAboutDepot(Article article, Bureau bureau, Depot depot, int quantity) throws IllegalArgumentException {
         if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
+            throw new IllegalArgumentException("La quantité ne peut pas être négative");
         }
 
         ArticleBureau targetArticleBureau = articleBureauRepo.findByArticleAndBureau(article, bureau);
@@ -218,6 +219,42 @@ public class ArticleService {
             System.out.println("PDF export complete. Output file: " + outputPath);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+
+    public void exportAllArticleToExcel(String filePath) {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Articles");
+
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("ID");
+            headerRow.createCell(1).setCellValue("Name");
+            headerRow.createCell(2).setCellValue("Label");
+            headerRow.createCell(3).setCellValue("Code");
+
+            // Fetch all articles
+            Iterable<Article> articles = articleRepo.findAll();
+
+            int rowNum = 1;
+            for (Article article : articles) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(article.getId());
+                row.createCell(1).setCellValue(article.getName());
+                row.createCell(2).setCellValue(article.getLebelle());
+                row.createCell(3).setCellValue(article.getCode());
+            }
+
+            // Write the workbook to the file
+            try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+                workbook.write(outputStream);
+            }
+
+            System.out.println("Exported all articles to Excel successfully.");
+        } catch (Exception e) {
+            System.err.println("Error exporting articles to Excel: " + e.getMessage());
         }
     }
 

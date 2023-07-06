@@ -23,9 +23,9 @@ public class BureauController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Bureau> createBureauInDepot(@RequestBody Bureau bureau, @RequestParam Long depotId) {
         // Check if any field contains only spaces
-        if (containsOnlySpaces(bureau)) {
+       /* if (containsOnlySpaces(bureau)) {
             throw new DuplicateException("Fields cannot contain only spaces");
-        }
+        }*/
         Bureau createdBureau = bureauService.createBureauInDepot(bureau, depotId);
         return ResponseEntity.ok(createdBureau);
     }

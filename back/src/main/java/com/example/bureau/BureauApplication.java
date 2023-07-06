@@ -15,7 +15,7 @@ public class BureauApplication {
 public CorsFilter corsFilter() {
    CorsConfiguration corsConfiguration = new CorsConfiguration();
    corsConfiguration.setAllowCredentials(true);
-   corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5000"));
+   corsConfiguration.setAllowedOrigins(Arrays.asList("http://41.226.182.130:5000"));
    corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
          "Accept", "Authorization", "Origin, Accept", "X-Requested-With",
          "Access-Control-Request-Method", "Access-Control-Request-Headers"));

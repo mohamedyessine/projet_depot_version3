@@ -35,15 +35,15 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/stock']);
           } else {
             // Authentication failed, show error message
-            this.errorMessage = 'Invalid username or password';
+            this.errorMessage = 'Nom utilisateur ou mot de passe invalide';
             this.snackBar.open('Nom utilisateur ou mot de passe invalide', 'Close', { 
               duration: 3000,
               panelClass: ['error-snackbar'] // Add a custom class to the snackbar
             });
           }
         }, error => {
-          console.error('Error during login:', error);
-          this.errorMessage = 'An error occurred during login';
+          console.error('Erreur lors de la connexion:', error);
+          this.errorMessage = "Une erreur s'est produite lors de la connexion";
           this.snackBar.open(error.error.message, 'Close', { 
             duration: 3000,
             panelClass: ['error-snackbar'] // Add a custom class to the snackbar

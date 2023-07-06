@@ -21,7 +21,7 @@ declare var $: any;
   styleUrls: ['./transfer.component.css']
 })
 export class TransferComponent implements OnInit {
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://41.226.182.130:5000';
   formData = {
     bureauId:'',
     code: '',
@@ -113,8 +113,8 @@ export class TransferComponent implements OnInit {
       //   this.sourceBureau = null;
       // }
       // Log the selected values
-      console.log('Selected Depot Emetteur:', this.selectedDepotValue);
-      console.log('Selected Bureau Emetteur:', this.sourceBureau);
+      // console.log('Selected Depot Emetteur:', this.selectedDepotValue);
+      // console.log('Selected Bureau Emetteur:', this.sourceBureau);
     });
   }
   
@@ -126,8 +126,8 @@ export class TransferComponent implements OnInit {
     this.getBureauxByDepot(this.selectedTargetDepotValue).subscribe((bureaux1: any[]) => {
       this.bureaux1 = bureaux1;
       // Log the selected values
-      console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
-      console.log('Selected Bureau Recepteur:', this.targetBureau);
+      // console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
+      // console.log('Selected Bureau Recepteur:', this.targetBureau);
     });
   } else {
     this.getBureauxByDepot(this.selectedTargetDepotValue).subscribe((bureaux1: any[]) => {
@@ -146,8 +146,8 @@ export class TransferComponent implements OnInit {
       //   this.targetBureau = null;
       // }
       // Log the selected values
-      console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
-      console.log('Selected Bureau Recepteur:', this.targetBureau);
+      // console.log('Selected Depot Recepteur:', this.selectedTargetDepotValue);
+      // console.log('Selected Bureau Recepteur:', this.targetBureau);
     });
   } 
   // else {
@@ -159,9 +159,6 @@ export class TransferComponent implements OnInit {
   //   console.log('Selected Bureau Recepteur:', this.targetBureau);
   // }
 }
-
-  
-  
 
   filterItem(event: string) {
     
@@ -185,23 +182,23 @@ export class TransferComponent implements OnInit {
       (response) => {
         this.articles = response;
         this.filteredArticles = this.articles; 
-        console.log("hhh "+ this.filteredArticles);
+       // console.log("hhh "+ this.filteredArticles);
         
         // $('.selectpicker').selectpicker();
         this.populateSelect(this.filteredArticles);
         this.initializeSelectPicker();
       },
       (error) => {
-        console.log("error");
+//console.log("error");
       }
     );
   }
   populateSelect(options: any[]):void{
-    console.log("fdfddfd");
+    //console.log("fdfddfd");
     
     const select = this.selectElement.nativeElement;
-    console.log("khijhfdfhd " +select);
-    console.log("yaaaa " +options);
+    // console.log("khijhfdfhd " +select);
+    // console.log("yaaaa " +options);
 
     
     options.forEach(option => {
@@ -216,7 +213,7 @@ export class TransferComponent implements OnInit {
     select.addEventListener('change', () => {
       const selectedOption = options.find(option => option.id.toString() === select.value.toString());
   
-      console.log("selectedOption: ", selectedOption);
+      //console.log("selectedOption: ", selectedOption);
   
       if (selectedOption) {
         this.data.code = selectedOption.code;
@@ -225,6 +222,7 @@ export class TransferComponent implements OnInit {
       }
     });
   }
+
   initializeSelectPicker():void{
     // $(this.selectElement.nativeElement).selectpicker();
     $(this.selectElement.nativeElement).selectpicker('refresh');
@@ -252,9 +250,6 @@ export class TransferComponent implements OnInit {
     // Update the selected article in the data object
     this.selectedValue = selectedArticle ? selectedArticle.name : '';
   }
-
-
-
 
   ngOnInit() {
     // this.getData();
@@ -338,7 +333,7 @@ export class TransferComponent implements OnInit {
 // onSubmit(form: NgForm) {
 //   // call the backend API to get the article ID
  
-//         this.http.get<any>('http://localhost:8080/articles/articles/' + this.data.code)
+//         this.http.get<any>('http://41.226.182.130:5000/articles/articles/' + this.data.code)
 //       .subscribe(response => {
 //         // Get the ID from the response
 //         const articleId = response.id;
@@ -368,7 +363,7 @@ export class TransferComponent implements OnInit {
 //         // };
         
 //         // call the backend API to transfer the article to the selected depot
-//         this.http.post('http://localhost:8080/transfers', formData)
+//         this.http.post('http://41.226.182.130:5000/transfers', formData)
 //           .subscribe(
 //             (response) => {
 //               console.log(response);

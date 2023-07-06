@@ -72,7 +72,7 @@ public class AuthController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
         authService.deleteUserById(userId);
-        ApiResponse response = new ApiResponse("User deleted successfully.", HttpStatus.OK.value());
+        ApiResponse response = new ApiResponse("Utilisateur supprimé avec succès.", HttpStatus.OK.value());
         return ResponseEntity.ok(response);
     }
 
@@ -119,13 +119,13 @@ public class AuthController {
                     userDetails.getEmail(),
                     roles));
         } catch (UsernameTakenException e) {
-            return ResponseEntity.ok(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.ok(new MessageResponse("Erreur: le nom d'utilisateur est déjà pris!"));
         } catch (EmailTakenException e) {
-            return ResponseEntity.ok(new MessageResponse("Error: Email is already in use!"));
+            return ResponseEntity.ok(new MessageResponse("Erreur: l'e-mail est déjà utilisé!"));
         } catch (InvalidEmailException e) {
-            return ResponseEntity.ok(new MessageResponse("Error: Email should be valid!"));
+            return ResponseEntity.ok(new MessageResponse("Erreur: l'e-mail doit être valide!"));
         } catch (PasswordTooLongException e) {
-            return ResponseEntity.ok(new MessageResponse("Error: Password should be less than or equal to 120 characters!"));
+            return ResponseEntity.ok(new MessageResponse("Erreur: Le mot de passe doit être inférieur ou égal à 120caractères!"));
         } catch (Exception e) {
             return handleException(e);
         }
@@ -142,7 +142,7 @@ public class AuthController {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
-        return ResponseEntity.ok(new MessageResponse("User logged out successfully!"));
+        return ResponseEntity.ok(new MessageResponse("L'utilisateur s'est déconnecté avec succès!"));
     }
 
     @GetMapping("/exists")

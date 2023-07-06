@@ -47,8 +47,8 @@
                  --> 
                  <div class="col-md-4">
                   <div class="input-group">
-                    <select #selectElement  data-live-search="true" [(ngModel)]="selectedValue" class="form-control">
-                      <option value="Article" disabled selected style="color: blueviolet;">Select Article</option> <!-- Add the initial placeholder option -->
+                    <select #selectElement  data-live-search="true" data-live-search-placeholder="Recherche.." data-none-selected-text="Aucune sélection" [(ngModel)]="selectedValue" class="form-control">
+                      <option value="Article" disabled selected style="color: blueviolet;">Sélectionner un article</option> <!-- Add the initial placeholder option -->
                       <option *ngFor="let article of filteredArticles" [value]="article.name">{{ article.name }}</option>
                     </select>
                   </div>
@@ -59,7 +59,7 @@
                 
                 <div class="col-md-4">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="formData.code" required (input)="onCodeInput()" #code="ngModel" required pattern="^[^\s].*[^\s]$">
+                    <input matInput placeholder="Code Article" id="code" name="code" [(ngModel)]="formData.code" required (input)="onCodeInput()" #code="ngModel" required minlength="2" pattern="^[^\s].*[^\s]$">
                     <mat-error *ngIf="code.invalid">Le code est invalide.</mat-error>
                   </mat-form-field>
                 </div>
@@ -70,7 +70,7 @@
                     <input matInput placeholder="Quantité" id="quantity" name="quantity" [(ngModel)]="formData.quantity"
                       pattern="[0-9]+" required>
                     <mat-error *ngIf="myForm.submitted && myForm.controls['quantity'].invalid">
-                      The quantité must contain only numbers.
+                      La quantité ne doit contenir que des chiffres.
                     </mat-error>
                   </mat-form-field>
                 </div>

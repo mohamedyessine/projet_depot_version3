@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-depot.component.css']
 })
 export class AddDepotComponent implements OnInit {
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://41.226.182.130:5000';
   formData = {
     numero: '',
     name: '',
@@ -36,7 +36,7 @@ export class AddDepotComponent implements OnInit {
         const headers = this.getHeaders();
         const url = `${this.baseUrl}/depots`;
         this.http.post(url, this.formData, {headers}).subscribe(response => {
-          this.snackBar.open('Ajout réussie', 'Close', { 
+          this.snackBar.open('Depot créé avec succès.', 'Close', { 
             duration: 3000,
             panelClass: ['success-snackbar'] // Add a custom class to the snackbar
           });

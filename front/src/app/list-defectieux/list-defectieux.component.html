@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title ">Historique defectieux</h4>
+            <h4 class="card-title ">Historique défectueux</h4>
           </div>
           <div class="card-body">
             <div class="row align-items-center mb-3">
@@ -36,10 +36,10 @@
             </div>
             <div class="row text-center " *ngIf="!(tableData.length <8 )">
               <div class="col-md-12">
-                <button mat-button (click)="prevPage()" [disabled]="page === 1">Previous</button>
-                <button mat-button (click)="nextPage()" [disabled]="page === pageCount">Next</button>
+                <button mat-button (click)="prevPage()" [disabled]="page === 1">Précédent</button>
+                <button mat-button (click)="nextPage()" [disabled]="page === pageCount">Suivant</button>
                 <div class="pagination-info">
-                  Page {{page}} of {{pageCount}} pages
+                  Page {{page}} sur {{pageCount}} pages
                 </div>
               </div>
             </div>

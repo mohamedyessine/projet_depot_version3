@@ -35,7 +35,6 @@ public class TransferController {
     public TransferController(TransferService transferService, ArticleService articleService, BureauService bureauService, DepotRepo depotRepo, BureauRepo bureauRepo, ArticleRepo articleRepo) {
         this.transferService = transferService;
         this.articleService = articleService;
-
         this.bureauService = bureauService;
         this.depotRepo = depotRepo;
         this.bureauRepo = bureauRepo;
@@ -59,14 +58,14 @@ public class TransferController {
         Map<String, String> response = new HashMap<>();
         try {
             transferService.transfer(article, targetDepot, request.getQuantity(), sourceDepot);
-            response.put("message", "Article added to Bureau successfully");
+            response.put("message", "Article ajouté au Bureau avec succès");
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            String errorMessage = "Insufficient quantity in source Bureau.";
+            String errorMessage = "Quantité insuffisante dans le bureau source.";
             response.put("message", errorMessage);
             return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
-            String errorMessage = "Invalid Bureau or article ";
+            String errorMessage = "Bureau ou article invalide ";
             response.put("message", errorMessage);
             return ResponseEntity.badRequest().body(response);
         }
@@ -87,17 +86,17 @@ public class TransferController {
                 transferService.transferSourceBureauAboutSourceDepotToTargetBureauAboutTargetDepot(
                         article, sourceBureau, sourceDepot, targetBureau, targetDepot, transferRequest.getQuantity());
 
-                response.put("message", "Transfer completed successfully.");
+                response.put("message", "Transfert terminé avec succès.");
                 return ResponseEntity.ok(response);
             } else {
-                response.put("message", "Invalid input parameters.");
+                response.put("message", "Paramètres d'entrée non valides.");
                 return ResponseEntity.badRequest().body(response);
             }
         } catch (IllegalArgumentException e) {
             response.put("message", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {
-            response.put("message", "An error occurred during the transfer.");
+            response.put("message", "Une erreur s'est produite lors du transfert.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }

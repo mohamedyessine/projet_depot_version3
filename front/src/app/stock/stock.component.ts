@@ -75,8 +75,8 @@ export class StockComponent implements OnInit {
 
 
 
-  private baseUrl = 'http://localhost:8080';
-  private apiUrl = 'http://localhost:8080/defectueux';
+  private baseUrl = 'http://41.226.182.130:5000';
+  private apiUrl = 'http://41.226.182.130:5000/defectueux';
   tableData: TableData[] = [];
   tableFullData: TableFullData[] = [];
   selectedValue: string;
@@ -151,11 +151,11 @@ export class StockComponent implements OnInit {
           this.closeModal();
           // this.closeModalEvent.emit();
         }, 300);
-        this.snackBar.open('Defectueux added successfully', 'Close', {
+        this.snackBar.open('Defectueux ajouté avec succès', 'Close', {
           duration: 3000,
           panelClass: ['success-snackbar'] // Add a custom class to the snackbar
         });
-        console.log('Defectueux created:', defectueux);
+       // console.log('Defectueux created:', defectueux);
         // Handle any necessary actions upon successful creation
         this.getStock();
        
@@ -529,7 +529,7 @@ export class StockComponent implements OnInit {
           this.onChangeBureau(); // Call the onChangeBureau() function to load the data
         },
         (error) => {
-          console.error(error);
+         // console.error(error);
           this.bureaux = []; // Set the bureaux array to an empty array
           this.selectedValue = null; // Reset the selectedValue
           this.tableFullData = []; // Set the tableFullData array to an empty array to clear the table

@@ -24,7 +24,7 @@
                   <mat-form-field appearance="fill">
                     <mat-label>Choisir Bureau</mat-label>
                     <mat-select [(ngModel)]="selectedValue" name="bureau" required (selectionChange)="onChangeBureau()">
-                      <mat-option value="all">All</mat-option>
+                      <mat-option value="all">Tout</mat-option>
                       <mat-option *ngFor="let bureau of bureaux" [value]="bureau.value">
                         {{bureau.viewValue}}
                       </mat-option>
@@ -109,7 +109,7 @@
                 <i class="material-icons">close</i>
               </button>
               <span>
-                <b>Bureau is already empty or you didn't select a depot.</b>
+                <b>Le bureau est déjà vide ou vous n'avez pas sélectionné de dépôt.</b>
               </span>
             </div>
             <!-- <div class="row text-center" *ngIf="!(tableData.length <8 && tableFullData.length <8)">
@@ -137,7 +137,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">{{ action === 'defect' ? 'Add to Défectueux' : 'Reparer Article' }}</h4>
+        <h4 class="modal-title" id="myModalLabel">{{ action === 'defect' ? 'Ajouter à Défectueux' : 'Reparer Article' }}</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -158,7 +158,7 @@
           (click)="action === 'defect' ? createDefectueux(selectedItem.article.id, selectedItem.bureau.id, newQuantity) : reparerArticle(selectedItem.article.id, selectedItem.bureau.id, newQuantity)"   [disabled]="quantity.invalid ||  newQuantity === null || newQuantity === 0">
           {{ action === 'defect' ? 'Ajouter' : 'Reparer' }}
         </button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Annuler</button>
       </div>
     </div>
   </div>

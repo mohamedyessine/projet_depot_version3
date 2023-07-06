@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-bureau.component.css']
 })
 export class AddBureauComponent implements OnInit {
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://41.226.182.130:5000';
   data: any = {};
   formData = {
     depotId: '',
@@ -72,12 +72,12 @@ export class AddBureauComponent implements OnInit {
         this.http.post(url1 + depotId, bureauData, { headers })
           .subscribe(response => {
             console.log('Bureau created:', response);
-            this.snackBar.open('Bureau created successfully.', 'Close', {
+            this.snackBar.open('Bureau créé avec succès.', 'Close', {
               duration: 3000,
               panelClass: ['success-snackbar'] // Add a custom class to the snackbar
             });
           }, error => {
-            this.snackBar.open(error.error.message, 'Close', {
+            this.snackBar.open('le code existe déjà', 'Close', {
               duration: 3000,
               panelClass: ['error-snackbar'] // Add a custom class to the snackbar
             });
