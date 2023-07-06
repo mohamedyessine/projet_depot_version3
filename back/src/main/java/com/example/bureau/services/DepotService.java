@@ -32,7 +32,7 @@ public class DepotService {
     private final BureauRepo bureauRepo;
     private final ArticleBureauRepo articleBureauRepo;
     private final ArticleRepo articleRepo;
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/bureau";
+    private static final String DB_URL = "jdbc:mysql://db:3306/bureau";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
