@@ -167,12 +167,12 @@ public class ArticleController {
             return ResponseEntity.badRequest().body("Error uploading file: " + e.getMessage());
         }
     }
-    @GetMapping("/exportToPDF")
+     @GetMapping("/exportToPDF")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Object> exportArticlesToPDF() {
+    public ResponseEntity<Object> exportArticlesToPDF(HttpServletResponse response) {
         try {
-            // Call the exportAllArticleToPDF method from the service
-            articleService.exportAllArticleToPDF();
+            // Call the exportAllArticleToPDF method from the service, passing the HttpServletResponse
+            articleService.exportAllArticleToPDF(response);
 
             // Build the success response
             String message = "Articles exported to PDF successfully";
