@@ -158,20 +158,23 @@ export class ListeArticleComponent implements OnInit {
   }
 
   filterTable() {
-    if (this.searchText === '') {
+    const searchText = this.searchText.trim(); // Remove leading and trailing spaces
+  
+    if (searchText === '') {
       this.getData().subscribe((data: any[]) => {
         this.tableData = data;
+        this.page = 1; // Reset the page to 1 when clearing the search
       });
     } else {
       this.getData().subscribe((data: any[]) => {
         this.tableData = data.filter(item => {
           const values = Object.values(item).join(' ').toLowerCase();
-          return values.includes(this.searchText.toLowerCase());
+          return values.includes(searchText.toLowerCase());
         });
+        this.page = 1; // Reset the page to 1 when performing a search
       });
     }
   }
-
   exportInventaireToExcel(): void {
     const headers = this.getHeaders();
     const url = `${this.baseUrl}/stock/export/articles_with_quantityAndDefectWithPDF`;
