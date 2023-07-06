@@ -175,19 +175,19 @@ public class ArticleService {
     }
 
 
-    public void exportAllArticleToPDF() {
+   public void exportAllArticleToPDF(HttpServletResponse response) {
         // Retrieve all articles from the database
         List<Article> articles = getAllArticles();
 
         // Create a new PDF document
         Document document = new Document();
         try {
-            // Specify the output file path
-            String outputPath = "D:\\projet_depot_version3\\front\\export\\export." +
-                    "pdf";
+            // Set the response headers
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=export.pdf");
 
             // Create a new PDF writer with the document and output file
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+            PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
 
             // Open the document
             document.open();
@@ -216,7 +216,6 @@ public class ArticleService {
             // Close the PDF writer
             writer.close();
 
-            System.out.println("PDF export complete. Output file: " + outputPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
