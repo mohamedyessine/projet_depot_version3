@@ -35,7 +35,7 @@ public class ArticleService {
         this.depotRepo = depotRepo;
         this.articleBureauRepo = articleBureauRepo;
     }
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/bureau";
+    private static final String DB_URL = "jdbc:mysql://db:3306/bureau";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
 
