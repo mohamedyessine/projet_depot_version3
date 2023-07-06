@@ -224,8 +224,8 @@ onCodeInput() {
         const formDataWithId = {
           // bureauId: this.formData.bureauId,
           // depotId:this.selectedDepotValue,
-          bureauId:2,
-          depotId:2,
+          bureauId:1,
+          depotId:1,
           articleId: articleId,
           quantity: this.formData.quantity
         };
