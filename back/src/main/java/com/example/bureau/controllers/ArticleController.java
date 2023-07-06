@@ -12,6 +12,7 @@ import com.example.bureau.payload.response.ResponseExport;
 import com.example.bureau.services.ArticleService;
 import com.example.bureau.services.BureauService;
 import com.example.bureau.services.DepotService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
