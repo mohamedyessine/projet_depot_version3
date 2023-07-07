@@ -42,7 +42,7 @@ export class AddDepotComponent implements OnInit {
           });
           form.resetForm();
         }, error => {
-          this.snackBar.open(error.error.message, 'Close', { 
+          this.snackBar.open('Le Depot est déja exist', 'Close', { 
             duration: 3000,
             panelClass: ['error-snackbar'] // Add a custom class to the snackbar
           });
