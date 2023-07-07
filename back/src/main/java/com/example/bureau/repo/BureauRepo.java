@@ -9,6 +9,6 @@ import java.util.List;
 public interface BureauRepo extends JpaRepository<Bureau,Long> {
     Bureau findByNumero(String numero);
     List<Bureau> findByDepot(Depot depot);
-    boolean existsByNumeroBureau(String numeroBureau);
+    boolean existsByNumero(String numero);
 
 }
