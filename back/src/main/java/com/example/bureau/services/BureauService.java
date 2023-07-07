@@ -23,7 +23,7 @@ public class BureauService {
 
     @Transactional
     public Bureau createBureauInDepot(Bureau bureau, Long depotId) {
-         if (bureauRepo.existsByNumeroBureau(bureau.getNumero())) {
+         if (bureauRepo.existsByNumero(bureau.getNumero())) {
             throw new DuplicateException("Le code bureau est exist déja");
         }
         Depot depot = depotRepo.findById(depotId)
