@@ -19,7 +19,7 @@ export const ROUTES: RouteInfo[] = [
   { path: '/achat', title: 'Achat',  icon:'shopping_cart', class: '' },
   { path: '/stock', title: 'Stock',  icon:'storage', class: '' },
   { path: '/transfer', title: 'Transfert',  icon:'local_shipping', class: '' },
-  { path: '/historique-transfert', title: 'Transfert historique',  icon:'history', class: 'active-pro' },
+  { path: '/historique-transfert', title: 'Transfert Historique',  icon:'history', class: 'active-pro' },
   { path: '/list-defect', title: 'Defectueux Historique',  icon:'history', class: 'active-pro' },
   { path: '/liste-users', title: 'Liste des utilisateurs',  icon:'list', class: '' },
   { path: '/login', title: 'Connextion',  icon:'person', class: 'active-pro' },
