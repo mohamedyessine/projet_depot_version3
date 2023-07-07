@@ -1,4 +1,5 @@
 package com.example.bureau.services;
+import com.example.bureau.exceptions.DuplicateException;
 
 import com.example.bureau.models.Bureau;
 import com.example.bureau.models.Depot;
@@ -22,6 +23,9 @@ public class BureauService {
 
     @Transactional
     public Bureau createBureauInDepot(Bureau bureau, Long depotId) {
+         if (bureauRepo.existsByNumeroBureau(bureau.getNumero())) {
+            throw new DuplicateException("Le code bureau est exist déja");
+        }
         Depot depot = depotRepo.findById(depotId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid depot"));
 
