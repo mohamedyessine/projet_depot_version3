@@ -41,7 +41,7 @@ export class AddArticleComponent implements OnInit {
           });
           form.resetForm();
         }, error => {
-          this.snackBar.open(error.error.message, 'Close', { 
+          this.snackBar.open("Le code existe déja", 'Close', { 
             duration: 3000,
             panelClass: ['error-snackbar'] // Add a custom class to the snackbar
           });
