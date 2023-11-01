@@ -29,9 +29,14 @@
                       <td>{{ item.targetBureau.name  }}</td>
                       <td>{{ item.article.name }}</td>
                       <td>{{ item.quantity }}</td>
-                      <td>{{ item.dateTransfer | slice: 0:10 }}</td>
+                      <td>{{ item.dateTransfer | date }}</td>
                   </tbody>
                 </table>
+              </div>
+              <div class="row text-center" *ngIf="transfersToShow.length === 0">
+                <div class="col-md-12">
+                  <p>Vide</p> <!-- Display "vide" message when transfersToShow is empty -->
+                </div>
               </div>
               <div class="row text-center " *ngIf="!(tableData.length <8)">
                 <div class="col-md-12">

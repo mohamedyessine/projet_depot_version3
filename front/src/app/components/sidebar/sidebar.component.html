@@ -18,7 +18,7 @@
       </a>
     </li>
     <ng-container *ngIf="isAuthenticated">
-      <li class="nav-item" *ngFor="let menuItem of menuItems">
+      <li  routerLinkActive="active" *ngFor="let menuItem of menuItems"  class="{{menuItem.class}} nav-item">
         <a class="nav-link" [routerLink]="[menuItem.path]" (click)="menuItem.title === 'Deconnexion' ? logout() : null">
           <i class="material-icons">{{ menuItem.icon }}</i>
           <p>{{ menuItem.title }}</p>

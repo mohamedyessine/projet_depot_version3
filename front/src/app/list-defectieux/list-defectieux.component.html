@@ -28,11 +28,16 @@
                   <tr  *ngFor="let item of defectieuxToShow ">
                     <td>{{ item.sourceBureau.name }}</td>
                     <td>{{ item.article.name }}</td>
-                    <td>{{ item.dateDefect | slice:0:10}}</td>
-                    <td>{{ item.dateReparation | slice:0:10}}</td>
+                    <td>{{ item.dateDefect | date}}</td>
+                    <td>{{ item.dateReparation | date}}</td>
                     <td>{{ item.quantity }}</td>
                 </tbody>
               </table>
+            </div>
+            <div class="row text-center" *ngIf="defectieuxToShow.length === 0">
+              <div class="col-md-12">
+                <p>Vide</p> <!-- Display "vide" message when transfersToShow is empty -->
+              </div>
             </div>
             <div class="row text-center " *ngIf="!(tableData.length <8 )">
               <div class="col-md-12">
@@ -80,8 +85,8 @@
                     <tr *ngFor="let item of tableData">
                       <td>{{ item.sourceDepot.name }}</td>
                       <td>{{ item.article.libelle }}</td>
-                      <td>{{ item.dateDefectueux | slice:0:10}}</td>
-                      <td>{{ item.dateReparation | slice:0:10}}</td>
+                      <td>{{ item.dateDefectueux | date}}</td>
+                      <td>{{ item.dateReparation | date}}</td>
                   </tbody>
                 </table>
               </div>
