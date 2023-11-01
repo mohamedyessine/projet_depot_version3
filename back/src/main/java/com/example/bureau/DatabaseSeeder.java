@@ -35,7 +35,7 @@ public class DatabaseSeeder implements ApplicationRunner {
             roleRepo.save(adminRole);
         }
 
-        if (!userRepo.existsByUsername("yessine")) {
+        if (!userRepo.existsByUsername("Abir")) {
             Role adminRole = roleRepo.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Admin role not found."));
 
@@ -43,9 +43,9 @@ public class DatabaseSeeder implements ApplicationRunner {
             roles.add(adminRole);
 
             User admin = new User();
-            admin.setUsername("yessine");
-            admin.setEmail("yessine@example.com");
-            admin.setPassword(passwordEncoder.encode("yessine07"));
+            admin.setUsername("Abir");
+            admin.setEmail("abir@sfax.com");
+            admin.setPassword(passwordEncoder.encode("@Abir010203"));
             admin.setRoles(roles);
 
             userRepo.save(admin);
