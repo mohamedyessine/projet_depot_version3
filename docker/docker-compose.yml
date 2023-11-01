@@ -1,0 +1,52 @@
+version: '4'
+services:
+  backend:
+    build:
+      context: ./spring # Path to the directory containing the Spring Boot Dockerfile
+      args:
+        - GIT_TOKEN=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
+    ports:
+      - 5000:5000 # Port for the Spring Boot application
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/bureau?useSSL=false&serverTimezone=UTC # Replace with your MySQL connection URL
+      SPRING_DATASOURCE_USERNAME: root # Replace with your MySQL username
+      SPRING_DATASOURCE_PASSWORD: 'Yessine07+'
+
+  frontend:
+    build:
+      context: ./angular # Path to the directory containing the Angular Dockerfile
+      args:
+        - GIT_TOKEN=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
+    ports:
+      - 3001:3001 # Port for the Angular application
+
+  db:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: bureau # Replace with your MySQL database name
+      MYSQL_ROOT_PASSWORD: 'Yessine07+' # Replace with your desired root password or leave it empty for no password
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      
+    volumes:
+      - ../Depot/Data volumes/Depot/mysql-data:/var/lib/mysql # Volume for persisting MySQL data
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: 'Yessine07+'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes' 
+
+volumes:
+  mysql-data:
+
+
