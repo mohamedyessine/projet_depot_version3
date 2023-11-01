@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./historique-transfert.component.css']
 })
 export class HistoriqueTransfertComponent implements OnInit {
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
   searchText: string = '';
   tableData: any;
  // Define the page and page size variables
