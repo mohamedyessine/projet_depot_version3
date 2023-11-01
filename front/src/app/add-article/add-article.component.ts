@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-article.component.css']
 })
 export class AddArticleComponent implements OnInit {
-  private baseUrl = 'http://localhost:5000';
+  private baseUrl = 'http://41.226.182.130:5000';
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
