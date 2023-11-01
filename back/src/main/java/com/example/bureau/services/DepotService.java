@@ -34,7 +34,7 @@ public class DepotService {
     private final ArticleRepo articleRepo;
     private static final String DB_URL = "jdbc:mysql://db:3306/bureau";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
+    private static final String DB_PASSWORD = "Yessine07+";
 
     private static final String INSERT_SQL = "INSERT INTO Depot (name, numero) VALUES (?, ?)";
 
