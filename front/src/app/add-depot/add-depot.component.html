@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">Ajout Depot</h4>
+            <h4 class="card-title">Ajout Dépôt</h4>
           </div>
           <div class="card-body">
             <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">
@@ -14,14 +14,14 @@
                   <!-- contain  4 character pattern="^\S{4}$" -->
                   <!-- contain 4 digits pattern="^\d{4}$" -->
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Nom Depot" name="name" [(ngModel)]="formData.name" #name="ngModel"
+                    <input matInput placeholder="Nom Dépôt" name="name" [(ngModel)]="formData.name" #name="ngModel"
                       required pattern="^[^\s].*[^\s]$">
                     <mat-error *ngIf="name.invalid">Le nom est invalide.</mat-error>
                   </mat-form-field>
                 </div>
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Code Depot" type="text" name="numero" [(ngModel)]="formData.numero"
+                    <input matInput placeholder="Code Dépôt" type="text" name="numero" [(ngModel)]="formData.numero"
                       #numeroDepot="ngModel" required pattern="^[^\s].*[^\s]$">
                     <mat-error *ngIf="numeroDepot.invalid">Le code est invalide.</mat-error>
                   </mat-form-field>
@@ -50,7 +50,7 @@
               <div class="row">
               </div>
               <button mat-raised-button type="submit" class="btn btn-danger pull-right"
-                [disabled]="myForm.invalid">Ajout Depot</button>
+                [disabled]="myForm.invalid">Ajout Dépôt</button>
               <div class="clearfix"></div>
             </form>
           </div>

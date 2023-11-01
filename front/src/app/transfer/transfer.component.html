@@ -43,8 +43,8 @@
                 </div>
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
-                    <mat-label>Depot Emetteur</mat-label>
-                    <mat-select placeholder="Sélectionner un Depot" name="depotEmetteur" required [(ngModel)]="selectedDepotValue"
+                    <mat-label>Dépôt Emetteur</mat-label>
+                    <mat-select placeholder="Sélectionner un Dépôt" name="depotEmetteur" required [(ngModel)]="selectedDepotValue"
                                 (selectionChange)="getBureauxByDepotEmetteur()">
                       <mat-option *ngFor="let depot of depots" [value]="depot.value">
                         {{ depot.viewValue }}
@@ -68,8 +68,8 @@
                 
                 <div class="col-md-6">
                   <mat-form-field class="example-full-width">
-                    <mat-label>Depot Récepteur</mat-label>
-                    <mat-select placeholder="Sélectionner un Depot" name="depotRecepteur" required [(ngModel)]="selectedTargetDepotValue"
+                    <mat-label>Dépôt Récepteur</mat-label>
+                    <mat-select placeholder="Sélectionner un Dépôt" name="depotRecepteur" required [(ngModel)]="selectedTargetDepotValue"
                                 (selectionChange)="getBureauxByDepotRecepteur()">
                       <mat-option *ngFor="let depot of depots" [value]="depot.value">
                         {{ depot.viewValue }}

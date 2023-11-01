@@ -18,8 +18,8 @@
                           </div>
                           <div class="col-md-4">
                             <mat-form-field class="example-full-width">
-                              <mat-label>Nom Depot</mat-label>
-                              <mat-select placeholder="Select Depot" name="depot" [(ngModel)]="data.depot" required (selectionChange)="onDepotsSelection()">
+                              <mat-label>Nom Dépôt</mat-label>
+                              <mat-select placeholder="Select Dépôt" name="depot" [(ngModel)]="data.depot" required (selectionChange)="onDepotsSelection()">
                                 <mat-option *ngFor="let depot of depots" [value]="depot.name">
                                   {{ depot.name }} 
                                 </mat-option>

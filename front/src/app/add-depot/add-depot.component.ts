@@ -36,13 +36,13 @@ export class AddDepotComponent implements OnInit {
         const headers = this.getHeaders();
         const url = `${this.baseUrl}/depots`;
         this.http.post(url, this.formData, {headers}).subscribe(response => {
-          this.snackBar.open('Depot créé avec succès.', 'Close', { 
+          this.snackBar.open('Dépôt créé avec succès.', 'Close', { 
             duration: 3000,
             panelClass: ['success-snackbar'] // Add a custom class to the snackbar
           });
           form.resetForm();
         }, error => {
-          this.snackBar.open('Le Depot est déja exist', 'Close', { 
+          this.snackBar.open('Le Dépôt est déja exist', 'Close', { 
             duration: 3000,
             panelClass: ['error-snackbar'] // Add a custom class to the snackbar
           });

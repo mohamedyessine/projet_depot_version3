@@ -12,7 +12,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <mat-form-field appearance="fill">
-                    <mat-label>Choisir Depot</mat-label>
+                    <mat-label>Choisir Dépôt</mat-label>
                     <mat-select [(ngModel)]="selectedDepotValue" name="depot" required (selectionChange)="getBureauxByDepot()">
                       <mat-option *ngFor="let depot of depots" [value]="depot.value">
                         {{depot.viewValue}}
