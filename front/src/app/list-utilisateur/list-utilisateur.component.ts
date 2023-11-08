@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class ListUtilisateurComponent implements OnInit {
   @ViewChild('deleteConfirmationModal', { static: false }) deleteConfirmationModal: ElementRef;
   userToDeleteId: string;
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
   searchText: string = '';
   tableData: any;
   // Define the page and page size variables
@@ -61,7 +61,7 @@ export class ListUtilisateurComponent implements OnInit {
 
   // deleteUser(userId: number) {
   //   const headers = this.getHeaders();
-  //   const url = `http://41.226.182.130:5000/api/auth/${userId}`;
+  //   const url = `http://localhost:5000/api/auth/${userId}`;
   //   this.http.delete(url, {headers}).subscribe(
   //     response => {
   //       this.getData();
@@ -87,7 +87,7 @@ export class ListUtilisateurComponent implements OnInit {
 
   deleteUserConfirmed() {
     const headers = this.getHeaders();
-    const url = `http://41.226.182.130:5000/api/auth/${this.userToDeleteId}`;
+    const url = `http://localhost:5000/api/auth/${this.userToDeleteId}`;
   
     this.http.delete(url, { headers }).subscribe(
       response => {

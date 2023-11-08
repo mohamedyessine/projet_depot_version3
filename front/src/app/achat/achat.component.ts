@@ -17,7 +17,7 @@ declare var $: any;
   styleUrls: ['./achat.component.css']
 })
 export class AchatComponent implements OnInit{
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
   data: any = {};
   formData = {
     bureauId:'',
@@ -26,8 +26,8 @@ export class AchatComponent implements OnInit{
   };
   articles: any[] = [];
   bureaux: Bureau[] = [];
-  // selectedValue: string;
   selectedDepotValue: string;
+  selectedBureauValue: string;
   depots: Bureau[] = [];
   filteredArticles: any[] = [];
   searchInput: string = '';
@@ -219,12 +219,12 @@ onCodeInput() {
       .subscribe(response => {
         // Get the ID from the response
         const articleId = response.id;
-  
+        const bureauId = this.bureaux.find(depot => depot.value === this.selectedValue);
         // Create a new form data object with the ID instead of the code
         const formDataWithId = {
-          // bureauId: this.formData.bureauId,
+          bureauId: bureauId.value,
           // depotId:this.selectedDepotValue,
-          bureauId:1,
+          // bureauId:1,
           // depotId:1,
           articleId: articleId,
           quantity: this.formData.quantity

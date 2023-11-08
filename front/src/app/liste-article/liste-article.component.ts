@@ -11,7 +11,7 @@ import { ArticlesService } from 'app/services/articles.service';
   styleUrls: ['./liste-article.component.css']
 })
 export class ListeArticleComponent implements OnInit {
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
   searchText: string = '';
   tableData: any;
   selectedType: string;

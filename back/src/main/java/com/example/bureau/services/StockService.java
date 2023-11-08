@@ -224,7 +224,10 @@ public class StockService {
         dataCell.setNoWrap(true);
 
         for (ArticleWithQuantities articleWithQuantity : articlesWithQuantity) {
-            dataCell.setPhrase(new Phrase(articleWithQuantity.getArticle().getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+
+            String articleName = splitTextIfTooLong(articleWithQuantity.getArticle().getName(), 40);
+
+            dataCell.setPhrase(new Phrase(articleName, new Font(Font.FontFamily.HELVETICA, 8)));
             table.addCell(dataCell);
 
             dataCell.setPhrase(new Phrase(String.valueOf(articleWithQuantity.getQuantity()), new Font(Font.FontFamily.HELVETICA, 8)));
@@ -338,10 +341,9 @@ public class StockService {
         dataCell.setNoWrap(true);
 
         for (ArticleBureau articleBureau : articleBureaux) {
-//            dataCell.setPhrase(new Phrase(bureau.getName(), new Font(Font.FontFamily.HELVETICA, 8)));
-//            table.addCell(dataCell);
+            String articleName = splitTextIfTooLong(articleBureau.getArticle().getName(), 40);
 
-            dataCell.setPhrase(new Phrase(articleBureau.getArticle().getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+            dataCell.setPhrase(new Phrase(articleName, new Font(Font.FontFamily.HELVETICA, 8)));
             table.addCell(dataCell);
 
             dataCell.setPhrase(new Phrase(String.valueOf(articleBureau.getQuantity()), new Font(Font.FontFamily.HELVETICA, 8)));
@@ -612,10 +614,14 @@ public class StockService {
             }
 
             for (ArticleWithQuantities articleWithQuantity : articlesWithQuantity) {
-                dataCell.setPhrase(new Phrase(depot.getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+                // Split depot name and article name into multiple lines if they are too long
+                String depotName = splitTextIfTooLong(depot.getName(), 40);
+                String articleName = splitTextIfTooLong(articleWithQuantity.getArticle().getName(), 40);
+
+                dataCell.setPhrase(new Phrase(depotName, new Font(Font.FontFamily.HELVETICA, 8)));
                 table.addCell(dataCell);
 
-                dataCell.setPhrase(new Phrase(articleWithQuantity.getArticle().getName(), new Font(Font.FontFamily.HELVETICA, 8)));
+                dataCell.setPhrase(new Phrase(articleName, new Font(Font.FontFamily.HELVETICA, 8)));
                 table.addCell(dataCell);
 
                 dataCell.setPhrase(new Phrase(articleWithQuantity.getArticle().getCode(), new Font(Font.FontFamily.HELVETICA, 8)));
@@ -639,7 +645,35 @@ public class StockService {
         document.close();
     }
 
-//    public static void addTitle(Document document, String image1Filename, String image2Filename, String titleText) throws DocumentException, IOException {
+    private String splitTextIfTooLong(String text, int maxLength) {
+        if (text.length() <= maxLength) {
+            return text;
+        } else {
+            // Split the text into multiple lines at word boundaries
+            String[] words = text.split(" ");
+            StringBuilder result = new StringBuilder();
+            int currentLineLength = 0;
+
+            for (String word : words) {
+                if (currentLineLength + word.length() + 1 <= maxLength) {
+                    if (currentLineLength > 0) {
+                        result.append(" ");  // Add a space between words
+                        currentLineLength++;
+                    }
+                    result.append(word);
+                    currentLineLength += word.length();
+                } else {
+                    result.append("\n").append(word);  // Start a new line for the word
+                    currentLineLength = word.length();
+                }
+            }
+
+            return result.toString();
+        }
+    }
+
+
+    //    public static void addTitle(Document document, String image1Filename, String image2Filename, String titleText) throws DocumentException, IOException {
 //        // Create a table for the current date
 //        PdfPTable dateTable = new PdfPTable(1);
 //        dateTable.setWidthPercentage(100);

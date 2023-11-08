@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
 
   constructor(private http: HttpClient) {
     this.checkAuthenticationStatus();
@@ -79,7 +79,7 @@ export class AuthService {
   }
   deleteUserById(userId: number): Observable<void> {
     const headers = this.getHeaders();
-    const url = `http://41.226.182.130:5000/api/auth/${userId}`;
+    const url = `http://localhost:5000/api/auth/${userId}`;
     return this.http.delete<void>(url, {headers});
   }
 

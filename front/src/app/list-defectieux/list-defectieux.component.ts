@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list-defectieux.component.css']
 })
 export class ListDefectieuxComponent implements OnInit {
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
   searchText: string = '';
   originalTableData: any;
   tableData: any;

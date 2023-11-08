@@ -21,7 +21,7 @@ declare var $: any;
   styleUrls: ['./transfer.component.css']
 })
 export class TransferComponent implements OnInit {
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
   formData = {
     bureauId:'',
     code: '',
@@ -333,7 +333,7 @@ export class TransferComponent implements OnInit {
 // onSubmit(form: NgForm) {
 //   // call the backend API to get the article ID
  
-//         this.http.get<any>('http://41.226.182.130:5000/articles/articles/' + this.data.code)
+//         this.http.get<any>('http://localhost:5000/articles/articles/' + this.data.code)
 //       .subscribe(response => {
 //         // Get the ID from the response
 //         const articleId = response.id;
@@ -363,7 +363,7 @@ export class TransferComponent implements OnInit {
 //         // };
         
 //         // call the backend API to transfer the article to the selected depot
-//         this.http.post('http://41.226.182.130:5000/transfers', formData)
+//         this.http.post('http://localhost:5000/transfers', formData)
 //           .subscribe(
 //             (response) => {
 //               console.log(response);

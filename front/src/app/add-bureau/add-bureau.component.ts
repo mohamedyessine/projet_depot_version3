@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-bureau.component.css']
 })
 export class AddBureauComponent implements OnInit {
-  private baseUrl = 'http://41.226.182.130:5000';
+  private baseUrl = 'http://localhost:5000';
   data: any = {};
   formData = {
     depotId: '',

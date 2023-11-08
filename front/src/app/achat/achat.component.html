@@ -57,9 +57,9 @@
                 <div class="col-md-4">
                   <mat-form-field appearance="fill">
                     <mat-label>Choisir Bureau</mat-label>
-                    <mat-select [(ngModel)]="selectedValue" name="bureau" required>
+                    <mat-select [(ngModel)]="selectedValue" name="bureau" required >
                       <!-- <mat-option value="all">Tout</mat-option> -->
-                      <mat-option *ngFor="let bureau of bureaux" [value]="bureau.value">
+                      <mat-option *ngFor="let bureau of bureaux" required [value]="bureau.value">
                         {{bureau.viewValue}}
                       </mat-option>
                     </mat-select>
@@ -86,8 +86,8 @@
                 </div>
               </div>
 
-              <button mat-raised-button type="submit" class="btn btn-danger pull-right" [disabled]="myForm.invalid">
-                Ajouter au depot general
+              <button mat-raised-button type="submit" class="btn btn-danger pull-right" [disabled]="myForm.invalid || !formData">
+                Ajouter
               </button>
 
               <div class="clearfix"></div>

@@ -6,7 +6,7 @@ import { Observable, catchError, throwError } from 'rxjs';
     providedIn: 'root',
   })
 export class ArticlesService {
-    private apiUrl = 'http://41.226.182.130:5000/articles';
+    private apiUrl = 'http://localhost:5000/articles';
 constructor(private http: HttpClient) { }
 
 getHeaders(): HttpHeaders {
