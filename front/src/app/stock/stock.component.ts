@@ -75,8 +75,8 @@ export class StockComponent implements OnInit {
 
 
 
-  private baseUrl = 'http://localhost:5000';
-  private apiUrl = 'http://localhost:5000/defectueux';
+  private baseUrl = 'http://41.226.182.130:5000';
+  private apiUrl = 'http://41.226.182.130:5000/defectueux';
   tableData: TableData[] = [];
   tableFullData: TableFullData[] = [];
   selectedValue: string;
