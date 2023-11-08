@@ -41,8 +41,6 @@ public class ArticleService {
     private static final String DB_PASSWORD = "Yessine07+";
 
     private static final String INSERT_SQL = "INSERT INTO Article (name, code) VALUES (?, ?)";
-
-
     public void uploadAndInsertArticles(MultipartFile file) throws IOException, SQLException {
         InputStream inputStream = file.getInputStream();
         Workbook workbook = WorkbookFactory.create(inputStream);
@@ -98,13 +96,9 @@ public class ArticleService {
             inputStream.close();
         }
     }
-
-
-
     public Article addArticle(Article article) {
         return articleRepo.save(article);
     }
-
    /* public Article addArticle(Article article, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             // Check if the authenticated user has the "ROLE_ADMIN" or "ROLE_USER" authority
@@ -119,8 +113,6 @@ public class ArticleService {
             throw new DuplicateException("Authentication required to add articles.");
         }
     }*/
-
-
     public Article findById(Long id) {
         return articleRepo.findById(id).orElse(null);
     }
@@ -130,11 +122,9 @@ public class ArticleService {
     public List<Article> getAllArticles() {
         return articleRepo.findAll();
     }
-
     public Article updateArticle(Article article) {
         return articleRepo.save(article);
     }
-
     public void addArticleToBureauGeneral(Article article, Bureau bureau, int quantity) throws IllegalArgumentException {
         if (quantity < 0) {
             throw new IllegalArgumentException("La quantité ne peut pas être négative");
@@ -168,15 +158,25 @@ public class ArticleService {
         targetArticleBureau.addQuantity(quantity);
         targetArticleBureau.setArticleBureauId(article.getId(), bureau.getId());
         articleBureauRepo.save(targetArticleBureau);
-
-        // Update the depot quantity
-       /* int updatedDepotQuantity = depot.getQuantity() + targetArticleBureauQuantity;
-        depot.setQuantity(updatedDepotQuantity);
-        depotRepo.save(depot);*/
     }
+    public void addArticleToBureau(Article article, Bureau bureau, int quantity) throws IllegalArgumentException {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("La quantité ne peut pas être négative");
+        }
 
+        ArticleBureau targetArticleBureau = articleBureauRepo.findByArticleAndBureau(article, bureau);
+        int targetArticleBureauQuantity = targetArticleBureau != null ? targetArticleBureau.getQuantity() : 0;
 
-   public void exportAllArticleToPDF(HttpServletResponse response) {
+        if (targetArticleBureau == null) {
+            targetArticleBureau = new ArticleBureau();
+            targetArticleBureau.setArticle(article);
+            targetArticleBureau.setBureau(bureau);
+        }
+        targetArticleBureau.addQuantity(quantity);
+        targetArticleBureau.setArticleBureauId(article.getId(), bureau.getId());
+        articleBureauRepo.save(targetArticleBureau);
+    }
+    public void exportAllArticleToPDF(HttpServletResponse response) {
         // Retrieve all articles from the database
         List<Article> articles = getAllArticles();
 
@@ -221,9 +221,6 @@ public class ArticleService {
             e.printStackTrace();
         }
     }
-
-
-
     public void exportAllArticleToExcel(String filePath) {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Articles");
@@ -258,6 +255,13 @@ public class ArticleService {
         }
     }
 
+    public List<Article> findArticlesByType(String type) {
+        return articleRepo.findByType(type);
+    }
 
+    public List<Article> searchByAllField(String searchTerm) {
+        searchTerm = searchTerm.toLowerCase();
+        return articleRepo.searchByAllFields("%" + searchTerm + "%");
+    }
 
 }

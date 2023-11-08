@@ -16,11 +16,6 @@
                             <mat-error *ngIf="name.invalid">Le nom est invalide</mat-error>
                           </mat-form-field>
                         </div>
-                        <!-- <div class="col-md-4">
-                          <mat-form-field class="example-full-width">
-                            <input matInput placeholder="Type" type="text" name="type" [(ngModel)]="formData.type">
-                          </mat-form-field>
-                        </div> -->
                         <div class="col-md-6">
                           <mat-form-field class="example-full-width">
                             <input matInput placeholder="Code Article" name="code" [(ngModel)]="formData.code" #codeABare="ngModel" required pattern="^[^\s].*[^\s]$">
@@ -29,9 +24,21 @@
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                           <mat-form-field class="example-full-width">
-                            <textarea matInput placeholder="Libelle" name="lebelle" [(ngModel)]="formData.lebelle" #lebelle="ngModel"  pattern="^[^\s].*[^\s]$"></textarea>
+                            <mat-label>Type</mat-label>
+                            <mat-select placeholder="Select Type" name="type" [(ngModel)]="formData.type" required>
+                              <mat-option value="Materiel">Materiel</mat-option>
+                              <mat-option value="Consommable">Consommable</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="myForm.submitted && myForm.controls['type'].invalid">
+                              Veuillez sélectionner un type.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                          <mat-form-field class="example-full-width">
+                            <textarea matInput placeholder="Libelle" name="lebelle" [(ngModel)]="formData.lebelle" pattern="^[^\s].*[^\s]$"></textarea>
                           </mat-form-field>
                         </div>
                       </div>

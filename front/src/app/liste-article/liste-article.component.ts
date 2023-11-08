@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as JsBarcode from 'jsbarcode';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import html2canvas from 'html2canvas';
+import { ArticlesService } from 'app/services/articles.service';
 
 @Component({
   selector: 'app-liste-article',
@@ -13,11 +14,14 @@ export class ListeArticleComponent implements OnInit {
   private baseUrl = 'http://41.226.182.130:5000';
   searchText: string = '';
   tableData: any;
-  // Define the page and page size variables
+  selectedType: string;
   page = 1;
   pageSize = 10;
-
-  constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
+  articles: any[];
+  constructor(
+    private http: HttpClient, 
+    private snackBar: MatSnackBar,
+    private articleService: ArticlesService) {}
 
   ngOnInit() {
     this.tableData = []; // Initialize tableData with an empty array
@@ -35,6 +39,8 @@ export class ListeArticleComponent implements OnInit {
       `Bearer ${currentUser?.token}`
     );
   }
+
+  
 
   getData() {
     const headers = this.getHeaders();
@@ -156,25 +162,138 @@ export class ListeArticleComponent implements OnInit {
       printWindow.close();
     });
   }
-
-  filterTable() {
+ 
+  filterTable(): Promise<any> {
     const searchText = this.searchText.trim(); // Remove leading and trailing spaces
   
     if (searchText === '') {
-      this.getData().subscribe((data: any[]) => {
-        this.tableData = data;
-        this.page = 1; // Reset the page to 1 when clearing the search
-      });
-    } else {
-      this.getData().subscribe((data: any[]) => {
-        this.tableData = data.filter(item => {
-          const values = Object.values(item).join(' ').toLowerCase();
-          return values.includes(searchText.toLowerCase());
+      return this.getData().toPromise()
+        .then((data: any[]) => {
+          this.tableData = data;
+          this.page = 1; // Reset the page to 1 when clearing the search
         });
-        this.page = 1; // Reset the page to 1 when performing a search
-      });
+    } else {
+      return this.getData().toPromise()
+        .then((data: any[]) => {
+          this.tableData = data.filter(item => {
+            const values = Object.values(item).join(' ').toLowerCase();
+            return values.includes(searchText.toLowerCase());
+          });
+          this.page = 1; // Reset the page to 1 when performing a search
+        });
     }
   }
+  
+  // filterByType(): Promise<any> {
+  //   if (this.selectedType === 'All') {
+  //     this.tableData = this.tableData;
+  //     return Promise.resolve();
+  //   } else {
+  //     return this.articleService.getByType(this.selectedType).toPromise()
+  //       .then((tableData) => {
+  //         console.log(tableData);
+  //         this.tableData = tableData;
+  //         this.page = 1; // Reset the page when filtering by type
+  //       });
+  //   }
+  // }
+
+  // async synchronizeFilters() {
+  //   await this.filterTable();
+  //   await this.filterByType();
+  // }
+  
+  // // Call the synchronized filters in your event handlers
+  // async onSearchChange() {
+  //   await this.synchronizeFilters();
+  // }
+
+  // async onTypeChange() {
+  //   await this.synchronizeFilters();
+  // }
+  
+  
+
+  async searchAll(criteria: {
+    searchText: string,
+    selectedType: string, 
+   
+  } = {
+    searchText: '',
+      selectedType: '', 
+    
+    }): Promise<void> {
+    const searchPromises: Promise<any[]>[] = [];
+
+    if (criteria.selectedType === 'All') {
+      // If 'All' is selected, fetch data from getData()
+      searchPromises.push(
+        this.getData().toPromise()
+          .then(response => response || [])
+      );
+    } else {
+      // Fetch data based on the selected type
+      try {
+        const typeResults = await this.articleService.getByType(criteria.selectedType).toPromise();
+        searchPromises.push(Promise.resolve(typeResults || [])); // Handle undefined case
+      } catch (error) {
+        console.error("Error fetching by type:", error);
+      }
+    }
+
+   
+
+    if (criteria.searchText) {
+  searchPromises.push(
+    this.articleService.searchArticles(criteria.searchText).toPromise()
+          .then(response => response || []) // Ensure we always have an array
+      );
+    }
+
+    // Check if no specific criteria were provided and fetch all articles
+    if (!criteria.searchText  && !(criteria.selectedType)) {
+
+      searchPromises.push(
+        this.getData().toPromise()
+          .then(response => response || [])
+      );
+    }
+
+    // Wait for all search promises to resolve
+    try {
+      const results = await Promise.all(searchPromises);
+      const commonArticles = results.reduce((accumulator, currentResult) => {
+        return accumulator.filter(article => currentResult.some(item => item.id === article.id));
+      }, results[0]);
+
+      this.tableData = commonArticles;
+      console.log(this.tableData);
+    } catch (error) {
+      console.error("Error occurred:", error);
+      this.tableData = [];
+    }
+  }
+
+  onSearchChange() {
+    this.performSearch();
+  }
+
+  onTypeChange() {
+    this.performSearch();
+  }
+
+  private performSearch() {
+    const criteria = {
+      searchText: this.searchText,
+      selectedType: this.selectedType,
+    };
+
+    this.searchAll(criteria);
+  }
+  
+
+
+  
   exportInventaireToExcel(): void {
     const headers = this.getHeaders();
     const url = `${this.baseUrl}/stock/export/articles_with_quantityAndDefectWithPDF`;

@@ -8,13 +8,26 @@
           </div>
           <div class="card-body">
             <div class="row align-items-center mb-3">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Recherche..." [(ngModel)]="searchText"
-                    (ngModelChange)="filterTable()">
+                  <input type="text" class="form-control" placeholder="Recherche..." [(ngModel)]="searchText"(ngModelChange)="onSearchChange()">
                 </div>
               </div>
+              
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Type</mat-label>
+                    <mat-select placeholder="Select Type" [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()">
+                      <mat-option value="All">All</mat-option>
+                      <mat-option value="Materiel">Materiel</mat-option>
+                      <mat-option value="Consommable">Consommable</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              
             </div>
+           
+            
             <div class="row">
               <div class="col-md-12">
                 <div class="table-responsive" *ngIf="articlesToShow.length > 0">
@@ -23,25 +36,15 @@
                     <thead class="text-primary">
                       <tr>
                         <th>Article</th>
-                        <!-- <th>Libelle</th> -->
-                        <!-- <th>Type</th> -->
                         <th>code à barre</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let item of articlesToShow ">
                         <td>{{ item.name }}</td>
-                        <!-- <td>{{ item.lebelle }}</td> -->
-                        <!-- <td>{{ item.type | slice:0:10 }}</td> -->
                         <td>{{ item.code }}</td>
-                        <!-- <td>
-                          <button class="btn btn-danger btn-sm" (click)="deleteData(item.id)">Supprimer</button>
-                        </td> -->
                         <td>
-                          <!-- <button class="btn btn-danger btn-sm" (click)="printBarcode(item.code,item.name||'')">Générer</button> -->
                           <button class="btn btn-danger btn-sm" (click)="generateBarcode(item.code, item.name)">Générer un code-barres</button>
-
-                          <!-- <canvas id="barcode"></canvas> -->
                         </td>
                       </tr>
                     </tbody>
@@ -49,7 +52,7 @@
                 </div>
                 <div class="row text-center" *ngIf="articlesToShow.length === 0">
                   <div class="col-md-12">
-                    <p>Vide</p> <!-- Display "vide" message when transfersToShow is empty -->
+                    <p>Vide</p> 
                   </div>
                 </div>
               </div>

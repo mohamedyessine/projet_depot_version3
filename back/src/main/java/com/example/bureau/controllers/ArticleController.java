@@ -46,28 +46,12 @@ public class ArticleController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public Article addArticle(@RequestBody Article article) {
-
-        // Check if any field contains only spaces
-       /* if (containsOnlySpaces(article)) {
-            throw new DuplicateException("Fields cannot contain only spaces");
-        }*/
         Article existingArticle = articleService.findByCode(article.getCode());
-
         if (existingArticle != null) {
             throw new DuplicateException("L'article avec le code '" + article.getCode() + "' existe déjà");
         }
-
         return articleService.addArticle(article);
-
     }
-    private boolean containsOnlySpaces(Article article) {
-        String code = article.getCode().trim();
-        String name = article.getName().trim();
-
-        return !code.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$") || !name.matches("^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$");
-    }
-
-
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<Article> getAllArticles() {
@@ -82,6 +66,21 @@ public class ArticleController {
             throw new ResourceNotFoundException("Article introuvable avec l'identifiant: " + articleId);
         }
         return ResponseEntity.ok().body(article);
+    }
+
+    @PostMapping("/type")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> getByType(@RequestBody Map<String, Object> requestBody) {
+        String articleType = String.valueOf(requestBody.get("type").toString());
+       List<Article> article = articleService.findArticlesByType(articleType);
+
+        if (article != null) {
+            return ResponseEntity.ok(article);
+        } else {
+            String errorMessage = "Article introuvable avec le code: " + articleType;
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
     }
 
     @PostMapping("/code")
@@ -110,6 +109,12 @@ public class ArticleController {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, errorMessage);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
+    }
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<Article> searchArticles(@RequestParam String searchTerm) {
+        List<Article> searchResults = articleService.searchByAllField(searchTerm);
+        return searchResults;
     }
 
     @PostMapping("/add-to-depot--general")
@@ -148,6 +153,31 @@ public class ArticleController {
 
         try {
             articleService.addArticleToBureauAboutDepot(article, bureau, depot, request.getQuantity());
+            return ResponseEntity.ok(new ArticleBureauResponse("Achat ajouté avec succès", 200, "OK"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ArticleBureauResponse(e.getMessage(), 400, "Bad Request"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArticleBureauResponse("Une erreur s'est produite lors de l'ajout", 500, "Internal Server Error"));
+        }
+    }
+
+    @PostMapping("/add-in-bureau")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ArticleBureauResponse> addArticleToBureau(@RequestBody ArticleBureauRequest request) {
+
+        // Validate quantity
+        if (request.getQuantity() <= 0) {
+            return ResponseEntity.badRequest().body(new ArticleBureauResponse("La quantité doit être supérieure à zéro", 400, "Bad Request"));
+        }
+        Article article = articleService.findById(request.getArticleId());
+        Bureau bureau = bureauService.findById(request.getBureauId());
+
+        if (article == null || bureau == null ) {
+            return ResponseEntity.badRequest().body(new ArticleBureauResponse("Article, bureau ou dépôt invalide", 400, "Bad Request"));
+        }
+
+        try {
+            articleService.addArticleToBureau(article, bureau, request.getQuantity());
             return ResponseEntity.ok(new ArticleBureauResponse("Achat ajouté avec succès", 200, "OK"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ArticleBureauResponse(e.getMessage(), 400, "Bad Request"));

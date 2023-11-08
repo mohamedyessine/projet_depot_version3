@@ -24,6 +24,8 @@ public class Article {
     @Column(unique = true)
     private String code;
 
+    private String type;
+
 
     @OneToMany(mappedBy = "article")
     private Set<ArticleBureau> articleBureaux;

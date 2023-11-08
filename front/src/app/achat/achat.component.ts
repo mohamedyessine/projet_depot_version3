@@ -225,13 +225,13 @@ onCodeInput() {
           // bureauId: this.formData.bureauId,
           // depotId:this.selectedDepotValue,
           bureauId:1,
-          depotId:1,
+          // depotId:1,
           articleId: articleId,
           quantity: this.formData.quantity
         };
   
         // Make an HTTP request to send the form data to the backend with the ID
-        const url1 = `${this.baseUrl}/articles/add`;
+        const url1 = `${this.baseUrl}/articles/add-in-bureau`;
         this.http.post(url1, formDataWithId, {headers})
           .subscribe(response => {
             //console.log('Form submitted:', response);
@@ -257,5 +257,8 @@ onCodeInput() {
         });
       });
   }
+
+
+
   
 }

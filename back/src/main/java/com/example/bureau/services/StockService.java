@@ -196,30 +196,7 @@ public class StockService {
 
         document.open();
 
-        // Create a title paragraph with blue color
-        Paragraph title = new Paragraph();
-        title.setAlignment(Element.ALIGN_CENTER);
-        title.setSpacingAfter(30f); // Add spacing after the title
-
-        // Add image1 at the left of the title
-        Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
-        image1.scaleToFit(50, 50); // Adjust the width and height of image1
-        title.add(new Chunk(image1, 0, -20));
-
-        // Add title text with black color
-        Chunk titleText = new Chunk("Inventaire de " + depot.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
-        title.add(titleText);
-
-        // Add image2 at the right of the title
-        Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
-        image2.scaleToFit(50, 50); // Adjust the width and height of image2
-        title.add(new Chunk(image2, 0, -20));
-
-        // Add spacing between the title and the table
-        title.setSpacingAfter(40f);
-
-        // Add the title to the document
-        document.add(title);
+        addTitle(document, image1Filename, image2Filename, "Inventaire de " + depot.getName());
 
         // Create a new PDF table with 3 columns
         PdfPTable table = new PdfPTable(3);
@@ -259,6 +236,8 @@ public class StockService {
 
         // Add the table to the document
         document.add(table);
+
+        addFooterSignature(document, getCurrentDateAsString(), "---------------------------");
 
         // Close the document
         document.close();
@@ -330,45 +309,18 @@ public class StockService {
         response.setHeader("Content-Disposition", "attachment; filename=" + bureau.getName() + ".pdf");
 
         document.open();
+        addTitle(document, image1Filename, image2Filename, "Inventaire de " + bureau.getName());
 
-        // Create a title paragraph with blue color
-        Paragraph title = new Paragraph();
-        title.setAlignment(Element.ALIGN_CENTER);
-        title.setSpacingAfter(30f); // Add spacing after the title
-
-
-        // Add image1 at the left of the title
-        Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
-        image1.scaleToFit(50, 50); // Adjust the width and height of image1
-        title.add(new Chunk(image1, 0, -20));
-
-        // Add title text with blue color
-        Chunk titleText = new Chunk("Inventaire de " + bureau.getName(), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
-        title.add(titleText);
-
-        // Add image2 at the right of the title
-        Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
-        image2.scaleToFit(50, 50); // Adjust the width and height of image2
-        title.add(new Chunk(image2, 0, -20));
-
-        // Add spacing between the title and the table
-        title.setSpacingAfter(40f);
-
-        // Add the title to the document
-        document.add(title);
-
-        // Create a new PDF table with 4 columns
+        // Create a new PDF table with 3 columns (Article, Quantité, Défectueux)
         PdfPTable table = new PdfPTable(3);
-        table.setWidthPercentage(100); // Set table width to 100% of the document
+        table.setWidthPercentage(100);
 
         // Set column widths
-        table.setWidths(new float[]{ 7, 3, 3});
+        table.setWidths(new float[]{7, 3, 3});
 
         // Add table headers with color
         PdfPCell headerCell = new PdfPCell();
         headerCell.setBackgroundColor(BaseColor.GRAY);
-//        headerCell.setPhrase(new Phrase("Bureau Name", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
-//        table.addCell(headerCell);
 
         headerCell.setPhrase(new Phrase("Article", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
@@ -402,6 +354,7 @@ public class StockService {
         // Add the table to the document
         document.add(table);
 
+        addFooterSignature(document, getCurrentDateAsString(), "---------------------------");
         // Close the document
         document.close();
     }
@@ -616,34 +569,12 @@ public class StockService {
 
         document.open();
 
-        // Create a title paragraph with blue color
-        Paragraph title = new Paragraph();
-        title.setAlignment(Element.ALIGN_CENTER);
-        title.setSpacingAfter(30f); // Add spacing after the title
-
-        // Add image1 at the left of the title
-        Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
-        image1.scaleToFit(50, 50); // Adjust the width and height of image1
-        title.add(new Chunk(image1, 0, -20));
-
-        // Add title text with black color
-        Chunk titleText = new Chunk(" Inventaire complet ", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK));
-        title.add(titleText);
-
-        // Add image2 at the right of the title
-        Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
-        image2.scaleToFit(50, 50); // Adjust the width and height of image2
-        title.add(new Chunk(image2, 0, -20));
-
-        // Add spacing between the title and the table
-        title.setSpacingAfter(40f);
-
-        // Add the title to the document
-        document.add(title);
+        // Call the TitleService to add the title
+        addTitle(document, image1Filename, image2Filename, "Inventaire Complet");
 
         // Create a new PDF table with 4 columns
         PdfPTable table = new PdfPTable(5);
-        table.setWidthPercentage(100); // Set table width to 100% of the document
+        table.setWidthPercentage(100);
 
         // Set column widths
         table.setWidths(new float[]{8, 7, 3, 3, 3});
@@ -651,6 +582,7 @@ public class StockService {
         // Add table headers with color
         PdfPCell headerCell = new PdfPCell();
         headerCell.setBackgroundColor(BaseColor.GRAY);
+
         headerCell.setPhrase(new Phrase("Dépôt", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE)));
         table.addCell(headerCell);
 
@@ -700,10 +632,154 @@ public class StockService {
         // Add the table to the document
         document.add(table);
 
+        // Call the SignatureService to add the footer signature
+        addFooterSignature(document, getCurrentDateAsString(), "---------------------------");
+
         // Close the document
         document.close();
     }
 
+//    public static void addTitle(Document document, String image1Filename, String image2Filename, String titleText) throws DocumentException, IOException {
+//        // Create a table for the current date
+//        PdfPTable dateTable = new PdfPTable(1);
+//        dateTable.setWidthPercentage(100);
+//        PdfPCell dateCell = new PdfPCell();
+//        dateCell.setBorder(PdfPCell.NO_BORDER);
+//        Paragraph dateParagraph = new Paragraph();
+//        dateParagraph.setAlignment(Element.ALIGN_RIGHT);
+//        dateParagraph.add(new Chunk("Date: " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new Font(Font.FontFamily.HELVETICA, 8)));
+//        dateCell.addElement(dateParagraph);
+//        dateTable.addCell(dateCell);
+//        document.add(dateTable);
+//
+//
+//        // Create a title paragraph with blue color
+//        Paragraph title = new Paragraph();
+//        title.setAlignment(Element.ALIGN_CENTER);
+//        title.setSpacingAfter(30f); // Add spacing after the title
+//
+//        // Create a nested table to hold the two images and the title
+//        PdfPTable titleTable = new PdfPTable(3);
+//        titleTable.setWidthPercentage(100);
+//
+//        PdfPCell imageCell1 = new PdfPCell();
+//        imageCell1.setBorder(PdfPCell.NO_BORDER);
+//        Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
+//        image1.scaleToFit(50, 50);
+//        imageCell1.addElement(image1);
+//
+//        PdfPCell titleCell = new PdfPCell();
+//        titleCell.setBorder(PdfPCell.NO_BORDER);
+//        Chunk titleTextChunk = new Chunk(titleText, new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD, BaseColor.BLACK));
+//        titleCell.addElement(titleTextChunk);
+//
+//        PdfPCell imageCell2 = new PdfPCell();
+//        imageCell2.setBorder(PdfPCell.NO_BORDER);
+//        Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
+//        image2.scaleToFit(50, 50);
+//        image2.setAlignment(Element.ALIGN_RIGHT);
+//        imageCell2.addElement(image2);
+//
+//        // Add the image and title cells to the title table
+//        titleTable.addCell(imageCell1);
+//        titleTable.addCell(titleCell);
+//        titleTable.addCell(imageCell2);
+//
+//        // Add the title table to the title paragraph
+//        title.add(titleTable);
+//
+//        // Add spacing after the title paragraph
+//        title.setSpacingAfter(30f);
+//
+//        // Add the title paragraph to the document
+//        document.add(title);
+//    }
+public static void addTitle(Document document, String image1Filename, String image2Filename, String titleText) throws DocumentException, IOException {
+    // Create a table for the current date
+    PdfPTable dateTable = new PdfPTable(1);
+    dateTable.setWidthPercentage(100);
+    PdfPCell dateCell = new PdfPCell();
+    dateCell.setBorder(PdfPCell.NO_BORDER);
+    Paragraph dateParagraph = new Paragraph();
+    dateParagraph.setAlignment(Element.ALIGN_RIGHT);
+    dateParagraph.add(new Chunk("Date: " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new Font(Font.FontFamily.HELVETICA, 8)));
+    dateCell.addElement(dateParagraph);
+    dateTable.addCell(dateCell);
+    document.add(dateTable);
+
+    // Create a title paragraph with blue color
+    Paragraph title = new Paragraph();
+    title.setAlignment(Element.ALIGN_CENTER);
+    title.setSpacingAfter(30f); // Add spacing after the title
+
+    // Create a nested table to hold the two images and the title
+    PdfPTable titleTable = new PdfPTable(5); // 5 columns
+
+    PdfPCell imageCell1 = new PdfPCell();
+    imageCell1.setBorder(PdfPCell.NO_BORDER);
+    Image image1 = Image.getInstance(image1Filename); // Replace with the path to your image1
+    image1.scaleToFit(50, 50);
+    imageCell1.addElement(image1);
+    imageCell1.setColspan(1); // 1/5 of the width
+
+    PdfPCell titleCell = new PdfPCell();
+    titleCell.setBorder(PdfPCell.NO_BORDER);
+    Chunk titleTextChunk = new Chunk(titleText, new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD, BaseColor.BLACK));
+    titleCell.addElement(titleTextChunk);
+    titleCell.setColspan(3); // 3/5 of the width
+    titleCell.setHorizontalAlignment(Element.ALIGN_CENTER); // Align content to the center
+
+    PdfPCell imageCell2 = new PdfPCell();
+    imageCell2.setBorder(PdfPCell.NO_BORDER);
+    Image image2 = Image.getInstance(image2Filename); // Replace with the path to your image2
+    image2.scaleToFit(50, 50);
+    imageCell2.addElement(image2);
+    imageCell2.setColspan(1); // 1/5 of the width
+
+    // Add the cells to the title table
+    titleTable.addCell(imageCell1);
+    titleTable.addCell(titleCell);
+    titleTable.addCell(imageCell2);
+
+    // Add the title table to the title paragraph
+    title.add(titleTable);
+
+    // Add spacing after the title paragraph
+    title.setSpacingAfter(30f);
+
+    // Add the title paragraph to the document
+    document.add(title);
+}
+    public static void addFooterSignature(Document document, String date, String signature) throws DocumentException {
+        // Add a section for the signature space at the end of the document
+        Paragraph signatureSpace = new Paragraph();
+        signatureSpace.setAlignment(Element.ALIGN_LEFT);
+
+        // Add a few newlines to push the signature to the bottom
+        for (int i = 0; i < 2; i++) {
+            signatureSpace.add(Chunk.NEWLINE);
+        }
+
+        // Add "CRCISfax" with formatting
+        Chunk crcisfaxLabel = new Chunk("CRCISfax", new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+        signatureSpace.add(crcisfaxLabel);
+
+        signatureSpace.add(Chunk.NEWLINE);
+
+        // Add "Date" with formatting
+        Chunk dateLabel = new Chunk("Nom et prénom      : ---------------------------");
+        dateLabel.setFont(new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+        signatureSpace.add(dateLabel);
+
+        signatureSpace.add(Chunk.NEWLINE);
+
+        // Add "Signature" with formatting
+        Chunk signatureLabel = new Chunk("Signature               : " + signature, new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL));
+        signatureSpace.add(signatureLabel);
+
+        // Add the signature space to the document
+        document.add(signatureSpace);
+    }
     private String getCurrentDateAsString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date currentDate = new Date();

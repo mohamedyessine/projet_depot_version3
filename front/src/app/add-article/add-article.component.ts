@@ -19,7 +19,8 @@ export class AddArticleComponent implements OnInit {
   formData = {
     code: '',
     name: '',
-    lebelle: ''
+    lebelle: '',
+    type: ''
   };
   getHeaders(): HttpHeaders {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
