@@ -219,11 +219,11 @@ onCodeInput() {
       .subscribe(response => {
         // Get the ID from the response
         const articleId = response.id;
-        const bureauId = this.bureaux.find(depot => depot.value === this.selectedValue);
+        const selectedBureau = this.bureaux.find(bureau => bureau.value === this.formData.bureauId);
         // Create a new form data object with the ID instead of the code
         const formDataWithId = {
-          bureauId: bureauId.value,
-          // depotId:this.selectedDepotValue,
+          bureauId: selectedBureau ? selectedBureau.value : null,
+          depotId:this.selectedDepotValue,
           // bureauId:1,
           // depotId:1,
           articleId: articleId,
